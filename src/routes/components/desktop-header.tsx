@@ -18,7 +18,8 @@ export default function DesktopHeader() {
         <div className='flex justify-start items-center w-full h-full'>
           <Typography
             variant='h5'
-            className='flex justify-center w-full'
+            className='w-full'
+            align='center'
             noWrap
             component='a'
             href='/'
