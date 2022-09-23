@@ -3,12 +3,24 @@ import React from 'react'
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 
 import { colors } from '../../services/colors'
+import { getInfo, setInfo } from '../../services/localforage'
 
 const ColorInput: React.FC = () => {
   const [color, setColor] = React.useState(colors[0].value)
+
   const changeColor = (event: SelectChangeEvent<string>) => {
     setColor(event.target.value)
   }
+
+  React.useEffect(() => {
+    const setUp = async () => {
+      const info = await getInfo()
+      if (info?.playerColor !== undefined) {
+        setColor(info.playerColor)
+      }
+    }
+    setUp()
+  }, [])
 
   return (
     <div className='flex justify-center items-center w-full h-full'>
@@ -20,6 +32,9 @@ const ColorInput: React.FC = () => {
           label='Color'
           value={color}
           onChange={changeColor}
+          onBlur={() => {
+            setInfo({ playerColor: color })
+          }}
           MenuProps={{
             PaperProps: {
               sx: { maxHeight: 300 },
