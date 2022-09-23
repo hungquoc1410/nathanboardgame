@@ -2,52 +2,55 @@ import React from 'react'
 import { Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
+import { gameInfo } from '../../services/game-information'
+
+import GameContent from './game-content'
+
 import 'swiper/css/bundle'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-export default function GameCarousel() {
+const GameCarousel: React.FC = () => {
   return (
     <>
       <div className='mobile:block laptop:hidden'>
         <Swiper
-          slidesPerView={'auto'}
+          slidesPerView={1}
           spaceBetween={10}
           centeredSlides={true}
           loop={true}
           modules={[Navigation]}
         >
-          <SwiperSlide className='h-96 w-2/3'>Slide 1</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 2</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 3</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 4</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 5</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 6</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 7</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 8</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 9</SwiperSlide>
+          {gameInfo.map((game) => {
+            return (
+              <SwiperSlide key={game.title} className='flex self-center'>
+                <GameContent game={game} />
+              </SwiperSlide>
+            )
+          })}
         </Swiper>
       </div>
+
       <div className='mobile:hidden laptop:block'>
         <Swiper
           slidesPerView={'auto'}
           spaceBetween={30}
           centeredSlides={true}
-          loop={true}
           navigation={true}
+          loop={true}
           modules={[Navigation]}
         >
-          <SwiperSlide className='h-96 w-2/3'>Slide 1</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 2</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 3</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 4</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 5</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 6</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 7</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 8</SwiperSlide>
-          <SwiperSlide className='h-96 w-2/3'>Slide 9</SwiperSlide>
+          {gameInfo.map((game) => {
+            return (
+              <SwiperSlide key={game.title} className='w-2/3 flex self-center'>
+                <GameContent game={game} />
+              </SwiperSlide>
+            )
+          })}
         </Swiper>
       </div>
     </>
   )
 }
+
+export default GameCarousel

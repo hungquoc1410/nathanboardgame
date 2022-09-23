@@ -7,8 +7,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 
 import App from './App'
 
-import './main.css'
-
 declare module '@mui/material/styles' {
   interface BreakpointOverrides {
     xs: false // removes the `xs` breakpoint
@@ -52,10 +50,15 @@ const darkTheme = createTheme({
         },
       },
     },
-    MuiSelect: {
+    MuiButton: {
       styleOverrides: {
-        outlined: {
-          border: '',
+        root: {
+          color: 'white',
+          backgroundImage: 'linear-gradient(to left, #06d6a0, #00c5b3, #00b2bd, #009fbd, #118ab2)',
+          '&:hover': {
+            backgroundImage:
+              'linear-gradient(to right, #ef476f, #fe6a61, #ff8d58, #ffb059, #ffd166)',
+          },
         },
       },
     },
