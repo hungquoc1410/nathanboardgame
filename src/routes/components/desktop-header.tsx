@@ -6,7 +6,7 @@ import { Grid, Typography } from '@mui/material'
 import ColorInput from './color-input'
 import NameInput from './name-input'
 
-export default function DesktopHeader() {
+const DesktopHeader: React.FC = () => {
   return (
     <Grid container spacing={2}>
       <Grid item mobile>
@@ -48,3 +48,5 @@ export default function DesktopHeader() {
     </Grid>
   )
 }
+
+export default DesktopHeader

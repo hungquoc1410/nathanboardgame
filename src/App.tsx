@@ -6,7 +6,7 @@ import Layout from './routes/layout'
 
 import './App.css'
 
-function App() {
+const App: React.FC = () => {
   return (
     <Routes>
       <Route path='/' element={<Layout />}>

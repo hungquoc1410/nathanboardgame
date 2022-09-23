@@ -6,7 +6,7 @@ import { AppBar, Box, Toolbar } from '@mui/material'
 import DesktopHeader from './components/desktop-header'
 import MobileHeader from './components/mobile-header'
 
-export default function Layout() {
+const Layout: React.FC = () => {
   return (
     <>
       <AppBar position='static'>
@@ -25,3 +25,5 @@ export default function Layout() {
     </>
   )
 }
+
+export default Layout

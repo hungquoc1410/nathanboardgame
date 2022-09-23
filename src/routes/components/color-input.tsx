@@ -4,7 +4,7 @@ import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@m
 
 import { colors } from '../../services/colors'
 
-export default function ColorInput() {
+const ColorInput: React.FC = () => {
   const [color, setColor] = React.useState(colors[0].value)
   const changeColor = (event: SelectChangeEvent<string>) => {
     setColor(event.target.value)
@@ -36,3 +36,5 @@ export default function ColorInput() {
     </div>
   )
 }
+
+export default ColorInput

@@ -6,7 +6,7 @@ import { Box, Grid, IconButton, SwipeableDrawer, Typography } from '@mui/materia
 import ColorInput from './color-input'
 import NameInput from './name-input'
 
-export default function MobileHeader() {
+const MobileHeader: React.FC = () => {
   const [anchorDrawer, setAnchorDrawer] = React.useState<boolean>(false)
 
   const toggleDrawer = (value: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -79,3 +79,5 @@ export default function MobileHeader() {
     </>
   )
 }
+
+export default MobileHeader

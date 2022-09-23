@@ -33,7 +33,7 @@ function a11yProps(index: number) {
   }
 }
 
-export default function Index() {
+const Index: React.FC = () => {
   const [value, setValue] = React.useState(0)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -59,3 +59,5 @@ export default function Index() {
     </Box>
   )
 }
+
+export default Index
