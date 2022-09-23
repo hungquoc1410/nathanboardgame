@@ -48,7 +48,7 @@ const darkTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage:
-            'linear-gradient(to right bottom, #2a4858, #235071, #2b5689, #48589d, #6f56ab)',
+            'linear-gradient(to right bottom, #2a4858, #204257, #153c55, #093654, #003052)',
         },
       },
     },

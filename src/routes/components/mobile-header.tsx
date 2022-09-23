@@ -64,13 +64,13 @@ export default function MobileHeader() {
       >
         <Box sx={{ width: 300 }} p={2}>
           <Typography variant='h6' mb={4} align='center'>
-            Your Information
+            User Settings
           </Typography>
           <Grid container rowSpacing={4}>
-            <Grid item xs={12}>
+            <Grid item mobile={12}>
               <NameInput />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item mobile={12}>
               <ColorInput />
             </Grid>
           </Grid>
