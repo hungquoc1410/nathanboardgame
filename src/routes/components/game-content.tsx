@@ -21,6 +21,11 @@ interface GameContentProps {
 const GameContent: React.FC<GameContentProps> = ({ game }) => {
   const { title, subtitle, image, players, playtime } = game
 
+  const createRoom = () => {
+    const id = Math.random().toString(36).substring(2, 8)
+    console.log(id)
+  }
+
   return (
     <div className='w-full flex flex-1 p-1 bg-gradient-to-br from-blue-500 to-pink-500'>
       <Card className='p-1 flex flex-1'>
@@ -33,7 +38,7 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
           >
             <CardMedia component='img' image={image} alt={title} />
           </Grid>
-          <Grid item mobile={12} laptop={8} className='flex justify-center' direction='column'>
+          <Grid item mobile={12} laptop={8} className='flex justify-center laptop:justify-start'>
             <Stack direction='column' spacing={2} className='laptop:my-2'>
               <div className='hidden laptop:block'>
                 <Typography variant='h4'>{title}</Typography>
@@ -55,7 +60,13 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
                 </Stack>
               </div>
 
-              <Button variant='contained' className='self-center !mb-3'>
+              <Button
+                variant='contained'
+                className='self-center !mb-3'
+                onClick={() => {
+                  createRoom()
+                }}
+              >
                 Create Room
               </Button>
             </Stack>

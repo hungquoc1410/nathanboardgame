@@ -1,12 +1,43 @@
 import * as React from 'react'
+import { onAuthStateChanged, signInAnonymously } from 'firebase/auth'
+import { onDisconnect, onValue } from 'firebase/database'
 import { Outlet } from 'react-router-dom'
 
-import { AppBar, Box, Toolbar } from '@mui/material'
+import { AppBar, Backdrop, Box, CircularProgress, Toolbar } from '@mui/material'
+
+import { Auth, connectedRef, setPlayerRef } from '../services/firebase'
+import { getInfo, setInfo } from '../services/localforage'
 
 import DesktopHeader from './components/desktop-header'
 import MobileHeader from './components/mobile-header'
 
 const Layout: React.FC = () => {
+  const [open, setOpen] = React.useState(false)
+
+  React.useEffect(() => {
+    signInAnonymously(Auth)
+
+    onAuthStateChanged(Auth, async (user) => {
+      if (user) {
+        setInfo({ playerId: user.uid })
+        const info = await getInfo()
+        const { roomId, playerId } = info
+        if (roomId && playerId) {
+          const playerRef = setPlayerRef(roomId, playerId)
+          onDisconnect(playerRef).remove()
+        }
+      }
+    })
+
+    onValue(connectedRef, (snap) => {
+      if (snap.val() === true) {
+        setOpen(false)
+      } else {
+        setOpen(true)
+      }
+    })
+  }, [])
+
   return (
     <>
       <AppBar position='static'>
@@ -22,6 +53,9 @@ const Layout: React.FC = () => {
         </Box>
       </AppBar>
       <Outlet />
+      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={open}>
+        <CircularProgress color='inherit' />
+      </Backdrop>
     </>
   )
 }

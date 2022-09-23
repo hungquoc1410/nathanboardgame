@@ -13,6 +13,7 @@ const firebaseConfig = {
   messagingSenderId: '685742545433',
   appId: '1:685742545433:web:f553f7916533124fcca888',
   measurementId: 'G-B87DNLZV6V',
+  databaseURL: 'https://nathan-boardgame-default-rtdb.asia-southeast1.firebasedatabase.app',
 }
 
 // Initialize Firebase
@@ -24,3 +25,9 @@ export const Auth = getAuth(app)
 // Initialize Realtime Database and get a reference to the service
 export const Database = getDatabase(app)
 export const DatabaseRef = ref(Database)
+export const connectedRef = ref(Database, '.info/connected')
+
+// set ref
+export const setPlayerRef = (roomId: string, playerId: string) => {
+  return ref(Database, `rooms/${roomId}/players/${playerId}`)
+}

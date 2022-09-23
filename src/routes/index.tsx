@@ -1,4 +1,5 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { Box, Paper, Tab, Tabs } from '@mui/material'
 
@@ -36,9 +37,13 @@ function a11yProps(index: number) {
 const Index: React.FC = () => {
   const [value, setValue] = React.useState(0)
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
+
+  const location = useLocation()
+
+  console.log(location.pathname)
 
   return (
     <Box className='w-full flex justify-center'>
