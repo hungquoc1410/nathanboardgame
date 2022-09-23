@@ -1,14 +1,15 @@
 import React from 'react'
-import { Navigation } from 'swiper'
+import { Lazy, Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import { gameInfo } from '../../services/game-information'
 
 import GameContent from './game-content'
 
-import 'swiper/css/bundle'
 import 'swiper/css'
+import 'swiper/css/lazy'
 import 'swiper/css/pagination'
+import 'swiper/css/bundle'
 
 const GameCarousel: React.FC = () => {
   return (
@@ -18,8 +19,9 @@ const GameCarousel: React.FC = () => {
           slidesPerView={1}
           spaceBetween={10}
           centeredSlides={true}
+          lazy={true}
           loop={true}
-          modules={[Navigation]}
+          modules={[Navigation, Lazy]}
         >
           {gameInfo.map((game) => {
             return (
@@ -36,8 +38,9 @@ const GameCarousel: React.FC = () => {
           slidesPerView={'auto'}
           spaceBetween={30}
           centeredSlides={true}
-          navigation={true}
+          lazy={true}
           loop={true}
+          navigation={true}
           modules={[Navigation]}
         >
           {gameInfo.map((game) => {
