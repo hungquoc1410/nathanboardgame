@@ -23,7 +23,11 @@ export default function ColorInput() {
           MenuProps={{ PaperProps: { sx: { maxHeight: 300 } } }}
         >
           {colors.map((option) => (
-            <MenuItem key={option.name} value={option.value} sx={{ backgroundColor: option.value }}>
+            <MenuItem
+              key={option.name}
+              value={option.value}
+              sx={{ backgroundColor: option.value, color: 'transparent' }}
+            >
               {option.name}
             </MenuItem>
           ))}
