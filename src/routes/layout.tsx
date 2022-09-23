@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Outlet } from 'react-router-dom'
 
-import { AppBar, Box, Container, Toolbar } from '@mui/material'
+import { AppBar, Box, Toolbar } from '@mui/material'
 
 import DesktopHeader from './components/desktop-header'
 import MobileHeader from './components/mobile-header'
@@ -10,16 +10,16 @@ export default function Layout() {
   return (
     <>
       <AppBar position='static'>
-        <Container maxWidth='xl'>
+        <Box>
           <Toolbar disableGutters>
-            <Box sx={{ display: { xs: 'none', md: 'block' } }} className='w-full'>
+            <Box sx={{ display: { mobile: 'none', laptop: 'block' } }} className='w-full px-6'>
               <DesktopHeader />
             </Box>
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }} className='w-full'>
+            <Box sx={{ display: { mobile: 'flex', laptop: 'none' } }} className='w-full px-4'>
               <MobileHeader />
             </Box>
           </Toolbar>
-        </Container>
+        </Box>
       </AppBar>
       <Outlet />
     </>

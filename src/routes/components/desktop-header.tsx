@@ -9,12 +9,12 @@ import NameInput from './name-input'
 export default function DesktopHeader() {
   return (
     <Grid container spacing={2}>
-      <Grid item xs>
+      <Grid item mobile>
         <div className='flex justify-start items-center w-full h-full'>
           <Casino fontSize='large' sx={{ display: 'flex' }} />
         </div>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item mobile={6}>
         <div className='flex justify-start items-center w-full h-full'>
           <Typography
             variant='h5'
@@ -35,12 +35,12 @@ export default function DesktopHeader() {
           </Typography>
         </div>
       </Grid>
-      <Grid item xs>
+      <Grid item mobile>
         <Grid container spacing={2}>
-          <Grid item xs>
+          <Grid item mobile>
             <NameInput />
           </Grid>
-          <Grid item xs>
+          <Grid item mobile>
             <ColorInput />
           </Grid>
         </Grid>
