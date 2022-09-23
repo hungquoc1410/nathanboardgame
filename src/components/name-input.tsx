@@ -2,7 +2,7 @@ import React from 'react'
 
 import { TextField } from '@mui/material'
 
-import { getInfo, setInfo } from '../../services/localforage'
+import { getInfo, setInfo } from '../services/localforage'
 
 const NameInput: React.FC = () => {
   const [name, setName] = React.useState('')

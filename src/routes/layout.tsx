@@ -5,14 +5,13 @@ import { Outlet } from 'react-router-dom'
 
 import { AppBar, Backdrop, Box, CircularProgress, Toolbar } from '@mui/material'
 
+import DesktopHeader from '../components/desktop-header'
+import MobileHeader from '../components/mobile-header'
 import { Auth, connectedRef, setPlayerRef } from '../services/firebase'
 import { getInfo, setInfo } from '../services/localforage'
 
-import DesktopHeader from './components/desktop-header'
-import MobileHeader from './components/mobile-header'
-
 const Layout: React.FC = () => {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(true)
 
   React.useEffect(() => {
     signInAnonymously(Auth)
@@ -32,8 +31,6 @@ const Layout: React.FC = () => {
     onValue(connectedRef, (snap) => {
       if (snap.val() === true) {
         setOpen(false)
-      } else {
-        setOpen(true)
       }
     })
   }, [])

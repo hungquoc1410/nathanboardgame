@@ -2,8 +2,8 @@ import React from 'react'
 
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 
-import { colors } from '../../services/colors'
-import { getInfo, setInfo } from '../../services/localforage'
+import { colors } from '../services/colors'
+import { getInfo, setInfo } from '../services/localforage'
 
 const ColorInput: React.FC = () => {
   const [color, setColor] = React.useState(colors[0].value)

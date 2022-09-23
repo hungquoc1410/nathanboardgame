@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import {
   Button,
@@ -12,7 +13,9 @@ import {
   Typography,
 } from '@mui/material'
 
-import { GameInfo } from '../../services/game-information'
+import { createPlayer, createRoom } from '../services/firebase'
+import { GameInfo } from '../services/game-information'
+import { getInfo, setInfo } from '../services/localforage'
 
 interface GameContentProps {
   game: GameInfo
@@ -21,9 +24,18 @@ interface GameContentProps {
 const GameContent: React.FC<GameContentProps> = ({ game }) => {
   const { title, subtitle, image, players, playtime } = game
 
-  const createRoom = () => {
+  const navigate = useNavigate()
+
+  const newRoom = async () => {
     const id = Math.random().toString(36).substring(2, 8)
-    console.log(id)
+    const info = await getInfo()
+    const { playerId, playerName, playerColor } = info
+    setInfo({ roomId: id, gameId: title })
+    createRoom(id, { id: id, game: title })
+    if (playerId !== undefined) {
+      createPlayer(id, playerId, { name: playerName, color: playerColor, master: true })
+    }
+    navigate(id)
   }
 
   return (
@@ -64,7 +76,7 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
                 variant='contained'
                 className='self-center !mb-3'
                 onClick={() => {
-                  createRoom()
+                  newRoom()
                 }}
               >
                 Create Room

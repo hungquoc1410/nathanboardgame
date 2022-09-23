@@ -2,7 +2,7 @@ import React from 'react'
 import { Lazy, Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import { gameInfo } from '../../services/game-information'
+import { gameInfo } from '../services/game-information'
 
 import GameContent from './game-content'
 

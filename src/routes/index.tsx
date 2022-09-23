@@ -3,7 +3,8 @@ import { useLocation } from 'react-router-dom'
 
 import { Box, Paper, Tab, Tabs } from '@mui/material'
 
-import GameCarousel from './components/game-carousel'
+import GameCarousel from '../components/game-carousel'
+import { checkRoom } from '../services/firebase'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -43,7 +44,9 @@ const Index: React.FC = () => {
 
   const location = useLocation()
 
-  console.log(location.pathname)
+  if (location.pathname === '/') {
+    checkRoom()
+  }
 
   return (
     <Box className='w-full flex justify-center'>
