@@ -33,7 +33,12 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
     setInfo({ roomId: id, gameId: title })
     createRoom(id, { id: id, game: title })
     if (playerId !== undefined) {
-      createPlayer(id, playerId, { name: playerName, color: playerColor, master: true })
+      createPlayer(id, playerId, {
+        name: playerName,
+        color: playerColor,
+        master: true,
+        phase: 'ready',
+      })
     }
     navigate(id)
   }

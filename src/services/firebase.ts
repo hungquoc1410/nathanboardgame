@@ -32,14 +32,15 @@ export const connectedRef = ref(Database, '.info/connected')
 
 // Initialize type
 
-type PlayerData = {
+export type PlayerDataType = {
   id: string
   name: string
   color: string
   master: boolean
+  phase: string
 }
 
-type RoomPlayersData = PlayerData[]
+type RoomPlayersDataType = PlayerDataType[]
 
 // set ref
 export const setRoomRef = (roomId: string) => {
@@ -111,11 +112,11 @@ export const checkRoom = async () => {
   const { roomId, playerId } = info
   if (roomId && playerId) {
     const snapshot = await getRoomPlayers(roomId)
-    const roomPlayers: RoomPlayersData = createArrayFromObject(snapshot)
+    const roomPlayers: RoomPlayersDataType = createArrayFromObject(snapshot)
     if (roomPlayers.length === 1) {
       removeRoom(roomId)
     } else {
-      const hasMaster = roomPlayers.map((player: PlayerData) => player.master).includes(true)
+      const hasMaster = roomPlayers.map((player: PlayerDataType) => player.master).includes(true)
       if (!hasMaster) {
         updatePlayer(roomId, roomPlayers[0].id, { master: true })
       }

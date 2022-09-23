@@ -3,20 +3,36 @@ import React from 'react'
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 
 import { colors } from '../services/colors'
+import { updatePlayer } from '../services/firebase'
 import { getInfo, setInfo } from '../services/localforage'
 
 const ColorInput: React.FC = () => {
   const [color, setColor] = React.useState(colors[0].value)
+  const [roomId, setRoomId] = React.useState('')
+  const [playerId, setPlayerId] = React.useState('')
 
   const changeColor = (event: SelectChangeEvent<string>) => {
     setColor(event.target.value)
   }
 
+  const updateBrower = () => {
+    setInfo({ playerColor: color })
+    if (roomId && playerId) {
+      updatePlayer(roomId, playerId, { color: color })
+    }
+  }
+
   React.useEffect(() => {
     const setUp = async () => {
       const info = await getInfo()
-      if (info?.playerColor !== undefined) {
+      if (info.playerColor) {
         setColor(info.playerColor)
+      }
+      if (info.roomId) {
+        setRoomId(info.roomId)
+      }
+      if (info.playerId) {
+        setPlayerId(info.playerId)
       }
     }
     setUp()
@@ -33,7 +49,7 @@ const ColorInput: React.FC = () => {
           value={color}
           onChange={changeColor}
           onBlur={() => {
-            setInfo({ playerColor: color })
+            updateBrower()
           }}
           MenuProps={{
             PaperProps: {
