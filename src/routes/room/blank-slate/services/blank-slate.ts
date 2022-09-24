@@ -4,6 +4,16 @@ import { createPlayer, createRoom } from '../../../../services/firebase'
 
 import { wordsData } from './words'
 
+export type IBLPlayer = {
+  id: string
+  points: number
+  answer: string
+  name: string
+  color: string
+  master: boolean
+  phase: string
+}
+
 export const BLNewGame = (roomId: string, playerId: string, name: string, color: string) => {
   BSRoom(roomId)
   BSPlayer(roomId, playerId, name, color, true)

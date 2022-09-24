@@ -144,8 +144,8 @@ export const checkRoom = async (roomId: string, playerId: string) => {
   }
 }
 
-export const checkMaster = (roomId: string, roomData: object) => {
-  const roomPlayers: IRoomPlayers = createArrayFromObject(roomData)
+export const checkMaster = (roomId: string, roomPlayersData: object) => {
+  const roomPlayers: IRoomPlayers = createArrayFromObject(roomPlayersData)
   const hasMaster = roomPlayers.map((player: IPlayer) => player.master).includes(true)
   if (!hasMaster) {
     updatePlayer(roomId, roomPlayers[0].id, { master: true, phase: 'ready' })
