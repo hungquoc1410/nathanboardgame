@@ -1,19 +1,32 @@
 import React from 'react'
 import { onValue } from 'firebase/database'
+import { useNavigate } from 'react-router-dom'
 
-import { Chip, TableCell, TableRow, useTheme } from '@mui/material'
+import { Button, Chip, TableCell, TableRow, useTheme } from '@mui/material'
 
+import { BSPlayer } from '../routes/room/blank-slate/services/blank-slate'
 import { createArrayFromObject } from '../services/create-array-from-object'
 import { getRoomInfo, setRoomPlayersRef } from '../services/firebase'
+import { getInfo } from '../services/localforage'
 
 const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
   const theme = useTheme()
+  const navigate = useNavigate()
   const [players, setPlayers] = React.useState<number>()
   const [roomInfo, setRoomInfo] = React.useState<{
     maxPlayer: string
     title: string
     color: string
   }>()
+
+  const joinRoom = async () => {
+    const info = await getInfo()
+    const { playerId, playerName, playerColor } = info
+    if (playerId && playerName && playerColor) {
+      BSPlayer(roomId, playerId, playerName, playerColor)
+    }
+    navigate(roomId)
+  }
 
   React.useEffect(() => {
     const setUp = async () => {
@@ -51,7 +64,15 @@ const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
               }}
             ></Chip>
           </TableCell>
-          <TableCell>Join</TableCell>
+          <TableCell>
+            <Button
+              onClick={() => {
+                joinRoom()
+              }}
+            >
+              Join room
+            </Button>
+          </TableCell>
         </TableRow>
       )}
     </>
