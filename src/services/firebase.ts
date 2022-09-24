@@ -46,8 +46,8 @@ const setRoomRef = (roomId: string) => {
   return ref(Database, `rooms/${roomId}`)
 }
 
-export const setRoomPlayersRef = (roomId: string) => {
-  return ref(Database, `rooms/${roomId}/players`)
+export const setRoomGameRef = (roomId: string) => {
+  return ref(Database, `rooms/${roomId}/game`)
 }
 
 export const setPlayerRef = (roomId: string, playerId: string) => {
@@ -67,10 +67,10 @@ export const createPlayer = (roomId: string, playerId: string, data: object) => 
 }
 
 // Remove data
-const removeRoom = (roomId: string) => {
+const removeRoom = async (roomId: string) => {
+  await removeRoomId(roomId)
   const roomRef = setRoomRef(roomId)
   set(roomRef, null)
-  removeRoomId(roomId)
 }
 
 const removePlayer = (roomId: string, playerId: string) => {
@@ -80,11 +80,12 @@ const removePlayer = (roomId: string, playerId: string) => {
 
 const removeRoomId = async (roomId: string) => {
   const snapshot = await getAllRoomsData()
-  if (snapshot?.ids) {
-    const allRoomIds = snapshot.ids
+  if (snapshot) {
+    const allRoomIds = snapshot
     const index = allRoomIds.indexOf(roomId)
     allRoomIds.splice(index, 1)
     update(ref(Database, 'allRooms'), { ids: allRoomIds })
+    console.log('Run')
   }
 }
 
@@ -94,14 +95,8 @@ export const getRoomsData = async () => {
   return snapshot.val()
 }
 
-const getRoomPlayers = async (roomId: string) => {
-  const roomRef = setRoomPlayersRef(roomId)
-  const data = await get(query(roomRef))
-  return data.val()
-}
-
 export const getAllRoomsData = async () => {
-  const snapshot = await get(query(ref(Database, 'allRooms')))
+  const snapshot = await get(query(ref(Database, 'allRooms/ids')))
   return snapshot.val()
 }
 
@@ -119,6 +114,22 @@ const updateAllRooms = async (roomId: string) => {
     allRoomIds.push(roomId)
   }
   update(ref(Database, 'allRooms'), { ids: allRoomIds })
+}
+
+export const getRoomInfo = async (roomId: string, key: string) => {
+  const snapshot = await get(query(ref(Database, `rooms/${roomId}/${key}`)))
+  return snapshot.val()
+}
+
+// Room Players
+export const setRoomPlayersRef = (roomId: string) => {
+  return ref(Database, `rooms/${roomId}/players`)
+}
+
+const getRoomPlayers = async (roomId: string) => {
+  const roomRef = setRoomPlayersRef(roomId)
+  const data = await get(query(roomRef))
+  return data.val()
 }
 
 // Clean data

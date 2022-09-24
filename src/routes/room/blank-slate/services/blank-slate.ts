@@ -1,3 +1,5 @@
+import { grey } from '@mui/material/colors'
+
 import { createPlayer, createRoom } from '../../../../services/firebase'
 
 import { wordsData } from './words'
@@ -11,6 +13,8 @@ export const BSRoom = (roomId: string) => {
   const roomData = {
     id: roomId,
     game: 'bs',
+    title: 'Blank Slate',
+    color: grey[500],
     minPlayer: 3,
     maxPlayer: 8,
     words: wordsData,

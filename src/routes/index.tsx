@@ -3,6 +3,7 @@ import React from 'react'
 import { Box, Paper, Tab, Tabs } from '@mui/material'
 
 import GameCarousel from '../components/game-carousel'
+import RoomTable from '../components/room-table'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -52,7 +53,7 @@ const Index: React.FC = () => {
             <GameCarousel />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            Item Two
+            <RoomTable />
           </TabPanel>
         </Paper>
       </Box>

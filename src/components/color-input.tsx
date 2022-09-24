@@ -27,6 +27,8 @@ const ColorInput: React.FC = () => {
       const info = await getInfo()
       if (info.playerColor) {
         setColor(info.playerColor)
+      } else {
+        setInfo({ playerColor: colors[0].value })
       }
     }
     setUp()

@@ -28,7 +28,9 @@ const NameInput: React.FC = () => {
       if (info.playerName) {
         setName(info.playerName)
       } else {
-        setName(generateName())
+        const newName = generateName()
+        setName(newName)
+        setInfo({ playerName: newName })
       }
     }
     setUp()

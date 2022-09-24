@@ -28,9 +28,9 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
 
   const newRoom = async () => {
     const id = Math.random().toString(36).substring(2, 8)
+    setInfo({ roomId: id, gameId: title })
     const info = await getInfo()
     const { playerId, playerName, playerColor } = info
-    await setInfo({ roomId: id, gameId: title })
     if (playerId && playerName && playerColor) {
       switch (title) {
         case 'Blank Slate':
