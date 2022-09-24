@@ -54,6 +54,14 @@ export const setRoomPlayersRef = (roomId: string) => {
   return ref(Database, `rooms/${roomId}/players`)
 }
 
+export const setRoomPhaseRef = (roomId: string) => {
+  return ref(Database, `rooms/${roomId}/phase`)
+}
+
+export const setRoomNumOfPlayersRef = (roomId: string) => {
+  return ref(Database, `rooms/${roomId}/numOfPlayers`)
+}
+
 // Create data
 export const createRoom = (roomId: string, data: object) => {
   const roomRef = setRoomRef(roomId)
@@ -105,6 +113,11 @@ export const updatePlayer = (roomId: string, playerId: string, data: object) => 
   update(playerRef, data)
 }
 
+export const updateRoom = (roomId: string, data: object) => {
+  const roomRef = setRoomRef(roomId)
+  update(roomRef, data)
+}
+
 const updateAllRooms = async (roomId: string) => {
   const snapshot = await getAllRoomsData()
   let allRoomIds = [roomId]
@@ -126,6 +139,8 @@ export const checkRoom = async (roomId: string, playerId: string) => {
       removePlayer(roomId, playerId)
     }
     clearInfo()
+  } else {
+    removeRoom(roomId)
   }
 }
 

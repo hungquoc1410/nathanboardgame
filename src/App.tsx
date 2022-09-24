@@ -17,7 +17,7 @@ const App: React.FC = () => {
         <Route index element={<Index />} />
         <Route path=':roomId' element={<RoomLayout />}>
           <Route index element={<RoomIndex />} />
-          <Route path='blankslate' element={<BLLayout />}>
+          <Route path='bs' element={<BLLayout />}>
             <Route index element={<BLIndex />} />
           </Route>
         </Route>

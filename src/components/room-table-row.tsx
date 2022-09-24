@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Chip, TableCell, TableRow, useTheme } from '@mui/material'
 
 import { BSPlayer } from '../routes/room/blank-slate/services/blank-slate'
-import { createArrayFromObject } from '../services/create-array-from-object'
-import { getRoomInfo, setRoomPlayersRef } from '../services/firebase'
+import { getRoomInfo, setRoomNumOfPlayersRef } from '../services/firebase'
 import { getInfo, setInfo } from '../services/localforage'
 
 const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
@@ -48,11 +47,10 @@ const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
 
     setUp()
 
-    const roomPlayersRef = setRoomPlayersRef(roomId)
-    onValue(roomPlayersRef, (snap) => {
+    const roomNumOfPlayersRef = setRoomNumOfPlayersRef(roomId)
+    onValue(roomNumOfPlayersRef, (snap) => {
       if (snap.exists()) {
-        const num = createArrayFromObject(snap.val()).length
-        setPlayers(num)
+        setPlayers(snap.val())
       }
     })
   }, [])

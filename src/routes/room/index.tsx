@@ -1,6 +1,6 @@
 import React from 'react'
 import { onValue, Query } from 'firebase/database'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import {
   Box,
@@ -20,16 +20,20 @@ import {
 import { createArrayFromObject } from '../../services/create-array-from-object'
 import {
   checkMaster,
+  getRoomInfo,
   IPlayer,
   IRoomPlayers,
+  setRoomPhaseRef,
   setRoomPlayersRef,
   updatePlayer,
+  updateRoom,
 } from '../../services/firebase'
 import { getInfo } from '../../services/localforage'
 
 const RoomIndex: React.FC = () => {
   const theme = useTheme()
   const params = useParams()
+  const navigate = useNavigate()
   const [data, setData] = React.useState<IRoomPlayers>()
   const [id, setId] = React.useState<string>()
   const [ready, setReady] = React.useState(false)
@@ -40,8 +44,16 @@ const RoomIndex: React.FC = () => {
   }
 
   let roomPlayersRef: Query
+  let roomPhaseRef: Query
   if (params.roomId) {
     roomPlayersRef = setRoomPlayersRef(params.roomId)
+    roomPhaseRef = setRoomPhaseRef(params.roomId)
+  }
+
+  const startGame = async () => {
+    if (params.roomId) {
+      updateRoom(params.roomId, { phase: 'playing' })
+    }
   }
 
   React.useEffect(() => {
@@ -65,11 +77,22 @@ const RoomIndex: React.FC = () => {
 
     setUp()
 
-    return onValue(roomPlayersRef, (snap) => {
+    onValue(roomPlayersRef, (snap) => {
       if (snap.exists() && params.roomId) {
         const players: IRoomPlayers = createArrayFromObject(snap.val())
-        setData(players.reverse())
+        setData(players)
+        updateRoom(params.roomId, { numOfPlayers: players.length })
         checkMaster(params.roomId, snap.val())
+      }
+    })
+
+    onValue(roomPhaseRef, async (snap) => {
+      if (snap.exists()) {
+        const phase = snap.val()
+        if (phase === 'playing' && params.roomId) {
+          const game = await getRoomInfo(params.roomId, 'game')
+          navigate(game)
+        }
       }
     })
   }, [])
@@ -138,7 +161,7 @@ const RoomIndex: React.FC = () => {
               <TableRow>
                 <TableCell align='center'>
                   {you && you.master ? (
-                    <Button>Start Game</Button>
+                    <Button onClick={() => startGame()}>Start Game</Button>
                   ) : (
                     <Button onClick={() => setReady(!ready)}>Ready</Button>
                   )}
