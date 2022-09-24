@@ -1,30 +1,49 @@
-import * as React from 'react'
+import React from 'react'
 import { onAuthStateChanged, signInAnonymously } from 'firebase/auth'
 import { onDisconnect, onValue } from 'firebase/database'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 
 import { AppBar, Backdrop, Box, CircularProgress, Toolbar } from '@mui/material'
 
 import DesktopHeader from '../components/desktop-header'
 import MobileHeader from '../components/mobile-header'
-import { Auth, connectedRef, setPlayerRef } from '../services/firebase'
+import { Auth, checkRoom, connectedRef, setPlayerRef } from '../services/firebase'
 import { getInfo, setInfo } from '../services/localforage'
 
+signInAnonymously(Auth)
+
 const Layout: React.FC = () => {
-  const [open, setOpen] = React.useState(true)
+  const [open, setOpen] = React.useState<boolean>(true)
+  const [roomId, setRoomId] = React.useState<string>()
+  const [playerId, setPlayerId] = React.useState<string>()
+  const location = useLocation()
+
+  if (roomId && playerId) {
+    const playerRef = setPlayerRef(roomId, playerId)
+    onDisconnect(playerRef).remove()
+  }
+
+  if (location.pathname === '/') {
+    if (roomId && playerId) {
+      checkRoom(roomId, playerId)
+    }
+  }
 
   React.useEffect(() => {
-    signInAnonymously(Auth)
+    const setUp = async () => {
+      const info = await getInfo()
+      const { roomId, playerId } = info
+      if (roomId && playerId) {
+        setRoomId(roomId)
+        setPlayerId(playerId)
+      }
+    }
+
+    setUp()
 
     onAuthStateChanged(Auth, async (user) => {
       if (user) {
-        setInfo({ playerId: user.uid })
-        const info = await getInfo()
-        const { roomId, playerId } = info
-        if (roomId && playerId) {
-          const playerRef = setPlayerRef(roomId, playerId)
-          onDisconnect(playerRef).remove()
-        }
+        await setInfo({ playerId: user.uid })
       }
     })
 
@@ -33,7 +52,7 @@ const Layout: React.FC = () => {
         setOpen(false)
       }
     })
-  }, [])
+  }, [location])
 
   return (
     <>

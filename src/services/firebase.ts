@@ -4,7 +4,7 @@ import { getAuth } from 'firebase/auth'
 import { get, getDatabase, query, ref, set, update } from 'firebase/database'
 
 import { createArrayFromObject } from './create-array-from-object'
-import { clearInfo, getInfo } from './localforage'
+import { clearInfo } from './localforage'
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -32,7 +32,7 @@ export const connectedRef = ref(Database, '.info/connected')
 
 // Initialize type
 
-export type PlayerDataType = {
+export type IPlayer = {
   id: string
   name: string
   color: string
@@ -40,7 +40,7 @@ export type PlayerDataType = {
   phase: string
 }
 
-type RoomPlayersDataType = PlayerDataType[]
+export type IRoomPlayers = IPlayer[]
 
 // set ref
 export const setRoomRef = (roomId: string) => {
@@ -107,23 +107,21 @@ export const updateRoom = (roomId: string, data: object) => {
 }
 
 // Clean data
-export const checkRoom = async () => {
-  const info = await getInfo()
-  const { roomId, playerId } = info
-  if (roomId && playerId) {
-    const snapshot = await getRoomPlayers(roomId)
-    if (snapshot !== null) {
-      const roomPlayers: RoomPlayersDataType = createArrayFromObject(snapshot)
-      if (roomPlayers.length === 1) {
-        removeRoom(roomId)
-      } else {
-        const hasMaster = roomPlayers.map((player: PlayerDataType) => player.master).includes(true)
-        if (!hasMaster) {
-          updatePlayer(roomId, roomPlayers[0].id, { master: true })
-        }
-        removePlayer(roomId, playerId)
+export const checkRoom = async (roomId: string, playerId: string) => {
+  const snapshot = await getRoomPlayers(roomId)
+  if (snapshot !== null) {
+    const roomPlayers: IRoomPlayers = createArrayFromObject(snapshot)
+    if (roomPlayers.length === 1) {
+      removeRoom(roomId)
+    } else {
+      const hasMaster = roomPlayers.map((player: IPlayer) => player.master).includes(true)
+      if (!hasMaster) {
+        updatePlayer(roomId, roomPlayers[0].id, { master: true })
       }
-      clearInfo()
+      removePlayer(roomId, playerId)
     }
+    clearInfo()
+  } else {
+    removeRoom(roomId)
   }
 }

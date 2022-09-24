@@ -30,7 +30,7 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
     const id = Math.random().toString(36).substring(2, 8)
     const info = await getInfo()
     const { playerId, playerName, playerColor } = info
-    setInfo({ roomId: id, gameId: title })
+    await setInfo({ roomId: id, gameId: title })
     createRoom(id, { id: id, game: title })
     if (playerId !== undefined) {
       createPlayer(id, playerId, {

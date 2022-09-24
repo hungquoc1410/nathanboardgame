@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 
 import {
   Box,
+  Button,
   Chip,
   Paper,
   Table,
@@ -17,10 +18,13 @@ import {
 } from '@mui/material'
 
 import { createArrayFromObject } from '../../services/create-array-from-object'
-import { PlayerDataType, setRoomPlayersRef } from '../../services/firebase'
+import { IPlayer, IRoomPlayers, setRoomPlayersRef } from '../../services/firebase'
+import { getInfo } from '../../services/localforage'
 
 const RoomIndex: React.FC = () => {
-  const [data, setData] = React.useState([])
+  const [data, setData] = React.useState<IRoomPlayers>()
+  const [id, setId] = React.useState<string>()
+  const [you, setYou] = React.useState<IPlayer>()
   const theme = useTheme()
 
   const params = useParams()
@@ -32,15 +36,26 @@ const RoomIndex: React.FC = () => {
   }
 
   React.useEffect(() => {
+    const setUp = async () => {
+      const info = await getInfo()
+      if (info.playerId !== undefined) {
+        setId(info.playerId)
+      }
+    }
+
+    setUp()
+
     onValue(roomPlayersRef, (snap) => {
       if (snap.exists()) {
-        setData(createArrayFromObject(snap.val()))
+        const players = createArrayFromObject(snap.val())
+        setData(players)
+        setYou(players.filter((player: IPlayer) => player.id === id)[0])
       }
     })
   }, [])
 
   return (
-    <Box className='w-full flex justify-center'>
+    <Box className='w-full flex justify-center gap-10'>
       <Box className='w-1/3 mt-10'>
         <TableContainer component={Paper}>
           <Table>
@@ -52,7 +67,7 @@ const RoomIndex: React.FC = () => {
             </TableHead>
             <TableBody>
               {data &&
-                data.map((row: PlayerDataType) => {
+                data.map((row: IPlayer) => {
                   return (
                     <TableRow key={row.name} sx={{ backgroundColor: row.color }}>
                       <TableCell>
@@ -79,6 +94,24 @@ const RoomIndex: React.FC = () => {
                     </TableRow>
                   )
                 })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+      <Box className='w-1/6 mt-10'>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell align='center'>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell align='center'>
+                  {you && you.master && <Button>Start Game</Button>}
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
