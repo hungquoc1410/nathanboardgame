@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@mui/material'
 
-import { createPlayer, createRoom } from '../services/firebase'
+import { BLNewGame } from '../routes/room/blank-slate/services/blank-slate'
 import { GameInfo } from '../services/game-information'
 import { getInfo, setInfo } from '../services/localforage'
 
@@ -31,15 +31,12 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
     const info = await getInfo()
     const { playerId, playerName, playerColor } = info
     await setInfo({ roomId: id, gameId: title })
-    createRoom(id, { id: id, game: title })
-    if (playerId !== undefined) {
-      createPlayer(id, playerId, {
-        id: playerId,
-        name: playerName,
-        color: playerColor,
-        master: true,
-        phase: 'ready',
-      })
+    if (playerId && playerName && playerColor) {
+      switch (title) {
+        case 'Blank Slate':
+          BLNewGame(id, playerId, playerName, playerColor)
+          break
+      }
     }
     navigate(id)
   }

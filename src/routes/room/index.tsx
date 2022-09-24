@@ -24,7 +24,10 @@ import { getInfo } from '../../services/localforage'
 const RoomIndex: React.FC = () => {
   const [data, setData] = React.useState<IRoomPlayers>()
   const [id, setId] = React.useState<string>()
-  const [you, setYou] = React.useState<IPlayer>()
+  let you: IPlayer = { id: '', name: '', color: '', master: false, phase: '' }
+  if (data !== undefined) {
+    you = data.filter((player) => player.id === id)[0]
+  }
   const theme = useTheme()
 
   const params = useParams()
@@ -38,7 +41,7 @@ const RoomIndex: React.FC = () => {
   React.useEffect(() => {
     const setUp = async () => {
       const info = await getInfo()
-      if (info.playerId !== undefined) {
+      if (info.playerId && info.playerId !== id) {
         setId(info.playerId)
       }
     }
@@ -49,7 +52,6 @@ const RoomIndex: React.FC = () => {
       if (snap.exists()) {
         const players = createArrayFromObject(snap.val())
         setData(players)
-        setYou(players.filter((player: IPlayer) => player.id === id)[0])
       }
     })
   }, [])

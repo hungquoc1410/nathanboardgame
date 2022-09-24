@@ -27,7 +27,6 @@ export const Auth = getAuth(app)
 
 // Initialize Realtime Database and get a reference to the service
 export const Database = getDatabase(app)
-export const DatabaseRef = ref(Database)
 export const connectedRef = ref(Database, '.info/connected')
 
 // Initialize type
@@ -43,7 +42,7 @@ export type IPlayer = {
 export type IRoomPlayers = IPlayer[]
 
 // set ref
-export const setRoomRef = (roomId: string) => {
+const setRoomRef = (roomId: string) => {
   return ref(Database, `rooms/${roomId}`)
 }
 
@@ -58,23 +57,35 @@ export const setPlayerRef = (roomId: string, playerId: string) => {
 // Create data
 export const createRoom = (roomId: string, data: object) => {
   const roomRef = setRoomRef(roomId)
-  return set(roomRef, data)
+  updateAllRooms(roomId)
+  set(roomRef, data)
 }
 
 export const createPlayer = (roomId: string, playerId: string, data: object) => {
   const playerRef = setPlayerRef(roomId, playerId)
-  return set(playerRef, data)
+  set(playerRef, data)
 }
 
 // Remove data
-export const removeRoom = (roomId: string) => {
+const removeRoom = (roomId: string) => {
   const roomRef = setRoomRef(roomId)
   set(roomRef, null)
+  removeRoomId(roomId)
 }
 
-export const removePlayer = (roomId: string, playerId: string) => {
+const removePlayer = (roomId: string, playerId: string) => {
   const playerRef = setPlayerRef(roomId, playerId)
   set(playerRef, null)
+}
+
+const removeRoomId = async (roomId: string) => {
+  const snapshot = await getAllRoomsData()
+  if (snapshot?.ids) {
+    const allRoomIds = snapshot.ids
+    const index = allRoomIds.indexOf(roomId)
+    allRoomIds.splice(index, 1)
+    update(ref(Database, 'allRooms'), { ids: allRoomIds })
+  }
 }
 
 // Get data
@@ -83,27 +94,31 @@ export const getRoomsData = async () => {
   return snapshot.val()
 }
 
-export const getRoomData = async (roomId: string) => {
-  const roomRef = setRoomRef(roomId)
-  const snapshot = await get(query(roomRef))
-  return snapshot.val()
-}
-
-export const getRoomPlayers = async (roomId: string) => {
+const getRoomPlayers = async (roomId: string) => {
   const roomRef = setRoomPlayersRef(roomId)
   const data = await get(query(roomRef))
   return data.val()
 }
 
+export const getAllRoomsData = async () => {
+  const snapshot = await get(query(ref(Database, 'allRooms')))
+  return snapshot.val()
+}
+
 // Update data
 export const updatePlayer = (roomId: string, playerId: string, data: object) => {
   const playerRef = setPlayerRef(roomId, playerId)
-  return update(playerRef, data)
+  update(playerRef, data)
 }
 
-export const updateRoom = (roomId: string, data: object) => {
-  const roomRef = setRoomRef(roomId)
-  return update(roomRef, data)
+const updateAllRooms = async (roomId: string) => {
+  const snapshot = await getAllRoomsData()
+  let allRoomIds = [roomId]
+  if (snapshot?.ids) {
+    allRoomIds = snapshot.ids
+    allRoomIds.push(roomId)
+  }
+  update(ref(Database, 'allRooms'), { ids: allRoomIds })
 }
 
 // Clean data

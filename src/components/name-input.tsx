@@ -4,6 +4,7 @@ import { TextField } from '@mui/material'
 
 import { updatePlayer } from '../services/firebase'
 import { getInfo, setInfo } from '../services/localforage'
+import { generateName } from '../services/random-name'
 
 const NameInput: React.FC = () => {
   const [name, setName] = React.useState('')
@@ -24,8 +25,10 @@ const NameInput: React.FC = () => {
   React.useEffect(() => {
     const setUp = async () => {
       const info = await getInfo()
-      if (info.playerName !== undefined) {
+      if (info.playerName) {
         setName(info.playerName)
+      } else {
+        setName(generateName())
       }
     }
     setUp()
