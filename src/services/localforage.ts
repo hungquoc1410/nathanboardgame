@@ -3,7 +3,6 @@ import localforage from 'localforage'
 type Info = {
   playerId?: string
   roomId?: string
-  gameId?: string
   playerName?: string
   playerColor?: string
 }
@@ -42,7 +41,6 @@ export const clearInfo = async () => {
   const info = await getInfo()
   if (info !== undefined) {
     delete info['roomId']
-    delete info['gameId']
     await set(info)
   }
 }

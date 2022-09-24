@@ -7,7 +7,7 @@ import { Button, Chip, TableCell, TableRow, useTheme } from '@mui/material'
 import { BSPlayer } from '../routes/room/blank-slate/services/blank-slate'
 import { createArrayFromObject } from '../services/create-array-from-object'
 import { getRoomInfo, setRoomPlayersRef } from '../services/firebase'
-import { getInfo } from '../services/localforage'
+import { getInfo, setInfo } from '../services/localforage'
 
 const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
   const theme = useTheme()
@@ -20,6 +20,7 @@ const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
   }>()
 
   const joinRoom = async () => {
+    setInfo({ roomId: roomId })
     const info = await getInfo()
     const { playerId, playerName, playerColor } = info
     if (playerId && playerName && playerColor) {

@@ -46,12 +46,12 @@ const setRoomRef = (roomId: string) => {
   return ref(Database, `rooms/${roomId}`)
 }
 
-export const setRoomGameRef = (roomId: string) => {
-  return ref(Database, `rooms/${roomId}/game`)
-}
-
 export const setPlayerRef = (roomId: string, playerId: string) => {
   return ref(Database, `rooms/${roomId}/players/${playerId}`)
+}
+
+export const setRoomPlayersRef = (roomId: string) => {
+  return ref(Database, `rooms/${roomId}/players`)
 }
 
 // Create data
@@ -85,18 +85,17 @@ const removeRoomId = async (roomId: string) => {
     const index = allRoomIds.indexOf(roomId)
     allRoomIds.splice(index, 1)
     update(ref(Database, 'allRooms'), { ids: allRoomIds })
-    console.log('Run')
   }
 }
 
 // Get data
-export const getRoomsData = async () => {
-  const snapshot = await get(query(ref(Database, 'rooms')))
+const getAllRoomsData = async () => {
+  const snapshot = await get(query(ref(Database, 'allRooms/ids')))
   return snapshot.val()
 }
 
-export const getAllRoomsData = async () => {
-  const snapshot = await get(query(ref(Database, 'allRooms/ids')))
+export const getRoomInfo = async (roomId: string, key: string) => {
+  const snapshot = await get(query(ref(Database, `rooms/${roomId}/${key}`)))
   return snapshot.val()
 }
 
@@ -116,38 +115,24 @@ const updateAllRooms = async (roomId: string) => {
   update(ref(Database, 'allRooms'), { ids: allRoomIds })
 }
 
-export const getRoomInfo = async (roomId: string, key: string) => {
-  const snapshot = await get(query(ref(Database, `rooms/${roomId}/${key}`)))
-  return snapshot.val()
-}
-
-// Room Players
-export const setRoomPlayersRef = (roomId: string) => {
-  return ref(Database, `rooms/${roomId}/players`)
-}
-
-const getRoomPlayers = async (roomId: string) => {
-  const roomRef = setRoomPlayersRef(roomId)
-  const data = await get(query(roomRef))
-  return data.val()
-}
-
-// Clean data
+// Check data
 export const checkRoom = async (roomId: string, playerId: string) => {
-  const snapshot = await getRoomPlayers(roomId)
-  if (snapshot !== null) {
+  const snapshot = await getRoomInfo(roomId, 'players')
+  if (snapshot) {
     const roomPlayers: IRoomPlayers = createArrayFromObject(snapshot)
-    if (roomPlayers.length === 1) {
+    if (roomPlayers.length === 1 && roomPlayers[0].id === playerId) {
       removeRoom(roomId)
     } else {
-      const hasMaster = roomPlayers.map((player: IPlayer) => player.master).includes(true)
-      if (!hasMaster) {
-        updatePlayer(roomId, roomPlayers[0].id, { master: true })
-      }
       removePlayer(roomId, playerId)
     }
     clearInfo()
-  } else {
-    removeRoom(roomId)
+  }
+}
+
+export const checkMaster = (roomId: string, roomData: object) => {
+  const roomPlayers: IRoomPlayers = createArrayFromObject(roomData)
+  const hasMaster = roomPlayers.map((player: IPlayer) => player.master).includes(true)
+  if (!hasMaster) {
+    updatePlayer(roomId, roomPlayers[0].id, { master: true, phase: 'ready' })
   }
 }

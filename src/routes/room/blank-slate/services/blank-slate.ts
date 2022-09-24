@@ -40,7 +40,7 @@ export const BSPlayer = (
     name: name,
     color: color,
     master,
-    phase: 'waiting',
+    phase: master === true ? 'ready' : 'waiting',
   }
   createPlayer(roomId, playerId, playerData)
 }

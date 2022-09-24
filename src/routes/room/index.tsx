@@ -18,40 +18,58 @@ import {
 } from '@mui/material'
 
 import { createArrayFromObject } from '../../services/create-array-from-object'
-import { IPlayer, IRoomPlayers, setRoomPlayersRef } from '../../services/firebase'
+import {
+  checkMaster,
+  IPlayer,
+  IRoomPlayers,
+  setRoomPlayersRef,
+  updatePlayer,
+} from '../../services/firebase'
 import { getInfo } from '../../services/localforage'
 
 const RoomIndex: React.FC = () => {
+  const theme = useTheme()
+  const params = useParams()
   const [data, setData] = React.useState<IRoomPlayers>()
   const [id, setId] = React.useState<string>()
-  let you: IPlayer = { id: '', name: '', color: '', master: false, phase: '' }
-  if (data !== undefined) {
+  const [ready, setReady] = React.useState(false)
+
+  let you
+  if (data) {
     you = data.filter((player) => player.id === id)[0]
   }
-  const theme = useTheme()
-
-  const params = useParams()
 
   let roomPlayersRef: Query
-
-  if (params.roomId !== undefined) {
+  if (params.roomId) {
     roomPlayersRef = setRoomPlayersRef(params.roomId)
   }
 
   React.useEffect(() => {
+    if (params.roomId && id) {
+      if (ready) {
+        updatePlayer(params.roomId, id, { phase: 'ready' })
+      } else {
+        updatePlayer(params.roomId, id, { phase: 'waiting' })
+      }
+    }
+  }, [ready])
+
+  React.useEffect(() => {
     const setUp = async () => {
       const info = await getInfo()
-      if (info.playerId && info.playerId !== id) {
-        setId(info.playerId)
+      const { playerId } = info
+      if (id !== playerId) {
+        setId(playerId)
       }
     }
 
     setUp()
 
-    onValue(roomPlayersRef, (snap) => {
-      if (snap.exists()) {
-        const players = createArrayFromObject(snap.val())
-        setData(players)
+    return onValue(roomPlayersRef, (snap) => {
+      if (snap.exists() && params.roomId) {
+        const players: IRoomPlayers = createArrayFromObject(snap.val())
+        setData(players.reverse())
+        checkMaster(params.roomId, snap.val())
       }
     })
   }, [])
@@ -88,9 +106,17 @@ const RoomIndex: React.FC = () => {
                             sx={{ border: `2px solid ${theme.palette.getContrastText(row.color)}` }}
                           />
                         ) : row.phase === 'ready' ? (
-                          <Chip label='Ready' color='success' />
+                          <Chip
+                            label='Ready'
+                            color='success'
+                            sx={{ border: `2px solid ${theme.palette.getContrastText(row.color)}` }}
+                          />
                         ) : (
-                          <Chip label='Not Ready' color='error' />
+                          <Chip
+                            label='Not Ready'
+                            color='error'
+                            sx={{ border: `2px solid ${theme.palette.getContrastText(row.color)}` }}
+                          />
                         )}
                       </TableCell>
                     </TableRow>
@@ -105,13 +131,17 @@ const RoomIndex: React.FC = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell align='center'>Action</TableCell>
+                <TableCell align='center'>{`Room ID: ${params.roomId}`}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow>
                 <TableCell align='center'>
-                  {you && you.master && <Button>Start Game</Button>}
+                  {you && you.master ? (
+                    <Button>Start Game</Button>
+                  ) : (
+                    <Button onClick={() => setReady(!ready)}>Ready</Button>
+                  )}
                 </TableCell>
               </TableRow>
             </TableBody>
