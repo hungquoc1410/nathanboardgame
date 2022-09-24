@@ -34,7 +34,6 @@ export const setInfo = async (data: Info) => {
     })
     if (isAnInfo(info)) {
       await set(info)
-      return info
     }
   }
 }
@@ -45,6 +44,5 @@ export const clearInfo = async () => {
     delete info['roomId']
     delete info['gameId']
     await set(info)
-    return info
   }
 }

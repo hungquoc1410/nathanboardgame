@@ -34,6 +34,7 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
     createRoom(id, { id: id, game: title })
     if (playerId !== undefined) {
       createPlayer(id, playerId, {
+        id: playerId,
         name: playerName,
         color: playerColor,
         master: true,

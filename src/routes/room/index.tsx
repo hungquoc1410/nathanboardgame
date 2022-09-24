@@ -13,6 +13,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  useTheme,
 } from '@mui/material'
 
 import { createArrayFromObject } from '../../services/create-array-from-object'
@@ -20,6 +21,7 @@ import { PlayerDataType, setRoomPlayersRef } from '../../services/firebase'
 
 const RoomIndex: React.FC = () => {
   const [data, setData] = React.useState([])
+  const theme = useTheme()
 
   const params = useParams()
 
@@ -54,11 +56,20 @@ const RoomIndex: React.FC = () => {
                   return (
                     <TableRow key={row.name} sx={{ backgroundColor: row.color }}>
                       <TableCell>
-                        <Typography className='h-full'>{row.name}</Typography>
+                        <Typography
+                          className='h-full'
+                          sx={{ color: theme.palette.getContrastText(row.color) }}
+                        >
+                          {row.name}
+                        </Typography>
                       </TableCell>
                       <TableCell>
                         {row.master ? (
-                          <Chip label='Room Master' color='info' />
+                          <Chip
+                            label='Room Master'
+                            color='info'
+                            sx={{ border: `2px solid ${theme.palette.getContrastText(row.color)}` }}
+                          />
                         ) : row.phase === 'ready' ? (
                           <Chip label='Ready' color='success' />
                         ) : (

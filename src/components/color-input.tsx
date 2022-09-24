@@ -8,15 +8,15 @@ import { getInfo, setInfo } from '../services/localforage'
 
 const ColorInput: React.FC = () => {
   const [color, setColor] = React.useState(colors[0].value)
-  const [roomId, setRoomId] = React.useState('')
-  const [playerId, setPlayerId] = React.useState('')
 
   const changeColor = (event: SelectChangeEvent<string>) => {
     setColor(event.target.value)
   }
 
-  const updateBrower = () => {
+  const updateBrower = async () => {
     setInfo({ playerColor: color })
+    const info = await getInfo()
+    const { roomId, playerId } = info
     if (roomId && playerId) {
       updatePlayer(roomId, playerId, { color: color })
     }
@@ -27,12 +27,6 @@ const ColorInput: React.FC = () => {
       const info = await getInfo()
       if (info.playerColor) {
         setColor(info.playerColor)
-      }
-      if (info.roomId) {
-        setRoomId(info.roomId)
-      }
-      if (info.playerId) {
-        setPlayerId(info.playerId)
       }
     }
     setUp()

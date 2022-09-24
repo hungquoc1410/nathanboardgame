@@ -4,7 +4,7 @@ import { getAuth } from 'firebase/auth'
 import { get, getDatabase, query, ref, set, update } from 'firebase/database'
 
 import { createArrayFromObject } from './create-array-from-object'
-import { getInfo } from './localforage'
+import { clearInfo, getInfo } from './localforage'
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -112,15 +112,18 @@ export const checkRoom = async () => {
   const { roomId, playerId } = info
   if (roomId && playerId) {
     const snapshot = await getRoomPlayers(roomId)
-    const roomPlayers: RoomPlayersDataType = createArrayFromObject(snapshot)
-    if (roomPlayers.length === 1) {
-      removeRoom(roomId)
-    } else {
-      const hasMaster = roomPlayers.map((player: PlayerDataType) => player.master).includes(true)
-      if (!hasMaster) {
-        updatePlayer(roomId, roomPlayers[0].id, { master: true })
+    if (snapshot !== null) {
+      const roomPlayers: RoomPlayersDataType = createArrayFromObject(snapshot)
+      if (roomPlayers.length === 1) {
+        removeRoom(roomId)
+      } else {
+        const hasMaster = roomPlayers.map((player: PlayerDataType) => player.master).includes(true)
+        if (!hasMaster) {
+          updatePlayer(roomId, roomPlayers[0].id, { master: true })
+        }
+        removePlayer(roomId, playerId)
       }
-      removePlayer(roomId, playerId)
+      clearInfo()
     }
   }
 }
