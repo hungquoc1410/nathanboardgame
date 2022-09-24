@@ -22,7 +22,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
     </div>
   )
 }
@@ -45,10 +45,12 @@ const Index: React.FC = () => {
     <Box className='w-full flex justify-center'>
       <Box className='w-4/5 mt-10'>
         <Paper elevation={3}>
-          <Tabs value={value} onChange={handleChange} centered>
-            <Tab label='Create Room' {...a11yProps(0)} />
-            <Tab label='Join Room' {...a11yProps(1)} />
-          </Tabs>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs value={value} onChange={handleChange} centered>
+              <Tab label='Create Room' {...a11yProps(0)} />
+              <Tab label='Join Room' {...a11yProps(1)} />
+            </Tabs>
+          </Box>
           <TabPanel value={value} index={0}>
             <GameCarousel />
           </TabPanel>
