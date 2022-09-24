@@ -14,9 +14,10 @@ const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
   const navigate = useNavigate()
   const [players, setPlayers] = React.useState<number>()
   const [roomInfo, setRoomInfo] = React.useState<{
-    maxPlayer: string
+    maxPlayer: number
     title: string
     color: string
+    phase: string
   }>()
 
   const joinRoom = async () => {
@@ -35,7 +36,13 @@ const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
         const roomMaxPlayer = await getRoomInfo(roomId, 'maxPlayer')
         const roomTitle = await getRoomInfo(roomId, 'title')
         const roomColor = await getRoomInfo(roomId, 'color')
-        setRoomInfo({ maxPlayer: roomMaxPlayer, title: roomTitle, color: roomColor })
+        const roomPhase = await getRoomInfo(roomId, 'phase')
+        setRoomInfo({
+          maxPlayer: roomMaxPlayer,
+          title: roomTitle,
+          color: roomColor,
+          phase: roomPhase,
+        })
       }
     }
 
@@ -52,7 +59,7 @@ const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
 
   return (
     <>
-      {players && roomInfo && (
+      {players && roomInfo && players !== roomInfo.maxPlayer && roomInfo.phase === 'waiting' && (
         <TableRow>
           <TableCell>{roomId}</TableCell>
           <TableCell>{`${players}/${roomInfo.maxPlayer}`}</TableCell>
