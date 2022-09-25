@@ -1,14 +1,33 @@
 import React from 'react'
+import { onValue, Query } from 'firebase/database'
+import { useParams } from 'react-router-dom'
 
 import { Button, Divider, Paper, Stack, TextField, Typography } from '@mui/material'
 
+import { setRoomKeyRef } from '../../../../services/firebase'
+
 const PlayerAnswer: React.FC = () => {
+  const params = useParams()
+  const [word, setWord] = React.useState<string>()
   const [answer, setAnswer] = React.useState<string>('')
   const [submit, setSubmit] = React.useState(false)
+
+  let roomWordRef: Query
+  if (params.roomId) {
+    roomWordRef = setRoomKeyRef(params.roomId, 'current')
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswer(event.target.value)
   }
+
+  React.useEffect(() => {
+    return onValue(roomWordRef, (snap) => {
+      if (snap.exists()) {
+        setWord(snap.val())
+      }
+    })
+  }, [])
 
   return (
     <Paper className='w-full' elevation={6}>
@@ -26,7 +45,7 @@ const PlayerAnswer: React.FC = () => {
             </Typography>
           </Divider>
           <Typography variant='h2' align='center'>
-            Words
+            {word && word}
           </Typography>
           <Stack spacing={2} className='w-1/3 self-center'>
             <TextField label='One Word Only' value={answer} onChange={handleChange} />

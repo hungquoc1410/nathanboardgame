@@ -4,9 +4,9 @@ import { useParams } from 'react-router-dom'
 
 import { Button, Paper } from '@mui/material'
 
-import { setPlayerRef, updateRoom } from '../../../../services/firebase'
+import { setPlayerRef } from '../../../../services/firebase'
 import { getInfo, IInfo } from '../../../../services/localforage'
-import { IBLPlayer } from '../services/blank-slate'
+import { BSPlaying, IBLPlayer } from '../services/blank-slate'
 
 const PlayerActions: React.FC = () => {
   const params = useParams()
@@ -25,9 +25,9 @@ const PlayerActions: React.FC = () => {
     playerRef = setPlayerRef(params.roomId, info.playerId)
   }
 
-  const startGame = () => {
+  const startRound = () => {
     if (params.roomId) {
-      updateRoom(params.roomId, { phase: 'answer' })
+      BSPlaying(params.roomId)
     }
   }
 
@@ -38,7 +38,7 @@ const PlayerActions: React.FC = () => {
         case 'ready':
           switch (master) {
             case true:
-              return <Button onClick={() => startGame()}>Start Round</Button>
+              return <Button onClick={() => startRound()}>Start Round</Button>
             default:
               break
           }

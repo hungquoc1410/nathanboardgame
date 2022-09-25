@@ -24,8 +24,7 @@ import {
   getRoomInfo,
   IPlayer,
   IRoomPlayers,
-  setRoomPhaseRef,
-  setRoomPlayersRef,
+  setRoomKeyRef,
   updatePlayer,
   updateRoom,
 } from '../../services/firebase'
@@ -47,8 +46,8 @@ const RoomIndex: React.FC = () => {
   let roomPlayersRef: Query
   let roomPhaseRef: Query
   if (params.roomId) {
-    roomPlayersRef = setRoomPlayersRef(params.roomId)
-    roomPhaseRef = setRoomPhaseRef(params.roomId)
+    roomPlayersRef = setRoomKeyRef(params.roomId, 'players')
+    roomPhaseRef = setRoomKeyRef(params.roomId, 'phase')
   }
 
   const startGame = async () => {

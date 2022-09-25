@@ -3,7 +3,7 @@ import { onValue, Query } from 'firebase/database'
 import { useParams } from 'react-router-dom'
 
 import { createArrayFromObject } from '../../../services/create-array-from-object'
-import { checkMaster, setRoomPlayersRef } from '../../../services/firebase'
+import { checkMaster, setRoomKeyRef } from '../../../services/firebase'
 
 import PlayArea from './components/play-area'
 import PlayerActions from './components/player-actions'
@@ -16,7 +16,7 @@ const BLIndex: React.FC = () => {
 
   let roomPlayersRef: Query
   if (params.roomId) {
-    roomPlayersRef = setRoomPlayersRef(params.roomId)
+    roomPlayersRef = setRoomKeyRef(params.roomId, 'players')
   }
 
   const PlayerComponent: React.FC<{ index: number }> = ({ index }) => {

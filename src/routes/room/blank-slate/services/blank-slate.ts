@@ -1,7 +1,16 @@
+import _ from 'underscore'
+
 import { grey } from '@mui/material/colors'
 
-import { createPlayer, createRoom } from '../../../../services/firebase'
+import {
+  createPlayer,
+  createRoom,
+  getRoomInfo,
+  updatePlayer,
+  updateRoom,
+} from '../../../../services/firebase'
 
+import { createArrayFromObject } from './../../../../services/create-array-from-object'
 import { wordsData } from './words'
 
 export type IBLPlayer = {
@@ -53,4 +62,13 @@ export const BSPlayer = (
     phase: master === true ? 'ready' : 'waiting',
   }
   createPlayer(roomId, playerId, playerData)
+}
+
+export const BSPlaying = async (roomId: string) => {
+  const words = await getRoomInfo(roomId, 'words')
+  const word = _.shuffle(words).splice(0, 1)[0]
+  const snapshot = await getRoomInfo(roomId, 'players')
+  const players: IBLPlayer[] = createArrayFromObject(snapshot)
+  players.forEach((player) => updatePlayer(roomId, player.id, { phase: 'answer' }))
+  updateRoom(roomId, { current: word, words: words, phase: 'answer' })
 }

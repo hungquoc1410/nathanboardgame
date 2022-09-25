@@ -15,7 +15,7 @@ import {
 } from '@mui/material'
 
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
-import { setRoomPlayersRef } from '../../../../services/firebase'
+import { setRoomKeyRef } from '../../../../services/firebase'
 import { IBLPlayer } from '../services/blank-slate'
 
 const sortAnswer = (obj: IBLPlayer[]) => {
@@ -29,7 +29,7 @@ const PlayerTable: React.FC = () => {
 
   let roomPlayersRef: Query
   if (params.roomId) {
-    roomPlayersRef = setRoomPlayersRef(params.roomId)
+    roomPlayersRef = setRoomKeyRef(params.roomId, 'players')
   }
 
   React.useEffect(() => {
