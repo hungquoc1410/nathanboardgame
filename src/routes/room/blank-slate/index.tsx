@@ -49,7 +49,7 @@ const BLIndex: React.FC = () => {
         <PlayerComponent index={3} />
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-span-1 row-span-1 flex' />
-        <div className='col-start-10 col-end-12 row-start-1 row-end-7 flex'>
+        <div className='col-start-10 col-end-12 row-start-1 row-end-5 flex'>
           <PlayerActions />
         </div>
         <div className='col-span-1 row-span-1 flex' />
@@ -70,7 +70,7 @@ const BLIndex: React.FC = () => {
         <PlayerComponent index={4} />
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-span-1 row-span-1 flex' />
-        <div className='col-start-1 col-end-10 row-start-6 row-end-7 flex'>Information</div>
+        <div className='col-start-1 col-end-12 row-start-6 row-end-7 flex'>Information</div>
       </div>
     </div>
   )
