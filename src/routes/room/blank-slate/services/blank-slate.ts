@@ -88,11 +88,9 @@ export const BSRoomPoint = async (roomId: string) => {
   const snapshot = await getRoomInfo(roomId, 'players')
   const players: IBLPlayer[] = createArrayFromObject(snapshot)
   const allAnswers = players.map((player) => player.answer)
-  console.log(allAnswers)
   players.forEach((player) => {
-    if (player.phase !== 'point') {
+    if (player.phase === 'submit') {
       const repeatTimes = allAnswers.filter((answer) => answer === player.answer).length
-      console.log(repeatTimes)
       switch (repeatTimes) {
         case 1:
           updatePlayer(roomId, player.id, { phase: 'point' })
