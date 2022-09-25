@@ -6,11 +6,11 @@ import { Button, Paper } from '@mui/material'
 
 import { setPlayerRef, updateRoom } from '../../../../services/firebase'
 import { getInfo, IInfo } from '../../../../services/localforage'
-import { BSPlayerPhase, BSReset, BSRoomStart, IBLPlayer } from '../services/blank-slate'
+import { BSPlayerPhase, BSReset, BSRoomStart, IBSPlayer } from '../services/blank-slate'
 
 const PlayerActions: React.FC = () => {
   const params = useParams()
-  const [data, setData] = React.useState<IBLPlayer>()
+  const [data, setData] = React.useState<IBSPlayer>()
   const [info, setInfo] = React.useState<IInfo>()
 
   getInfo().then((value) => {

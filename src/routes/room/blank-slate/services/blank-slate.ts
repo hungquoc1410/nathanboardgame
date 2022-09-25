@@ -13,7 +13,7 @@ import {
 import { createArrayFromObject } from './../../../../services/create-array-from-object'
 import { wordsData } from './words'
 
-export type IBLPlayer = {
+export type IBSPlayer = {
   id: string
   points: number
   answer: string
@@ -65,7 +65,7 @@ export const BSPlayer = (
 
 export const BSRoomPlay = async (roomId: string) => {
   const snapshot = await getRoomInfo(roomId, 'players')
-  const players: IBLPlayer[] = createArrayFromObject(snapshot)
+  const players: IBSPlayer[] = createArrayFromObject(snapshot)
   players.forEach((player) => {
     if (player.phase !== 'ready') {
       updatePlayer(roomId, player.id, { phase: 'ready' })
@@ -78,14 +78,14 @@ export const BSRoomStart = async (roomId: string) => {
   const newWords = _.shuffle(words)
   const word = newWords.splice(0, 1)[0]
   const snapshot = await getRoomInfo(roomId, 'players')
-  const players: IBLPlayer[] = createArrayFromObject(snapshot)
+  const players: IBSPlayer[] = createArrayFromObject(snapshot)
   players.forEach((player) => updatePlayer(roomId, player.id, { phase: 'answer' }))
   updateRoom(roomId, { current: word, words: newWords, phase: 'answer' })
 }
 
 export const BSRoomPoint = async (roomId: string) => {
   const snapshot = await getRoomInfo(roomId, 'players')
-  const players: IBLPlayer[] = createArrayFromObject(snapshot)
+  const players: IBSPlayer[] = createArrayFromObject(snapshot)
   const allAnswers = players.map((player) => player.answer)
   players.forEach((player) => {
     if (player.phase === 'submit') {
@@ -107,7 +107,7 @@ export const BSRoomPoint = async (roomId: string) => {
 
 export const BSRoomEnd = async (roomId: string) => {
   const snapshot = await getRoomInfo(roomId, 'players')
-  const players: IBLPlayer[] = createArrayFromObject(snapshot)
+  const players: IBSPlayer[] = createArrayFromObject(snapshot)
   const allPoints = players.map((player) => player.points)
   const maxPoint = Math.max(...allPoints)
   if (maxPoint < 7) {
@@ -124,7 +124,7 @@ export const BSRoomEnd = async (roomId: string) => {
 
 export const BSReset = async (roomId: string) => {
   const snapshot = await getRoomInfo(roomId, 'players')
-  const players: IBLPlayer[] = createArrayFromObject(snapshot)
+  const players: IBSPlayer[] = createArrayFromObject(snapshot)
   players.forEach((player) => {
     updatePlayer(roomId, player.id, { points: 0, answer: '', phase: 'ready' })
   })
@@ -133,7 +133,7 @@ export const BSReset = async (roomId: string) => {
 
 export const BSPlayerPhase = async (roomId: string, playerPhase: string, roomPhase: string) => {
   const snapshot = await getRoomInfo(roomId, 'players')
-  const players: IBLPlayer[] = createArrayFromObject(snapshot)
+  const players: IBSPlayer[] = createArrayFromObject(snapshot)
   const allSubmit = !players.map((player) => player.phase === playerPhase).includes(false)
   if (allSubmit) {
     updateRoom(roomId, { phase: roomPhase })

@@ -8,11 +8,11 @@ import { checkMaster, setRoomKeyRef } from '../../../services/firebase'
 import PlayArea from './components/play-area'
 import PlayerActions from './components/player-actions'
 import PlayerAvatar from './components/player-avatar'
-import { IBLPlayer } from './services/blank-slate'
+import { IBSPlayer } from './services/blank-slate'
 
 const BLIndex: React.FC = () => {
   const params = useParams()
-  const [data, setData] = React.useState<IBLPlayer[]>()
+  const [data, setData] = React.useState<IBSPlayer[]>()
 
   let roomPlayersRef: Query
   if (params.roomId) {

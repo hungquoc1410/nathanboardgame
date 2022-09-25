@@ -2,10 +2,10 @@ import React from 'react'
 
 import { Avatar, useTheme } from '@mui/material'
 
-import { IBLPlayer } from '../services/blank-slate'
+import { IBSPlayer } from '../services/blank-slate'
 
 interface PlayerAvatarProps {
-  data: IBLPlayer
+  data: IBSPlayer
 }
 
 const PlayerAvatar: React.FC<PlayerAvatarProps> = ({ data }) => {
