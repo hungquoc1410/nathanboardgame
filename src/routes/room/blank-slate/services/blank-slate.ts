@@ -73,3 +73,12 @@ export const BSPlay = async (roomId: string) => {
   players.forEach((player) => updatePlayer(roomId, player.id, { phase: 'answer' }))
   updateRoom(roomId, { current: word, words: newWords, phase: 'answer' })
 }
+
+export const BSAnswer = async (roomId: string) => {
+  const snapshot = await getRoomInfo(roomId, 'players')
+  const players: IBLPlayer[] = createArrayFromObject(snapshot)
+  const allSubmit = !players.map((player) => player.phase === 'submit').includes(false)
+  if (allSubmit) {
+    updateRoom(roomId, { phase: 'point' })
+  }
+}

@@ -6,7 +6,7 @@ import { Button, Paper } from '@mui/material'
 
 import { setPlayerRef } from '../../../../services/firebase'
 import { getInfo, IInfo } from '../../../../services/localforage'
-import { BSPlay, IBLPlayer } from '../services/blank-slate'
+import { BSAnswer, BSPlay, IBLPlayer } from '../services/blank-slate'
 
 const PlayerActions: React.FC = () => {
   const params = useParams()
@@ -51,8 +51,16 @@ const PlayerActions: React.FC = () => {
   React.useEffect(() => {
     if (info) {
       return onValue(playerRef, (snap) => {
-        if (snap.exists()) {
+        if (snap.exists() && params.roomId) {
           setData(snap.val())
+          switch (snap.val().phase) {
+            case 'submit':
+              BSAnswer(params.roomId)
+              break
+
+            default:
+              break
+          }
         }
       })
     }
