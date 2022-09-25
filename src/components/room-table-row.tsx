@@ -48,7 +48,7 @@ const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
     setUp()
 
     const roomNumOfPlayersRef = setRoomNumOfPlayersRef(roomId)
-    onValue(roomNumOfPlayersRef, (snap) => {
+    return onValue(roomNumOfPlayersRef, (snap) => {
       if (snap.exists()) {
         setPlayers(snap.val())
       }

@@ -47,7 +47,7 @@ const Layout: React.FC = () => {
       }
     })
 
-    onValue(connectedRef, (snap) => {
+    return onValue(connectedRef, (snap) => {
       if (snap.val() === true) {
         setOpen(false)
       }

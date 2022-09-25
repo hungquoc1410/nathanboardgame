@@ -1,4 +1,6 @@
 import React from 'react'
+import { onValue } from 'firebase/database'
+import { useParams } from 'react-router-dom'
 
 import { Paper } from '@mui/material'
 

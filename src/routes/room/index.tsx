@@ -68,6 +68,18 @@ const RoomIndex: React.FC = () => {
   }, [ready])
 
   React.useEffect(() => {
+    return onValue(roomPhaseRef, async (snap) => {
+      if (snap.exists()) {
+        const phase = snap.val()
+        if (phase === 'playing' && params.roomId) {
+          const game = await getRoomInfo(params.roomId, 'game')
+          navigate(game)
+        }
+      }
+    })
+  }, [])
+
+  React.useEffect(() => {
     const setUp = async () => {
       const info = await getInfo()
       const { playerId } = info
@@ -78,22 +90,12 @@ const RoomIndex: React.FC = () => {
 
     setUp()
 
-    onValue(roomPlayersRef, (snap) => {
+    return onValue(roomPlayersRef, (snap) => {
       if (snap.exists() && params.roomId) {
         const players: IRoomPlayers = createArrayFromObject(snap.val())
         setData(players)
         updateRoom(params.roomId, { numOfPlayers: players.length })
         checkMaster(params.roomId, snap.val())
-      }
-    })
-
-    onValue(roomPhaseRef, async (snap) => {
-      if (snap.exists()) {
-        const phase = snap.val()
-        if (phase === 'playing' && params.roomId) {
-          const game = await getRoomInfo(params.roomId, 'game')
-          navigate(game)
-        }
       }
     })
   }, [])

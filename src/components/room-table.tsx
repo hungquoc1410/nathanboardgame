@@ -19,7 +19,7 @@ const RoomTable: React.FC = () => {
   const [data, setData] = React.useState<string[]>()
 
   React.useEffect(() => {
-    onValue(ref(Database, 'allRooms/ids'), (snap) => {
+    return onValue(ref(Database, 'allRooms/ids'), (snap) => {
       if (snap.exists()) {
         setData(snap.val())
       } else {
