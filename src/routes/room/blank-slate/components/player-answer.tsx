@@ -4,10 +4,12 @@ import { useParams } from 'react-router-dom'
 
 import { Button, Divider, Paper, Stack, TextField, Typography } from '@mui/material'
 
-import { setRoomKeyRef } from '../../../../services/firebase'
+import { setRoomKeyRef, updatePlayer } from '../../../../services/firebase'
+import { getInfo, IInfo } from '../../../../services/localforage'
 
 const PlayerAnswer: React.FC = () => {
   const params = useParams()
+  const [info, setInfo] = React.useState<IInfo>()
   const [word, setWord] = React.useState<string>()
   const [answer, setAnswer] = React.useState<string>('')
   const [submit, setSubmit] = React.useState(false)
@@ -17,9 +19,21 @@ const PlayerAnswer: React.FC = () => {
     roomWordRef = setRoomKeyRef(params.roomId, 'current')
   }
 
+  getInfo().then((value) => {
+    if (value && value !== info) {
+      setInfo(value)
+    }
+  })
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswer(event.target.value)
   }
+
+  React.useEffect(() => {
+    if (info && info.playerId && submit && params.roomId) {
+      updatePlayer(params.roomId, info.playerId, { answer: answer.toUpperCase(), phase: 'submit' })
+    }
+  }, [submit])
 
   React.useEffect(() => {
     return onValue(roomWordRef, (snap) => {

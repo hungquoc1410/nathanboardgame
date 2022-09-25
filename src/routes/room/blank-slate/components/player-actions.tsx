@@ -6,14 +6,12 @@ import { Button, Paper } from '@mui/material'
 
 import { setPlayerRef } from '../../../../services/firebase'
 import { getInfo, IInfo } from '../../../../services/localforage'
-import { BSPlaying, IBLPlayer } from '../services/blank-slate'
+import { BSPlay, IBLPlayer } from '../services/blank-slate'
 
 const PlayerActions: React.FC = () => {
   const params = useParams()
   const [data, setData] = React.useState<IBLPlayer>()
   const [info, setInfo] = React.useState<IInfo>()
-
-  let playerRef: Query
 
   getInfo().then((value) => {
     if (value && value !== info) {
@@ -21,13 +19,14 @@ const PlayerActions: React.FC = () => {
     }
   })
 
+  let playerRef: Query
   if (info && info.playerId && params.roomId) {
     playerRef = setPlayerRef(params.roomId, info.playerId)
   }
 
   const startRound = () => {
     if (params.roomId) {
-      BSPlaying(params.roomId)
+      BSPlay(params.roomId)
     }
   }
 

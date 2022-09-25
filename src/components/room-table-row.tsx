@@ -57,7 +57,7 @@ const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
 
   return (
     <>
-      {players && roomInfo && players !== roomInfo.maxPlayer && roomInfo.phase === 'waiting' && (
+      {players && roomInfo && players !== roomInfo.maxPlayer && roomInfo.phase === 'wait' && (
         <TableRow>
           <TableCell>{roomId}</TableCell>
           <TableCell>{`${players}/${roomInfo.maxPlayer}`}</TableCell>

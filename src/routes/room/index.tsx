@@ -52,7 +52,7 @@ const RoomIndex: React.FC = () => {
 
   const startGame = async () => {
     if (params.roomId) {
-      updateRoom(params.roomId, { phase: 'playing' })
+      updateRoom(params.roomId, { phase: 'play' })
     }
   }
 
@@ -61,7 +61,7 @@ const RoomIndex: React.FC = () => {
       if (ready) {
         updatePlayer(params.roomId, id, { phase: 'ready' })
       } else {
-        updatePlayer(params.roomId, id, { phase: 'waiting' })
+        updatePlayer(params.roomId, id, { phase: 'wait' })
       }
     }
   }, [ready])
@@ -70,7 +70,7 @@ const RoomIndex: React.FC = () => {
     return onValue(roomPhaseRef, async (snap) => {
       if (snap.exists()) {
         const phase = snap.val()
-        if (phase === 'playing' && params.roomId) {
+        if (phase === 'play' && params.roomId) {
           const game = await getRoomInfo(params.roomId, 'game')
           navigate(game)
         }

@@ -40,7 +40,7 @@ export const BSRoom = (roomId: string) => {
     current: '',
     round: 0,
     numOfPlayers: 1,
-    phase: 'waiting',
+    phase: 'wait',
   }
   createRoom(roomId, roomData)
 }
@@ -59,16 +59,17 @@ export const BSPlayer = (
     name: name,
     color: color,
     master,
-    phase: master === true ? 'ready' : 'waiting',
+    phase: master === true ? 'ready' : 'wait',
   }
   createPlayer(roomId, playerId, playerData)
 }
 
-export const BSPlaying = async (roomId: string) => {
+export const BSPlay = async (roomId: string) => {
   const words = await getRoomInfo(roomId, 'words')
-  const word = _.shuffle(words).splice(0, 1)[0]
+  const newWords = _.shuffle(words)
+  const word = newWords.splice(0, 1)[0]
   const snapshot = await getRoomInfo(roomId, 'players')
   const players: IBLPlayer[] = createArrayFromObject(snapshot)
   players.forEach((player) => updatePlayer(roomId, player.id, { phase: 'answer' }))
-  updateRoom(roomId, { current: word, words: words, phase: 'answer' })
+  updateRoom(roomId, { current: word, words: newWords, phase: 'answer' })
 }
