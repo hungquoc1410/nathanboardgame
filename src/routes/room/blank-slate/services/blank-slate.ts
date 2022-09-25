@@ -38,7 +38,6 @@ export const BSRoom = (roomId: string) => {
     maxPlayer: 8,
     words: wordsData,
     current: '',
-    round: 0,
     numOfPlayers: 1,
     phase: 'wait',
   }
@@ -104,6 +103,32 @@ export const BSRoomPoint = async (roomId: string) => {
       }
     }
   })
+}
+
+export const BSRoomEnd = async (roomId: string) => {
+  const snapshot = await getRoomInfo(roomId, 'players')
+  const players: IBLPlayer[] = createArrayFromObject(snapshot)
+  const allPoints = players.map((player) => player.points)
+  const maxPoint = Math.max(...allPoints)
+  if (maxPoint < 7) {
+    updateRoom(roomId, { phase: 'play' })
+  } else {
+    players.forEach((player) => {
+      if (player.phase === 'point') {
+        updatePlayer(roomId, player.id, { phase: 'end' })
+      }
+    })
+    updateRoom(roomId, { phase: 'end' })
+  }
+}
+
+export const BSReset = async (roomId: string) => {
+  const snapshot = await getRoomInfo(roomId, 'players')
+  const players: IBLPlayer[] = createArrayFromObject(snapshot)
+  players.forEach((player) => {
+    updatePlayer(roomId, player.id, { points: 0, answer: '', phase: 'ready' })
+  })
+  updateRoom(roomId, { words: wordsData, current: '' })
 }
 
 export const BSPlayerPhase = async (roomId: string, playerPhase: string, roomPhase: string) => {

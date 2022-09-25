@@ -1,17 +1,18 @@
 import React from 'react'
 import { onValue, Query } from 'firebase/database'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { Paper } from '@mui/material'
 
 import { setRoomKeyRef } from '../../../../services/firebase'
-import { BSRoomPlay, BSRoomPoint } from '../services/blank-slate'
+import { BSRoomEnd, BSRoomPlay, BSRoomPoint } from '../services/blank-slate'
 
 import PlayerAnswer from './player-answer'
 import PlayerTable from './player-table'
 
 const PlayArea: React.FC = () => {
   const params = useParams()
+  const navigate = useNavigate()
   const [phase, setPhase] = React.useState<string>()
 
   let roomPhaseRef: Query
@@ -30,7 +31,11 @@ const PlayArea: React.FC = () => {
           case 'point':
             BSRoomPoint(params.roomId)
             break
-          default:
+          case 'end':
+            BSRoomEnd(params.roomId)
+            break
+          case 'wait':
+            navigate(-1)
             break
         }
       }
@@ -43,6 +48,7 @@ const PlayArea: React.FC = () => {
         <div className='flex w-full h-full py-10 px-20 justify-center items-center'>
           {phase && phase === 'play' && <PlayerTable />}
           {phase && phase === 'answer' && <PlayerAnswer />}
+          {phase && phase === 'end' && <div>End</div>}
         </div>
       </Paper>
     </div>

@@ -4,9 +4,9 @@ import { useParams } from 'react-router-dom'
 
 import { Button, Paper } from '@mui/material'
 
-import { setPlayerRef } from '../../../../services/firebase'
+import { setPlayerRef, updateRoom } from '../../../../services/firebase'
 import { getInfo, IInfo } from '../../../../services/localforage'
-import { BSPlayerPhase, BSRoomStart, IBLPlayer } from '../services/blank-slate'
+import { BSPlayerPhase, BSReset, BSRoomStart, IBLPlayer } from '../services/blank-slate'
 
 const PlayerActions: React.FC = () => {
   const params = useParams()
@@ -30,16 +30,34 @@ const PlayerActions: React.FC = () => {
     }
   }
 
+  const newGame = () => {
+    if (params.roomId) {
+      BSReset(params.roomId)
+    }
+  }
+
+  const backToWait = () => {
+    if (params.roomId) {
+      BSReset(params.roomId)
+      updateRoom(params.roomId, { phase: 'wait' })
+    }
+  }
+
   const actions = () => {
     if (data) {
       const { phase, master } = data
-      switch (phase) {
-        case 'ready':
-          switch (master) {
-            case true:
+      switch (master) {
+        case true:
+          switch (phase) {
+            case 'ready':
               return <Button onClick={() => startRound()}>Start Round</Button>
-            default:
-              break
+            case 'end':
+              return (
+                <div className='flex flex-col gap-4'>
+                  <Button onClick={() => newGame()}>Start a new round</Button>
+                  <Button onClick={() => backToWait()}>Back to waiting room</Button>
+                </div>
+              )
           }
           break
         default:
@@ -58,7 +76,7 @@ const PlayerActions: React.FC = () => {
               BSPlayerPhase(params.roomId, 'submit', 'point')
               break
             case 'point':
-              BSPlayerPhase(params.roomId, 'point', 'play')
+              BSPlayerPhase(params.roomId, 'point', 'end')
               break
           }
         }
