@@ -6,7 +6,7 @@ import { Button, Paper } from '@mui/material'
 
 import { setPlayerRef } from '../../../../services/firebase'
 import { getInfo, IInfo } from '../../../../services/localforage'
-import { BSAnswer, BSPlay, IBLPlayer } from '../services/blank-slate'
+import { BSPlayerPhase, BSRoomStart, IBLPlayer } from '../services/blank-slate'
 
 const PlayerActions: React.FC = () => {
   const params = useParams()
@@ -26,7 +26,7 @@ const PlayerActions: React.FC = () => {
 
   const startRound = () => {
     if (params.roomId) {
-      BSPlay(params.roomId)
+      BSRoomStart(params.roomId)
     }
   }
 
@@ -55,10 +55,10 @@ const PlayerActions: React.FC = () => {
           setData(snap.val())
           switch (snap.val().phase) {
             case 'submit':
-              BSAnswer(params.roomId)
+              BSPlayerPhase(params.roomId, 'submit', 'point')
               break
-
-            default:
+            case 'point':
+              BSPlayerPhase(params.roomId, 'point', 'play')
               break
           }
         }

@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import { Paper } from '@mui/material'
 
 import { setRoomKeyRef } from '../../../../services/firebase'
+import { BSRoomPlay, BSRoomPoint } from '../services/blank-slate'
 
 import PlayerAnswer from './player-answer'
 import PlayerTable from './player-table'
@@ -20,8 +21,18 @@ const PlayArea: React.FC = () => {
 
   React.useEffect(() => {
     return onValue(roomPhaseRef, (snap) => {
-      if (snap.exists()) {
+      if (snap.exists() && params.roomId) {
         setPhase(snap.val())
+        switch (snap.val()) {
+          case 'play':
+            BSRoomPlay(params.roomId)
+            break
+          case 'point':
+            BSRoomPoint(params.roomId)
+            break
+          default:
+            break
+        }
       }
     })
   }, [])
