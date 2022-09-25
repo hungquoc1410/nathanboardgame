@@ -67,10 +67,10 @@ export const createPlayer = (roomId: string, playerId: string, data: object) => 
 }
 
 // Remove data
-const removeRoom = async (roomId: string) => {
-  await removeRoomId(roomId)
+const removeRoom = (roomId: string) => {
   const roomRef = setRoomRef(roomId)
   set(roomRef, null)
+  removeRoomId(roomId)
 }
 
 const removePlayer = (roomId: string, playerId: string) => {
@@ -81,10 +81,9 @@ const removePlayer = (roomId: string, playerId: string) => {
 const removeRoomId = async (roomId: string) => {
   const snapshot = await getAllRoomsData()
   if (snapshot) {
-    const allRoomIds = snapshot
-    const index = allRoomIds.indexOf(roomId)
-    allRoomIds.splice(index, 1)
-    update(ref(Database, 'allRooms'), { ids: allRoomIds })
+    const index = snapshot.indexOf(roomId)
+    snapshot.splice(index, 1)
+    update(ref(Database, 'allRooms'), { ids: snapshot })
   }
 }
 
@@ -112,12 +111,12 @@ export const updateRoom = (roomId: string, data: object) => {
 
 const updateAllRooms = async (roomId: string) => {
   const snapshot = await getAllRoomsData()
-  let allRoomIds = [roomId]
-  if (snapshot?.ids) {
-    allRoomIds = snapshot.ids
-    allRoomIds.push(roomId)
+  if (snapshot) {
+    snapshot.push(roomId)
+    update(ref(Database, 'allRooms'), { ids: snapshot })
+  } else {
+    update(ref(Database, 'allRooms'), { ids: [roomId] })
   }
-  update(ref(Database, 'allRooms'), { ids: allRoomIds })
 }
 
 // Check data
