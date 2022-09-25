@@ -7,6 +7,7 @@ import {
   Button,
   Chip,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -100,7 +101,7 @@ const RoomIndex: React.FC = () => {
   return (
     <Box className='w-full flex justify-center gap-10'>
       <Box className='w-1/3 mt-10'>
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} elevation={3}>
           <Table>
             <TableHead>
               <TableRow>
@@ -150,26 +151,42 @@ const RoomIndex: React.FC = () => {
         </TableContainer>
       </Box>
       <Box className='w-1/6 mt-10'>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell align='center'>{`Room ID: ${params.roomId}`}</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <TableCell align='center'>
-                  {you && you.master ? (
-                    <Button onClick={() => startGame()}>Start Game</Button>
-                  ) : (
-                    <Button onClick={() => setReady(!ready)}>Ready</Button>
-                  )}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Stack spacing={2}>
+          <TableContainer component={Paper} elevation={3}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell align='center'>{`Room ID: ${params.roomId}`}</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell align='center'>
+                    {you && you.master ? (
+                      <Button onClick={() => startGame()}>Start Game</Button>
+                    ) : (
+                      <Button onClick={() => setReady(!ready)}>Ready</Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TableContainer component={Paper} elevation={3}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell align='center'>How to Play?</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell align='center'>Some Instructions</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Stack>
       </Box>
     </Box>
   )
