@@ -35,6 +35,7 @@ export const setInfo = async (data: IInfo) => {
       await set(info)
     }
   }
+  return info
 }
 
 export const clearInfo = async () => {

@@ -7,13 +7,15 @@ import { AppBar, Backdrop, Box, CircularProgress, Toolbar } from '@mui/material'
 
 import DesktopHeader from '../components/desktop-header'
 import MobileHeader from '../components/mobile-header'
+import NameColorModal from '../components/name-color-modal'
 import { Auth, checkRoom, connectedRef, setPlayerRef } from '../services/firebase'
 import { getInfo, setInfo } from '../services/localforage'
 
 signInAnonymously(Auth)
 
 const Layout: React.FC = () => {
-  const [open, setOpen] = React.useState<boolean>(true)
+  const [openModal, setOpenModal] = React.useState(false)
+  const [openBackdrop, setOpenBackdrop] = React.useState(true)
   const [roomId, setRoomId] = React.useState<string>()
   const [playerId, setPlayerId] = React.useState<string>()
   const location = useLocation()
@@ -32,10 +34,13 @@ const Layout: React.FC = () => {
   React.useEffect(() => {
     const setUp = async () => {
       const info = await getInfo()
-      const { roomId, playerId } = info
+      const { roomId, playerId, playerName, playerColor } = info
       if (roomId && playerId) {
         setRoomId(roomId)
         setPlayerId(playerId)
+      }
+      if (!playerName || !playerColor) {
+        setOpenModal(true)
       }
     }
 
@@ -49,7 +54,7 @@ const Layout: React.FC = () => {
 
     return onValue(connectedRef, (snap) => {
       if (snap.val() === true) {
-        setOpen(false)
+        setOpenBackdrop(false)
       }
     })
   }, [location])
@@ -69,9 +74,13 @@ const Layout: React.FC = () => {
         </Box>
       </AppBar>
       <Outlet />
-      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={open}>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={openBackdrop}
+      >
         <CircularProgress color='inherit' />
       </Backdrop>
+      <NameColorModal open={openModal} setOpen={setOpenModal} />
     </>
   )
 }
