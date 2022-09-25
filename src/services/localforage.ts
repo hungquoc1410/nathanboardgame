@@ -1,23 +1,23 @@
 import localforage from 'localforage'
 
-type Info = {
+export type IInfo = {
   playerId?: string
   roomId?: string
   playerName?: string
   playerColor?: string
 }
 
-type InfoKeys = keyof Info
+type IInfoKeys = keyof IInfo
 
-const isAnInfo = (obj: object | unknown): obj is Info => {
+const isAnInfo = (obj: object | unknown): obj is IInfo => {
   return typeof obj === 'object' && obj !== null && 'playerId' in obj
 }
 
-const set = (info: Info) => {
+const set = (info: IInfo) => {
   return localforage.setItem('info', info)
 }
 
-export const getInfo = async (): Promise<Info> => {
+export const getInfo = async (): Promise<IInfo> => {
   const info = await localforage.getItem('info')
   if (isAnInfo(info)) {
     return info
@@ -25,11 +25,11 @@ export const getInfo = async (): Promise<Info> => {
   return {}
 }
 
-export const setInfo = async (data: Info) => {
+export const setInfo = async (data: IInfo) => {
   const info = await getInfo()
   if (info !== undefined) {
     Object.keys(data).forEach((key) => {
-      info[key as InfoKeys] = data[key as InfoKeys]
+      info[key as IInfoKeys] = data[key as IInfoKeys]
     })
     if (isAnInfo(info)) {
       await set(info)

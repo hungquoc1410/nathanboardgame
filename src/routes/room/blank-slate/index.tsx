@@ -6,6 +6,7 @@ import { createArrayFromObject } from '../../../services/create-array-from-objec
 import { checkMaster, setRoomPlayersRef } from '../../../services/firebase'
 
 import PlayArea from './components/play-area'
+import PlayerActions from './components/player-actions'
 import PlayerAvatar from './components/player-avatar'
 import { IBLPlayer } from './services/blank-slate'
 
@@ -48,7 +49,9 @@ const BLIndex: React.FC = () => {
         <PlayerComponent index={3} />
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-span-1 row-span-1 flex' />
-        <div className='col-start-10 col-end-12 row-start-1 row-end-7 flex'>Actions</div>
+        <div className='col-start-10 col-end-12 row-start-1 row-end-7 flex'>
+          <PlayerActions />
+        </div>
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-start-2 col-end-9 row-start-2 row-end-5 flex'>
           <PlayArea />
