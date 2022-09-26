@@ -20,8 +20,9 @@ export type ICAHPlayer = {
   name: string
   color: string
   master: boolean
-  phase: string
   drawer: boolean
+  phase: string
+  choseCard: string
   currentWhites: string[]
 }
 
@@ -65,6 +66,7 @@ export const CAHPlayer = (
     master,
     drawer,
     phase: master === true ? 'ready' : 'wait',
+    choseCard: '',
     currentWhites: [],
   }
   createPlayer(roomId, playerId, playerData)
@@ -121,7 +123,9 @@ export const CAHPlayerReceive = async (roomId: string) => {
   const snapshot = await getRoomInfo(roomId, 'players')
   const players: ICAHPlayer[] = createArrayFromObject(snapshot)
   const allReceive = !players.map((player) => player.phase === 'receive').includes(false)
+  const drawerPlayer = players.filter((player) => player.drawer)[0]
   if (allReceive) {
+    updatePlayer(roomId, drawerPlayer.id, { phase: 'submit' })
     updateRoom(roomId, { phase: 'submit' })
   }
 }

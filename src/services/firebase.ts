@@ -54,6 +54,10 @@ export const setRoomKeyRef = (roomId: string, key: string) => {
   return ref(Database, `rooms/${roomId}/${key}`)
 }
 
+export const setPlayerKeyRef = (roomId: string, playerId: string, key: string) => {
+  return ref(Database, `rooms/${roomId}/players/${playerId}/${key}`)
+}
+
 // Create data
 export const createRoom = (roomId: string, data: object) => {
   const roomRef = setRoomRef(roomId)

@@ -8,6 +8,7 @@ import { setRoomKeyRef } from '../../../../services/firebase'
 import { CAHRoomWhite } from '../services/cah'
 
 import BlackCard from './black-card'
+import WhiteCards from './white-cards'
 
 const CAHPlayArea: React.FC = () => {
   const params = useParams()
@@ -34,11 +35,13 @@ const CAHPlayArea: React.FC = () => {
       }
     })
   }, [])
+
   return (
-    <div className='p-1 flex-1 bg-gradient-to-br from-blue-500 to-pink-500 rounded-3xl'>
+    <div className='p-1 flex-1 bg-gradient-to-br from-blue-500 to-pink-500 rounded-3xl max-w-full'>
       <Paper elevation={3} sx={{ borderRadius: 6 }}>
-        <div className='flex w-full h-full py-10 px-20 justify-center items-center'>
-          {phase && phase === 'black' && <BlackCard />}
+        <div className='flex w-full h-full py-10 px-20 justify-center items-center flex-col gap-4'>
+          {phase && (phase === 'black' || phase === 'submit') && <BlackCard />}
+          {phase && phase === 'submit' && <WhiteCards />}
         </div>
       </Paper>
     </div>

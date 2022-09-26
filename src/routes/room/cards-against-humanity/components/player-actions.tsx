@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 
 import { Button, Paper } from '@mui/material'
 
-import { setPlayerRef, updateRoom } from '../../../../services/firebase'
+import { setPlayerRef, updatePlayer, updateRoom } from '../../../../services/firebase'
 import { getInfo, IInfo } from '../../../../services/localforage'
 import { CAHPlayerDraw, CAHPlayerReceive, CAHStart, ICAHPlayer } from '../services/cah'
 
@@ -49,9 +49,15 @@ const CAHPlayerActions: React.FC = () => {
     }
   }
 
-  const confirmCard = () => {
+  const confirmBlackCard = () => {
     if (params.roomId) {
       updateRoom(params.roomId, { phase: 'white' })
+    }
+  }
+
+  const confirmWhiteCard = () => {
+    if (params.roomId && info && info.playerId) {
+      updatePlayer(params.roomId, info.playerId, { phase: 'submit' })
     }
   }
 
@@ -91,18 +97,22 @@ const CAHPlayerActions: React.FC = () => {
               return (
                 <>
                   <Button onClick={() => drawCard()}>Draw a card</Button>
-                  <Button onClick={() => confirmCard()} color='secondary'>
+                  <Button onClick={() => confirmBlackCard()} color='secondary'>
                     Confirm
                   </Button>
                 </>
               )
-
             default:
               break
           }
           break
-
         default:
+          switch (phase) {
+            case 'receive':
+              return <Button onClick={() => confirmWhiteCard()}>Confirm</Button>
+            default:
+              break
+          }
           break
       }
     }

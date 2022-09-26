@@ -24,7 +24,7 @@ const BlackCard: React.FC = () => {
   return (
     <>
       {black && (
-        <div className='max-h-96 aspect-[492/683]'>
+        <div className='max-h-72 aspect-[492/683]'>
           <img
             className='aspect-[492/683]'
             src={`/games/cards-against-humanity/black-cards/${black}`}
