@@ -23,7 +23,7 @@ export type IBSPlayer = {
   phase: string
 }
 
-export const BLNewGame = (roomId: string, playerId: string, name: string, color: string) => {
+export const BSNewGame = (roomId: string, playerId: string, name: string, color: string) => {
   BSRoom(roomId)
   BSPlayer(roomId, playerId, name, color, true)
 }

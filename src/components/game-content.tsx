@@ -13,7 +13,8 @@ import {
   Typography,
 } from '@mui/material'
 
-import { BLNewGame } from '../routes/room/blank-slate/services/blank-slate'
+import { BSNewGame } from '../routes/room/blank-slate/services/blank-slate'
+import { CAHNewGame } from '../routes/room/cards-against-humanity/services/cah'
 import { GameInfo } from '../services/game-information'
 import { getInfo, setInfo } from '../services/localforage'
 
@@ -34,7 +35,10 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
     if (playerId && playerName && playerColor) {
       switch (title) {
         case 'Blank Slate':
-          BLNewGame(id, playerId, playerName, playerColor)
+          BSNewGame(id, playerId, playerName, playerColor)
+          break
+        case 'Cards Against Humanity':
+          CAHNewGame(id, playerId, playerName, playerColor)
           break
       }
     }

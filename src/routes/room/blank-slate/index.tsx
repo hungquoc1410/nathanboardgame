@@ -38,7 +38,7 @@ const BLIndex: React.FC = () => {
   }, [])
 
   return (
-    <div className='w-full h-96 px-20'>
+    <div className='w-full px-20'>
       <div className='grid grid-cols-11 grid-rows-7 gap-2'>
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-span-1 row-span-1 flex' />
@@ -70,7 +70,7 @@ const BLIndex: React.FC = () => {
         <PlayerComponent index={4} />
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-span-1 row-span-1 flex' />
-        <div className='col-start-1 col-end-12 row-start-6 row-end-7 flex'>Information</div>
+        <div id='information' className='col-start-1 col-end-12 row-start-6 row-end-7 flex'></div>
       </div>
     </div>
   )
