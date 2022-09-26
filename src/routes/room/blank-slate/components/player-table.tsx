@@ -22,7 +22,7 @@ const sortAnswer = (obj: IBSPlayer[]) => {
   return obj.sort((a, b) => (a.answer > b.answer ? 1 : b.answer > a.answer ? -1 : 0))
 }
 
-const PlayerTable: React.FC = () => {
+const BSPlayerTable: React.FC = () => {
   const params = useParams()
   const theme = useTheme()
   const [data, setData] = React.useState<IBSPlayer[]>()
@@ -81,4 +81,4 @@ const PlayerTable: React.FC = () => {
   )
 }
 
-export default PlayerTable
+export default BSPlayerTable

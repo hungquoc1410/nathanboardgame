@@ -4,10 +4,10 @@ import { useParams } from 'react-router-dom'
 
 import { createArrayFromObject } from '../../../services/create-array-from-object'
 import { checkMaster, setRoomKeyRef } from '../../../services/firebase'
+import PlayerAvatar from '../components/player-avatar'
 
-import PlayArea from './components/play-area'
-import PlayerActions from './components/player-actions'
-import PlayerAvatar from './components/player-avatar'
+import BSPlayArea from './components/play-area'
+import BSPlayerActions from './components/player-actions'
 import { IBSPlayer } from './services/blank-slate'
 
 const BLIndex: React.FC = () => {
@@ -50,11 +50,11 @@ const BLIndex: React.FC = () => {
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-start-10 col-end-12 row-start-1 row-end-5 flex'>
-          <PlayerActions />
+          <BSPlayerActions />
         </div>
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-start-2 col-end-9 row-start-2 row-end-5 flex'>
-          <PlayArea />
+          <BSPlayArea />
         </div>
         <div className='col-span-1 row-span-1 flex' />
         <PlayerComponent index={7} />

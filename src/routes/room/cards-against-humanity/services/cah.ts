@@ -2,6 +2,16 @@ import { grey } from '@mui/material/colors'
 
 import { createPlayer, createRoom } from '../../../../services/firebase'
 
+export type ICAHPlayer = {
+  id: string
+  points: number
+  name: string
+  color: string
+  master: boolean
+  phase: string
+  currentWhites: string[]
+}
+
 export const CAHNewGame = (roomId: string, playerId: string, name: string, color: string) => {
   CAHRoom(roomId)
   CAHPlayer(roomId, playerId, name, color, true)

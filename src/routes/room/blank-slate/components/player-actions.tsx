@@ -8,7 +8,7 @@ import { setPlayerRef, updateRoom } from '../../../../services/firebase'
 import { getInfo, IInfo } from '../../../../services/localforage'
 import { BSPlayerPhase, BSReset, BSRoomStart, IBSPlayer } from '../services/blank-slate'
 
-const PlayerActions: React.FC = () => {
+const BSPlayerActions: React.FC = () => {
   const params = useParams()
   const [data, setData] = React.useState<IBSPlayer>()
   const [info, setInfo] = React.useState<IInfo>()
@@ -106,4 +106,4 @@ const PlayerActions: React.FC = () => {
   )
 }
 
-export default PlayerActions
+export default BSPlayerActions

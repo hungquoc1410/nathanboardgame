@@ -89,7 +89,7 @@ const RoomIndex: React.FC = () => {
         setOpenNoti(true)
         result = false
       }
-      return result
+      return true
     }
   }
 

@@ -7,10 +7,10 @@ import { Paper } from '@mui/material'
 import { setRoomKeyRef } from '../../../../services/firebase'
 import { BSRoomEnd, BSRoomPlay, BSRoomPoint } from '../services/blank-slate'
 
-import PlayerAnswer from './player-answer'
-import PlayerTable from './player-table'
+import BSPlayerAnswer from './player-answer'
+import BSPlayerTable from './player-table'
 
-const PlayArea: React.FC = () => {
+const BSPlayArea: React.FC = () => {
   const params = useParams()
   const navigate = useNavigate()
   const [phase, setPhase] = React.useState<string>()
@@ -46,8 +46,8 @@ const PlayArea: React.FC = () => {
     <div className='p-1 flex-1 bg-gradient-to-br from-blue-500 to-pink-500 rounded-3xl'>
       <Paper elevation={3} sx={{ borderRadius: 6 }}>
         <div className='flex w-full h-full py-10 px-20 justify-center items-center'>
-          {phase && phase === 'play' && <PlayerTable />}
-          {phase && phase === 'answer' && <PlayerAnswer />}
+          {phase && phase === 'play' && <BSPlayerTable />}
+          {phase && phase === 'answer' && <BSPlayerAnswer />}
           {phase && phase === 'end' && <div>End</div>}
         </div>
       </Paper>
@@ -55,4 +55,4 @@ const PlayArea: React.FC = () => {
   )
 }
 
-export default PlayArea
+export default BSPlayArea

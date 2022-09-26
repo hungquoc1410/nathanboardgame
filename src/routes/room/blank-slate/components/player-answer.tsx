@@ -7,7 +7,7 @@ import { Button, Divider, Paper, Stack, TextField, Typography } from '@mui/mater
 import { setRoomKeyRef, updatePlayer } from '../../../../services/firebase'
 import { getInfo, IInfo } from '../../../../services/localforage'
 
-const PlayerAnswer: React.FC = () => {
+const BSPlayerAnswer: React.FC = () => {
   const params = useParams()
   const [info, setInfo] = React.useState<IInfo>()
   const [word, setWord] = React.useState<string>()
@@ -71,4 +71,4 @@ const PlayerAnswer: React.FC = () => {
   )
 }
 
-export default PlayerAnswer
+export default BSPlayerAnswer
