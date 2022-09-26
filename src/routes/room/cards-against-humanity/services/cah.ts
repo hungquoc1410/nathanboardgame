@@ -1,7 +1,15 @@
+import _ from 'underscore'
+
 import { grey } from '@mui/material/colors'
 
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
-import { createPlayer, createRoom, getRoomInfo, updatePlayer } from '../../../../services/firebase'
+import {
+  createPlayer,
+  createRoom,
+  getRoomInfo,
+  updatePlayer,
+  updateRoom,
+} from '../../../../services/firebase'
 
 import { blackCardsData } from './black-cards'
 import { whiteCardsData } from './white-cards'
@@ -68,6 +76,43 @@ export const CAHStart = async (roomId: string) => {
   players.forEach((player) => {
     if (player.drawer) {
       updatePlayer(roomId, player.id, { phase: 'draw' })
+    }
+  })
+  updateRoom(roomId, { phase: 'black' })
+}
+
+export const CAHPlayerDraw = async (roomId: string) => {
+  const snapshot = await getRoomInfo(roomId, 'blackCards')
+  const blackCard = _.shuffle(snapshot)[0]
+  const index = snapshot.indexOf(blackCard)
+  snapshot.splice(index, 1)
+  updateRoom(roomId, { currentBlack: blackCard, blackCards: snapshot })
+}
+
+export const CAHRoomWhite = async (roomId: string) => {
+  const whiteCards = await getRoomInfo(roomId, 'whiteCards')
+  const snapshot = await getRoomInfo(roomId, 'players')
+  const players: ICAHPlayer[] = createArrayFromObject(snapshot)
+  const distributedWhites = players.map((player) => player.currentWhites || []).flat()
+  const remainingWhites = _.difference(whiteCards, distributedWhites)
+  players.forEach((player) => {
+    if (player.phase === 'ready') {
+      const playerCards = player.currentWhites
+      let newCards
+      if (!playerCards) {
+        newCards = _.shuffle(remainingWhites).splice(1, 10)
+      } else {
+        if (playerCards.length === 10) {
+          newCards = playerCards
+        } else if (playerCards.length > 0) {
+          newCards = playerCards.concat(
+            _.shuffle(remainingWhites).splice(1, 10 - playerCards.length)
+          )
+        }
+      }
+      updatePlayer(roomId, player.id, { currentWhites: newCards, phase: 'receive' })
+    } else {
+      updatePlayer(roomId, player.id, { phase: 'receive' })
     }
   })
 }

@@ -5,6 +5,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Paper } from '@mui/material'
 
 import { setRoomKeyRef } from '../../../../services/firebase'
+import { CAHRoomWhite } from '../services/cah'
+
+import BlackCard from './black-card'
 
 const CAHPlayArea: React.FC = () => {
   const params = useParams()
@@ -24,6 +27,9 @@ const CAHPlayArea: React.FC = () => {
           case 'wait':
             navigate(-1)
             break
+          case 'white':
+            CAHRoomWhite(params.roomId)
+            break
         }
       }
     })
@@ -31,7 +37,9 @@ const CAHPlayArea: React.FC = () => {
   return (
     <div className='p-1 flex-1 bg-gradient-to-br from-blue-500 to-pink-500 rounded-3xl'>
       <Paper elevation={3} sx={{ borderRadius: 6 }}>
-        <div className='flex w-full h-full py-10 px-20 justify-center items-center'></div>
+        <div className='flex w-full h-full py-10 px-20 justify-center items-center'>
+          {phase && phase === 'black' && <BlackCard />}
+        </div>
       </Paper>
     </div>
   )

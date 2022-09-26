@@ -6,7 +6,7 @@ import { Button, Paper } from '@mui/material'
 
 import { setPlayerRef, updateRoom } from '../../../../services/firebase'
 import { getInfo, IInfo } from '../../../../services/localforage'
-import { CAHStart, ICAHPlayer } from '../services/cah'
+import { CAHPlayerDraw, CAHStart, ICAHPlayer } from '../services/cah'
 
 const CAHPlayerActions: React.FC = () => {
   const params = useParams()
@@ -40,6 +40,18 @@ const CAHPlayerActions: React.FC = () => {
     if (params.roomId) {
       console.log(params.roomId)
       updateRoom(params.roomId, { phase: 'wait' })
+    }
+  }
+
+  const drawCard = () => {
+    if (params.roomId) {
+      CAHPlayerDraw(params.roomId)
+    }
+  }
+
+  const confirmCard = () => {
+    if (params.roomId) {
+      updateRoom(params.roomId, { phase: 'white' })
     }
   }
 
@@ -78,8 +90,10 @@ const CAHPlayerActions: React.FC = () => {
             case 'draw':
               return (
                 <>
-                  <Button>Draw a card</Button>
-                  <Button color='secondary'>Confirm</Button>
+                  <Button onClick={() => drawCard()}>Draw a card</Button>
+                  <Button onClick={() => confirmCard()} color='secondary'>
+                    Confirm
+                  </Button>
                 </>
               )
 
