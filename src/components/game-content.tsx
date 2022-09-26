@@ -76,7 +76,6 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
               </div>
 
               <Button
-                variant='contained'
                 className='self-center !mb-3'
                 onClick={() => {
                   newRoom()

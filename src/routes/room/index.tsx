@@ -207,9 +207,19 @@ const RoomIndex: React.FC = () => {
                   <TableRow>
                     <TableCell align='center'>
                       {you && you.master ? (
-                        <Button onClick={() => startGame()}>Start Game</Button>
+                        <div className='flex flex-col gap-4'>
+                          <Button onClick={() => startGame()}>Start Game</Button>
+                          <Button onClick={() => navigate(-1)} variant='outlined' color='error'>
+                            Leave Room
+                          </Button>
+                        </div>
                       ) : (
-                        <Button onClick={() => setReady(!ready)}>Ready</Button>
+                        <div className='flex flex-col gap-4'>
+                          <Button onClick={() => setReady(!ready)}>Ready</Button>
+                          <Button onClick={() => navigate(-1)} variant='outlined' color='error'>
+                            Leave Room
+                          </Button>
+                        </div>
                       )}
                     </TableCell>
                   </TableRow>

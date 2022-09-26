@@ -53,14 +53,18 @@ const PlayerActions: React.FC = () => {
               return (
                 <div className='flex flex-col gap-4'>
                   <Button onClick={() => startRound()}>Start Round</Button>
-                  <Button onClick={() => backToWait()}>Back to waiting room</Button>
+                  <Button onClick={() => backToWait()} color='secondary'>
+                    Back to waiting room
+                  </Button>
                 </div>
               )
             case 'end':
               return (
                 <div className='flex flex-col gap-4'>
-                  <Button onClick={() => newGame()}>Start a new round</Button>
-                  <Button onClick={() => backToWait()}>Back to waiting room</Button>
+                  <Button onClick={() => newGame()}>Start a new game</Button>
+                  <Button onClick={() => backToWait()} color='secondary'>
+                    Back to waiting room
+                  </Button>
                 </div>
               )
           }

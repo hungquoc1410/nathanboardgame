@@ -52,7 +52,7 @@ const darkTheme = createTheme({
     },
     MuiButton: {
       styleOverrides: {
-        root: {
+        textPrimary: {
           color: 'white',
           backgroundImage: 'linear-gradient(to left, #06d6a0, #00c5b3, #00b2bd, #009fbd, #118ab2)',
           '&:hover': {
