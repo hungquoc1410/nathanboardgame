@@ -7,6 +7,7 @@ import { checkMaster, setRoomKeyRef } from '../../../services/firebase'
 import PlayerAvatar from '../components/player-avatar'
 
 import CAHPlayArea from './components/play-area'
+import CAHPlayerActions from './components/player-actions'
 import { ICAHPlayer } from './services/cah'
 
 const CAHIndex: React.FC = () => {
@@ -47,7 +48,9 @@ const CAHIndex: React.FC = () => {
         <PlayerComponent index={3} />
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-span-1 row-span-1 flex' />
-        <div className='col-start-10 col-end-12 row-start-1 row-end-7 flex'>Actions</div>
+        <div className='col-start-10 col-end-12 row-start-1 row-end-7 flex'>
+          <CAHPlayerActions />
+        </div>
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-start-2 col-end-9 row-start-2 row-end-6 flex'>
           <CAHPlayArea />
@@ -68,9 +71,7 @@ const CAHIndex: React.FC = () => {
         <PlayerComponent index={4} />
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-span-1 row-span-1 flex' />
-        <div id='information' className='col-start-1 col-end-12 row-start-8 row-end-9 flex'>
-          Infomation
-        </div>
+        <div id='information' className='col-start-1 col-end-12 row-start-8 row-end-9 flex'></div>
       </div>
     </div>
   )
