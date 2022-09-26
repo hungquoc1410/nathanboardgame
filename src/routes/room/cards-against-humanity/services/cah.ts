@@ -1,6 +1,10 @@
 import { grey } from '@mui/material/colors'
 
-import { createPlayer, createRoom } from '../../../../services/firebase'
+import { createArrayFromObject } from '../../../../services/create-array-from-object'
+import { createPlayer, createRoom, getRoomInfo, updatePlayer } from '../../../../services/firebase'
+
+import { blackCardsData } from './black-cards'
+import { whiteCardsData } from './white-cards'
 
 export type ICAHPlayer = {
   id: string
@@ -9,12 +13,13 @@ export type ICAHPlayer = {
   color: string
   master: boolean
   phase: string
+  drawer: boolean
   currentWhites: string[]
 }
 
 export const CAHNewGame = (roomId: string, playerId: string, name: string, color: string) => {
   CAHRoom(roomId)
-  CAHPlayer(roomId, playerId, name, color, true)
+  CAHPlayer(roomId, playerId, name, color, true, true)
 }
 
 export const CAHRoom = (roomId: string) => {
@@ -27,8 +32,8 @@ export const CAHRoom = (roomId: string) => {
     maxPlayer: 10,
     numOfPlayers: 1,
     phase: 'wait',
-    blackCards: [],
-    whiteCards: [],
+    blackCards: blackCardsData,
+    whiteCards: whiteCardsData,
     currentBlack: '',
     currentWhites: [],
     choseCard: '',
@@ -41,7 +46,8 @@ export const CAHPlayer = (
   playerId: string,
   name: string,
   color: string,
-  master = false
+  master = false,
+  drawer = false
 ) => {
   const playerData = {
     id: playerId,
@@ -49,8 +55,19 @@ export const CAHPlayer = (
     name: name,
     color: color,
     master,
+    drawer,
     phase: master === true ? 'ready' : 'wait',
     currentWhites: [],
   }
   createPlayer(roomId, playerId, playerData)
+}
+
+export const CAHStart = async (roomId: string) => {
+  const snapshot = await getRoomInfo(roomId, 'players')
+  const players: ICAHPlayer[] = createArrayFromObject(snapshot)
+  players.forEach((player) => {
+    if (player.drawer) {
+      updatePlayer(roomId, player.id, { phase: 'draw' })
+    }
+  })
 }

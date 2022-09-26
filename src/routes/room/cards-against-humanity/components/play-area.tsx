@@ -1,8 +1,33 @@
 import React from 'react'
+import { onValue, Query } from 'firebase/database'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { Paper } from '@mui/material'
 
+import { setRoomKeyRef } from '../../../../services/firebase'
+
 const CAHPlayArea: React.FC = () => {
+  const params = useParams()
+  const navigate = useNavigate()
+  const [phase, setPhase] = React.useState<string>()
+
+  let roomPhaseRef: Query
+  if (params.roomId) {
+    roomPhaseRef = setRoomKeyRef(params.roomId, 'phase')
+  }
+
+  React.useEffect(() => {
+    return onValue(roomPhaseRef, (snap) => {
+      if (snap.exists() && params.roomId) {
+        setPhase(snap.val())
+        switch (snap.val()) {
+          case 'wait':
+            navigate(-1)
+            break
+        }
+      }
+    })
+  }, [])
   return (
     <div className='p-1 flex-1 bg-gradient-to-br from-blue-500 to-pink-500 rounded-3xl'>
       <Paper elevation={3} sx={{ borderRadius: 6 }}>
