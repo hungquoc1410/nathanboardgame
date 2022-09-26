@@ -60,7 +60,6 @@ const RoomIndex: React.FC = () => {
     if (reason === 'clickaway') {
       return
     }
-
     setOpenNoti(false)
   }
 
@@ -124,7 +123,6 @@ const RoomIndex: React.FC = () => {
         setId(playerId)
       }
     }
-
     setUp()
 
     return onValue(roomPlayersRef, (snap) => {

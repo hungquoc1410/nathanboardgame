@@ -50,7 +50,12 @@ const PlayerActions: React.FC = () => {
         case true:
           switch (phase) {
             case 'ready':
-              return <Button onClick={() => startRound()}>Start Round</Button>
+              return (
+                <div className='flex flex-col gap-4'>
+                  <Button onClick={() => startRound()}>Start Round</Button>
+                  <Button onClick={() => backToWait()}>Back to waiting room</Button>
+                </div>
+              )
             case 'end':
               return (
                 <div className='flex flex-col gap-4'>
