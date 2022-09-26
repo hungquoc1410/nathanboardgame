@@ -6,7 +6,7 @@ import { Button, Paper } from '@mui/material'
 
 import { setPlayerRef, updateRoom } from '../../../../services/firebase'
 import { getInfo, IInfo } from '../../../../services/localforage'
-import { CAHPlayerDraw, CAHStart, ICAHPlayer } from '../services/cah'
+import { CAHPlayerDraw, CAHPlayerReceive, CAHStart, ICAHPlayer } from '../services/cah'
 
 const CAHPlayerActions: React.FC = () => {
   const params = useParams()
@@ -114,8 +114,8 @@ const CAHPlayerActions: React.FC = () => {
         if (snap.exists() && params.roomId) {
           setData(snap.val())
           switch (snap.val().phase) {
-            case 'submit':
-              console.log(params.roomId, 'submit', 'point')
+            case 'receive':
+              CAHPlayerReceive(params.roomId)
               break
             case 'point':
               console.log(params.roomId, 'point', 'end')

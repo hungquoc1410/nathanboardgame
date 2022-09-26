@@ -116,3 +116,12 @@ export const CAHRoomWhite = async (roomId: string) => {
     }
   })
 }
+
+export const CAHPlayerReceive = async (roomId: string) => {
+  const snapshot = await getRoomInfo(roomId, 'players')
+  const players: ICAHPlayer[] = createArrayFromObject(snapshot)
+  const allReceive = !players.map((player) => player.phase === 'receive').includes(false)
+  if (allReceive) {
+    updateRoom(roomId, { phase: 'submit' })
+  }
+}
