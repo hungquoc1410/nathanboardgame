@@ -3,16 +3,27 @@ import _ from 'underscore'
 import { grey } from '@mui/material/colors'
 
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
-import {
-  createPlayer,
-  createRoom,
-  getRoomInfo,
-  updatePlayer,
-  updateRoom,
-} from '../../../../services/firebase'
+import { createPlayer, createRoom, updatePlayer, updateRoom } from '../../../../services/firebase'
 
 import { blackCardsData } from './black-cards'
 import { whiteCardsData } from './white-cards'
+
+export type ICAHRoom = {
+  id: string
+  game: string
+  title: string
+  color: string
+  minPlayer: number
+  maxPlayer: number
+  numOfPlayers: number
+  phase: string
+  blackCards: string[]
+  whiteCards: string[]
+  currentBlack: string
+  currentWhites: string[]
+  choseCard: string
+  players: { [x: string]: ICAHPlayer }
+}
 
 export type ICAHPlayer = {
   id: string
@@ -72,29 +83,27 @@ export const CAHPlayer = (
   createPlayer(roomId, playerId, playerData)
 }
 
-export const CAHStart = async (roomId: string) => {
-  const snapshot = await getRoomInfo(roomId, 'players')
-  const players: ICAHPlayer[] = createArrayFromObject(snapshot)
+export const CAHStart = (roomData: ICAHRoom) => {
+  const players: ICAHPlayer[] = createArrayFromObject(roomData.players)
   players.forEach((player) => {
     if (player.drawer) {
-      updatePlayer(roomId, player.id, { phase: 'draw' })
+      updatePlayer(roomData.id, player.id, { phase: 'draw' })
     }
   })
-  updateRoom(roomId, { phase: 'black' })
+  updateRoom(roomData.id, { phase: 'black' })
 }
 
-export const CAHPlayerDraw = async (roomId: string) => {
-  const snapshot = await getRoomInfo(roomId, 'blackCards')
-  const blackCard = _.shuffle(snapshot)[0]
-  const index = snapshot.indexOf(blackCard)
-  snapshot.splice(index, 1)
-  updateRoom(roomId, { currentBlack: blackCard, blackCards: snapshot })
+export const CAHPlayerDraw = (roomData: ICAHRoom) => {
+  const blackCards = roomData.blackCards
+  const blackCard = _.shuffle(blackCards)[0]
+  const index = blackCards.indexOf(blackCard)
+  blackCards.splice(index, 1)
+  updateRoom(roomData.id, { currentBlack: blackCard, blackCards: blackCards })
 }
 
-export const CAHRoomWhite = async (roomId: string) => {
-  const whiteCards = await getRoomInfo(roomId, 'whiteCards')
-  const snapshot = await getRoomInfo(roomId, 'players')
-  const players: ICAHPlayer[] = createArrayFromObject(snapshot)
+export const CAHRoomWhite = (roomData: ICAHRoom) => {
+  const whiteCards = roomData.whiteCards
+  const players: ICAHPlayer[] = createArrayFromObject(roomData.players)
   const distributedWhites = players.map((player) => player.currentWhites || []).flat()
   const remainingWhites = _.difference(whiteCards, distributedWhites)
   players.forEach((player) => {
@@ -112,20 +121,72 @@ export const CAHRoomWhite = async (roomId: string) => {
           )
         }
       }
-      updatePlayer(roomId, player.id, { currentWhites: newCards, phase: 'receive' })
+      updatePlayer(roomData.id, player.id, { currentWhites: newCards, phase: 'receive' })
     } else {
-      updatePlayer(roomId, player.id, { phase: 'receive' })
+      updatePlayer(roomData.id, player.id, { phase: 'receive' })
     }
   })
 }
 
-export const CAHPlayerReceive = async (roomId: string) => {
-  const snapshot = await getRoomInfo(roomId, 'players')
-  const players: ICAHPlayer[] = createArrayFromObject(snapshot)
-  const allReceive = !players.map((player) => player.phase === 'receive').includes(false)
+export const CAHPlayerPhase = (
+  roomData: ICAHRoom,
+  playerPhase: string,
+  roomPhase: string,
+  playerNextPhase = ''
+) => {
+  const players: ICAHPlayer[] = createArrayFromObject(roomData.players)
+  const allSubmit = !players.map((player) => player.phase === playerPhase).includes(false)
   const drawerPlayer = players.filter((player) => player.drawer)[0]
-  if (allReceive) {
-    updatePlayer(roomId, drawerPlayer.id, { phase: 'submit' })
-    updateRoom(roomId, { phase: 'submit' })
+  if (allSubmit) {
+    if (playerNextPhase) {
+      updatePlayer(roomData.id, drawerPlayer.id, { phase: playerNextPhase })
+    }
+    updateRoom(roomData.id, { phase: roomPhase })
   }
+}
+
+export const CAHRoomChoose = (roomData: ICAHRoom) => {
+  const players: ICAHPlayer[] = createArrayFromObject(roomData.players)
+  const distributedWhites = players.map((player) => player.choseCard)
+  updateRoom(roomData.id, { currentWhites: distributedWhites.filter((e) => e) })
+}
+
+export const CAHPlayerConfirmWhite = (roomId: string, playerData: ICAHPlayer) => {
+  const choseWhite = playerData.choseCard
+  const currentWhites = playerData.currentWhites
+  const index = playerData.currentWhites.indexOf(choseWhite)
+  currentWhites.splice(index, 1)
+  updatePlayer(roomId, playerData.id, { currentWhites: currentWhites, phase: 'submit' })
+}
+
+export const CAHRoomConfirmWhite = async (roomData: ICAHRoom) => {
+  const players: ICAHPlayer[] = createArrayFromObject(roomData.players)
+  const currentMaster = players.filter((player) => player.master)[0]
+  let index = players.indexOf(currentMaster)
+  if (index === roomData.numOfPlayers - 1) {
+    index = 0
+  } else {
+    index += 1
+  }
+  const nextMaster = players[index].id
+  players.forEach((player) => {
+    if (player.phase === 'submit') {
+      if (player.choseCard === roomData.choseCard) {
+        updatePlayer(roomData.id, player.id, {
+          phase: 'ready',
+          points: player.points + 1,
+          choseCard: '',
+        })
+      } else {
+        updatePlayer(roomData.id, player.id, { phase: 'ready', choseCard: '' })
+      }
+      if (player.drawer) {
+        updatePlayer(roomData.id, player.id, { drawer: false })
+      }
+      if (player.id === nextMaster) {
+        updatePlayer(roomData.id, player.id, { drawer: true })
+      }
+    }
+  })
+  updateRoom(roomData.id, { phase: 'play', currentBlack: '', currentWhites: [], choseCard: '' })
 }

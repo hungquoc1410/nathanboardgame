@@ -1,64 +1,51 @@
 import React from 'react'
-import { onValue, Query } from 'firebase/database'
-import { useParams } from 'react-router-dom'
 
 import { Button, Paper } from '@mui/material'
 
-import { setPlayerRef, updatePlayer, updateRoom } from '../../../../services/firebase'
-import { getInfo, IInfo } from '../../../../services/localforage'
-import { CAHPlayerDraw, CAHPlayerReceive, CAHStart, ICAHPlayer } from '../services/cah'
+import { createArrayFromObject } from '../../../../services/create-array-from-object'
+import { updateRoom } from '../../../../services/firebase'
+import { getInfo } from '../../../../services/localforage'
+import {
+  CAHPlayerConfirmWhite,
+  CAHPlayerDraw,
+  CAHPlayerPhase,
+  CAHRoomConfirmWhite,
+  CAHStart,
+  ICAHPlayer,
+} from '../services/cah'
+import { CAHProps } from '..'
 
-const CAHPlayerActions: React.FC = () => {
-  const params = useParams()
+const CAHPlayerActions: React.FC<CAHProps> = ({ roomData }) => {
   const [data, setData] = React.useState<ICAHPlayer>()
-  const [info, setInfo] = React.useState<IInfo>()
-
-  getInfo().then((value) => {
-    if (value && value !== info) {
-      setInfo(value)
-    }
-  })
-
-  let playerRef: Query
-  if (info && info.playerId && params.roomId) {
-    playerRef = setPlayerRef(params.roomId, info.playerId)
-  }
 
   const startRound = () => {
-    if (params.roomId) {
-      CAHStart(params.roomId)
-    }
+    CAHStart(roomData)
   }
 
   const newGame = () => {
-    if (params.roomId) {
-      console.log(params.roomId)
-    }
+    console.log(roomData.id)
   }
 
   const backToWait = () => {
-    if (params.roomId) {
-      console.log(params.roomId)
-      updateRoom(params.roomId, { phase: 'wait' })
-    }
+    updateRoom(roomData.id, { phase: 'wait' })
   }
 
   const drawCard = () => {
-    if (params.roomId) {
-      CAHPlayerDraw(params.roomId)
-    }
+    CAHPlayerDraw(roomData)
   }
 
   const confirmBlackCard = () => {
-    if (params.roomId) {
-      updateRoom(params.roomId, { phase: 'white' })
-    }
+    updateRoom(roomData.id, { phase: 'white' })
   }
 
   const confirmWhiteCard = () => {
-    if (params.roomId && info && info.playerId) {
-      updatePlayer(params.roomId, info.playerId, { phase: 'submit' })
+    if (data) {
+      CAHPlayerConfirmWhite(roomData.id, data)
     }
+  }
+
+  const confirmWhiteRoomCard = () => {
+    CAHRoomConfirmWhite(roomData)
   }
 
   const actions = () => {
@@ -85,6 +72,8 @@ const CAHPlayerActions: React.FC = () => {
                   </Button>
                 </>
               )
+            default:
+              break
           }
           break
         default:
@@ -100,6 +89,14 @@ const CAHPlayerActions: React.FC = () => {
                   <Button onClick={() => confirmBlackCard()} color='secondary'>
                     Confirm
                   </Button>
+                </>
+              )
+            case 'submit':
+              return (
+                <>
+                  {roomData.currentWhites && (
+                    <Button onClick={() => confirmWhiteRoomCard()}>Confirm</Button>
+                  )}
                 </>
               )
             default:
@@ -118,23 +115,27 @@ const CAHPlayerActions: React.FC = () => {
     }
   }
 
-  React.useEffect(() => {
-    if (info) {
-      return onValue(playerRef, (snap) => {
-        if (snap.exists() && params.roomId) {
-          setData(snap.val())
-          switch (snap.val().phase) {
-            case 'receive':
-              CAHPlayerReceive(params.roomId)
-              break
-            case 'point':
-              console.log(params.roomId, 'point', 'end')
-              break
-          }
-        }
-      })
+  if (data) {
+    switch (data.phase) {
+      case 'receive':
+        CAHPlayerPhase(roomData, 'receive', 'submit', 'submit')
+        break
+      case 'submit':
+        CAHPlayerPhase(roomData, 'submit', 'choose')
+        break
     }
-  }, [info])
+  }
+
+  React.useEffect(() => {
+    getInfo().then((value) => {
+      if (value) {
+        const info = value
+        const playersData: ICAHPlayer[] = createArrayFromObject(roomData.players)
+        setData(playersData.filter((player) => player.id === info.playerId)[0])
+      }
+    })
+  }, [roomData])
+
   return (
     <div className='w-full flex flex-1 p-1 bg-gradient-to-br from-blue-500 to-pink-500 rounded-3xl'>
       <Paper

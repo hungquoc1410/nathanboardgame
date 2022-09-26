@@ -42,7 +42,7 @@ export type IPlayer = {
 export type IRoomPlayers = IPlayer[]
 
 // set ref
-const setRoomRef = (roomId: string) => {
+export const setRoomRef = (roomId: string) => {
   return ref(Database, `rooms/${roomId}`)
 }
 
@@ -99,6 +99,11 @@ const getAllRoomsData = async () => {
 
 export const getRoomInfo = async (roomId: string, key: string) => {
   const snapshot = await get(query(ref(Database, `rooms/${roomId}/${key}`)))
+  return snapshot.val()
+}
+
+export const getPlayerInfo = async (roomId: string, playerId: string, key: string) => {
+  const snapshot = await get(query(ref(Database, `rooms/${roomId}/players/${playerId}/${key}`)))
   return snapshot.val()
 }
 

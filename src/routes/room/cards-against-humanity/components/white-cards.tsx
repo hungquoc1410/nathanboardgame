@@ -1,27 +1,16 @@
 import React from 'react'
-import { onValue, Query } from 'firebase/database'
 
 import { Typography } from '@mui/material'
 
-import { setPlayerRef, updatePlayer } from '../../../../services/firebase'
-import { getInfo, IInfo } from '../../../../services/localforage'
+import { createArrayFromObject } from '../../../../services/create-array-from-object'
+import { updatePlayer } from '../../../../services/firebase'
+import { getInfo } from '../../../../services/localforage'
 import { ICAHPlayer } from '../services/cah'
+import { CAHProps } from '..'
 
-const WhiteCards: React.FC = () => {
-  const [info, setInfo] = React.useState<IInfo>()
+const WhiteCards: React.FC<CAHProps> = ({ roomData }) => {
   const [data, setData] = React.useState<ICAHPlayer>()
   const [chose, setChose] = React.useState<string>()
-
-  getInfo().then((value) => {
-    if (value && value !== info) {
-      setInfo(value)
-    }
-  })
-
-  let playerRef: Query
-  if (info && info.playerId && info.roomId) {
-    playerRef = setPlayerRef(info.roomId, info.playerId)
-  }
 
   const displayCards = () => {
     if (data) {
@@ -62,18 +51,21 @@ const WhiteCards: React.FC = () => {
   }
 
   React.useEffect(() => {
-    if (info) {
-      return onValue(playerRef, (snap) => {
-        if (snap.exists()) {
-          setData(snap.val())
-        }
-      })
-    }
-  }, [info])
+    getInfo().then((value) => {
+      if (value && value.playerId) {
+        const playersData: ICAHPlayer[] = createArrayFromObject(roomData.players)
+        setData(playersData.filter((player) => player.id === value.playerId)[0])
+      }
+    })
+  }, [roomData])
 
   React.useEffect(() => {
-    if (chose && info && info.roomId && info.playerId) {
-      updatePlayer(info.roomId, info.playerId, { choseCard: chose })
+    if (chose) {
+      getInfo().then((value) => {
+        if (value && value.roomId && value.playerId) {
+          updatePlayer(value.roomId, value.playerId, { choseCard: chose })
+        }
+      })
     }
   }, [chose])
 

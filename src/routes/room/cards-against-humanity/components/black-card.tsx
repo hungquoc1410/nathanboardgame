@@ -1,25 +1,13 @@
 import React from 'react'
-import { onValue, Query } from 'firebase/database'
-import { useParams } from 'react-router-dom'
 
-import { setRoomKeyRef } from '../../../../services/firebase'
+import { CAHProps } from '..'
 
-const BlackCard: React.FC = () => {
-  const params = useParams()
+const BlackCard: React.FC<CAHProps> = ({ roomData }) => {
   const [black, setBlack] = React.useState<string>()
 
-  let roomCardRef: Query
-  if (params.roomId) {
-    roomCardRef = setRoomKeyRef(params.roomId, 'currentBlack')
-  }
-
   React.useEffect(() => {
-    return onValue(roomCardRef, (snap) => {
-      if (snap.exists()) {
-        setBlack(snap.val())
-      }
-    })
-  }, [])
+    setBlack(roomData.currentBlack)
+  }, [roomData])
 
   return (
     <>
