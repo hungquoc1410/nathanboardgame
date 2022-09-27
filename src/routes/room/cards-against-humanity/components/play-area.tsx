@@ -35,7 +35,7 @@ const CAHPlayArea: React.FC<CAHProps> = ({ roomData }) => {
             <BlackCard roomData={roomData} />
           )}
           {roomData.phase && roomData.phase === 'submit' && <WhiteCards roomData={roomData} />}
-          {roomData.phase && roomData.phase === 'choose' && <WhiteBlackCards />}
+          {roomData.phase && roomData.phase === 'choose' && <WhiteBlackCards roomData={roomData} />}
         </div>
       </Paper>
     </div>

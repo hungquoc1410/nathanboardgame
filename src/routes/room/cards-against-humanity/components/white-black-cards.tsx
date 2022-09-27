@@ -1,48 +1,31 @@
 import React from 'react'
-import { onValue, Query } from 'firebase/database'
-import { useParams } from 'react-router-dom'
 
-import {
-  getPlayerInfo,
-  getRoomInfo,
-  setRoomKeyRef,
-  updateRoom,
-} from '../../../../services/firebase'
-import { getInfo, IInfo } from '../../../../services/localforage'
+import { createArrayFromObject } from '../../../../services/create-array-from-object'
+import { updateRoom } from '../../../../services/firebase'
+import { getInfo } from '../../../../services/localforage'
+import { ICAHPlayer } from '../services/cah'
+import { CAHProps } from '..'
 
-const WhiteBlackCards: React.FC = () => {
-  const params = useParams()
+const WhiteBlackCards: React.FC<CAHProps> = ({ roomData }) => {
   const [black, setBlack] = React.useState<string>()
   const [whites, setWhites] = React.useState<string[]>()
   const [chose, setChose] = React.useState<string>()
-  const [info, setInfo] = React.useState<IInfo>()
   const [drawer, setDrawer] = React.useState(false)
-
-  if (params.roomId) {
-    getRoomInfo(params.roomId, 'currentBlack').then((value) => {
-      if (value && value !== black) {
-        setBlack(value)
-      }
-    })
-  }
-
-  let roomWhiteCardsRef: Query
-  if (params.roomId) {
-    roomWhiteCardsRef = setRoomKeyRef(params.roomId, 'currentWhites')
-  }
+  const [choseCard, setChoseCard] = React.useState<string>()
 
   getInfo().then((value) => {
-    if (value && value !== info) {
-      setInfo(value)
+    if (value && value.playerId) {
+      const players: ICAHPlayer[] = createArrayFromObject(roomData.players)
+      setDrawer(players.filter((player) => player.id === value.playerId)[0].drawer)
     }
   })
 
-  if (info && info.playerId && info.roomId) {
-    getPlayerInfo(info.roomId, info.playerId, 'drawer').then((value) => {
-      if (value && value !== drawer) {
-        setDrawer(value)
-      }
-    })
+  if (black !== roomData.currentBlack) {
+    setBlack(roomData.currentBlack)
+  }
+  
+  if (whites !== roomData.currentWhites) {
+    setWhites(roomData.currentWhites)
   }
 
   const choseWhiteCard = (card: string) => {
@@ -52,18 +35,12 @@ const WhiteBlackCards: React.FC = () => {
   }
 
   React.useEffect(() => {
-    if (roomWhiteCardsRef && black) {
-      return onValue(roomWhiteCardsRef, (snap) => {
-        if (snap.exists()) {
-          setWhites(snap.val())
-        }
-      })
-    }
-  }, [black])
+    setChoseCard(roomData.choseCard)
+  }, [roomData])
 
   React.useEffect(() => {
-    if (chose && params.roomId) {
-      updateRoom(params.roomId, { choseCard: chose })
+    if (chose) {
+      updateRoom(roomData.id, { choseCard: chose })
     }
   }, [chose])
 
@@ -84,7 +61,7 @@ const WhiteBlackCards: React.FC = () => {
             <img
               onClick={() => choseWhiteCard(card)}
               className={`aspect-[492/683] w-1/4 ${
-                chose === card ? 'border-8 border-blue-500' : ''
+                choseCard === card ? 'border-8 border-blue-500' : ''
               }`}
               src={`/games/cards-against-humanity/white-cards/${card}`}
               alt='black-card'

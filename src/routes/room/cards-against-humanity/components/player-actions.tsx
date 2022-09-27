@@ -30,18 +30,22 @@ const CAHPlayerActions: React.FC<CAHProps> = ({ roomData }) => {
     CAHPlayerDraw(roomData)
   }
 
-  const confirmBlackCard = () => {
-    updateRoom(roomData.id, { phase: 'white' })
+  const confirmRoomBlackCard = () => {
+    if (roomData.currentBlack) {
+      updateRoom(roomData.id, { phase: 'white' })
+    }
   }
 
   const confirmWhiteCard = () => {
-    if (data) {
+    if (data && data.choseCard) {
       CAHPlayerConfirmWhite(roomData.id, data)
     }
   }
 
-  const confirmWhiteRoomCard = () => {
-    CAHRoomConfirmWhite(roomData)
+  const confirmRoomWhiteCard = () => {
+    if (roomData.choseCard) {
+      CAHRoomConfirmWhite(roomData)
+    }
   }
 
   const actions = () => {
@@ -76,7 +80,7 @@ const CAHPlayerActions: React.FC<CAHProps> = ({ roomData }) => {
               return (
                 <>
                   <Button onClick={() => drawCard()}>Draw a card</Button>
-                  <Button onClick={() => confirmBlackCard()} color='secondary'>
+                  <Button onClick={() => confirmRoomBlackCard()} color='secondary'>
                     Confirm
                   </Button>
                 </>
@@ -86,7 +90,7 @@ const CAHPlayerActions: React.FC<CAHProps> = ({ roomData }) => {
                 return (
                   <>
                     {roomData.currentWhites && (
-                      <Button onClick={() => confirmWhiteRoomCard()}>Confirm</Button>
+                      <Button onClick={() => confirmRoomWhiteCard()}>Confirm</Button>
                     )}
                   </>
                 )
