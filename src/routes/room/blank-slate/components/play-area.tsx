@@ -33,7 +33,7 @@ const BSPlayArea: React.FC<BSProps> = ({ roomData }) => {
     <div className='p-1 flex-1 bg-gradient-to-br from-blue-500 to-pink-500 rounded-3xl'>
       <Paper elevation={3} sx={{ borderRadius: 6 }}>
         <div className='flex w-full h-full py-10 px-20 justify-center items-center'>
-          {roomData.phase === 'play' && <BSPlayerTable />}
+          {roomData.phase === 'play' && <BSPlayerTable roomData={roomData} />}
           {roomData.phase === 'answer' && <BSPlayerAnswer />}
           {roomData.phase === 'end' && <div>End</div>}
         </div>

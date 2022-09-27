@@ -1,6 +1,4 @@
 import React from 'react'
-import { onValue, Query } from 'firebase/database'
-import { useParams } from 'react-router-dom'
 
 import {
   Box,
@@ -15,31 +13,21 @@ import {
 } from '@mui/material'
 
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
-import { setRoomKeyRef } from '../../../../services/firebase'
 import { IBSPlayer } from '../services/blank-slate'
+import { BSProps } from '..'
 
 const sortAnswer = (obj: IBSPlayer[]) => {
   return obj.sort((a, b) => (a.answer > b.answer ? 1 : b.answer > a.answer ? -1 : 0))
 }
 
-const BSPlayerTable: React.FC = () => {
-  const params = useParams()
+const BSPlayerTable: React.FC<BSProps> = ({ roomData }) => {
   const theme = useTheme()
   const [data, setData] = React.useState<IBSPlayer[]>()
 
-  let roomPlayersRef: Query
-  if (params.roomId) {
-    roomPlayersRef = setRoomKeyRef(params.roomId, 'players')
-  }
-
   React.useEffect(() => {
-    return onValue(roomPlayersRef, (snap) => {
-      if (snap.exists()) {
-        const result = createArrayFromObject(snap.val())
-        setData(result)
-      }
-    })
-  }, [])
+    const result = createArrayFromObject(roomData.players)
+    setData(result)
+  }, [roomData])
 
   return (
     <Box className='flex-1'>
