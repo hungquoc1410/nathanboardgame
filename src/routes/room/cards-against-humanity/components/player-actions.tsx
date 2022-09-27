@@ -22,10 +22,6 @@ const CAHPlayerActions: React.FC<CAHProps> = ({ roomData }) => {
     CAHStart(roomData)
   }
 
-  const newGame = () => {
-    console.log(roomData.id)
-  }
-
   const backToWait = () => {
     updateRoom(roomData.id, { phase: 'wait' })
   }
@@ -55,23 +51,17 @@ const CAHPlayerActions: React.FC<CAHProps> = ({ roomData }) => {
         case true:
           switch (phase) {
             case 'ready':
-              return (
-                <>
-                  <Button onClick={() => startRound()}>Start Round</Button>
-                  <Button onClick={() => backToWait()} color='secondary'>
-                    Back to waiting room
-                  </Button>
-                </>
-              )
-            case 'end':
-              return (
-                <>
-                  <Button onClick={() => newGame()}>Start a new game</Button>
-                  <Button onClick={() => backToWait()} color='secondary'>
-                    Back to waiting room
-                  </Button>
-                </>
-              )
+              if (roomData.phase === 'play') {
+                return (
+                  <>
+                    <Button onClick={() => startRound()}>Start Round</Button>
+                    <Button onClick={() => backToWait()} color='secondary'>
+                      Back to waiting room
+                    </Button>
+                  </>
+                )
+              }
+              break
             default:
               break
           }
@@ -92,13 +82,16 @@ const CAHPlayerActions: React.FC<CAHProps> = ({ roomData }) => {
                 </>
               )
             case 'submit':
-              return (
-                <>
-                  {roomData.currentWhites && (
-                    <Button onClick={() => confirmWhiteRoomCard()}>Confirm</Button>
-                  )}
-                </>
-              )
+              if (roomData.phase === 'choose') {
+                return (
+                  <>
+                    {roomData.currentWhites && (
+                      <Button onClick={() => confirmWhiteRoomCard()}>Confirm</Button>
+                    )}
+                  </>
+                )
+              }
+              break
             default:
               break
           }

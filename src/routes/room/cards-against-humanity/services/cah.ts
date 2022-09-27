@@ -161,14 +161,15 @@ export const CAHPlayerConfirmWhite = (roomId: string, playerData: ICAHPlayer) =>
 
 export const CAHRoomConfirmWhite = async (roomData: ICAHRoom) => {
   const players: ICAHPlayer[] = createArrayFromObject(roomData.players)
-  const currentMaster = players.filter((player) => player.master)[0]
-  let index = players.indexOf(currentMaster)
+  const currentDrawer = players.filter((player) => player.drawer)[0]
+  let index = players.indexOf(currentDrawer)
   if (index === roomData.numOfPlayers - 1) {
     index = 0
   } else {
     index += 1
   }
-  const nextMaster = players[index].id
+  console.log(index)
+  const nextDrawer = players[index].id
   players.forEach((player) => {
     if (player.phase === 'submit') {
       if (player.choseCard === roomData.choseCard) {
@@ -183,7 +184,7 @@ export const CAHRoomConfirmWhite = async (roomData: ICAHRoom) => {
       if (player.drawer) {
         updatePlayer(roomData.id, player.id, { drawer: false })
       }
-      if (player.id === nextMaster) {
+      if (player.id === nextDrawer) {
         updatePlayer(roomData.id, player.id, { drawer: true })
       }
     }
