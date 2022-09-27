@@ -50,7 +50,7 @@ const BSPlayerAnswer: React.FC<BSProps> = ({ roomData }) => {
           <Typography variant='h2' align='center'>
             {word && word}
           </Typography>
-          <Stack spacing={2} className='w-1/3 self-center'>
+          <Stack spacing={2} className='w-2/3 laptop:w-1/3 self-center'>
             <TextField label='One Word Only' value={answer} onChange={handleChange} />
             <Button onClick={() => setSubmit(true)}>Sumbit</Button>
           </Stack>
