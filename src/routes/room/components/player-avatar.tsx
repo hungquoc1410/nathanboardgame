@@ -1,9 +1,11 @@
 import React from 'react'
 
-import { Avatar, useTheme } from '@mui/material'
+import { Avatar, Badge, useTheme } from '@mui/material'
 
-interface PlayerAvatarProps {
-  data: { name: string; color: string }
+import { IPlayer } from '../../../services/firebase'
+
+type PlayerAvatarProps = {
+  data: IPlayer
 }
 
 const PlayerAvatar: React.FC<PlayerAvatarProps> = ({ data }) => {
@@ -11,16 +13,18 @@ const PlayerAvatar: React.FC<PlayerAvatarProps> = ({ data }) => {
 
   return (
     <div className='flex flex-1 justify-center items-center'>
-      <Avatar
-        sx={{
-          width: 56,
-          height: 56,
-          backgroundColor: data.color,
-          color: theme.palette.getContrastText(data.color),
-        }}
-      >
-        {data.name[0]}
-      </Avatar>
+      <Badge badgeContent={data.points} color='primary'>
+        <Avatar
+          sx={{
+            width: 56,
+            height: 56,
+            backgroundColor: data.color,
+            color: theme.palette.getContrastText(data.color),
+          }}
+        >
+          {data.name[0]}
+        </Avatar>
+      </Badge>
     </div>
   )
 }

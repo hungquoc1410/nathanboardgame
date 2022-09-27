@@ -91,7 +91,7 @@ export const BSRoomEnd = (roomData: IBSRoom) => {
   const players: IBSPlayer[] = createArrayFromObject(roomData.players)
   const allPoints = players.map((player) => player.points)
   const maxPoint = Math.max(...allPoints)
-  if (maxPoint < 7) {
+  if (maxPoint < 25) {
     updateRoom(roomData.id, { phase: 'play' })
   } else {
     players.forEach((player) => {

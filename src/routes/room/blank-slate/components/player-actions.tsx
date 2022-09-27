@@ -31,14 +31,17 @@ const BSPlayerActions: React.FC<BSProps> = ({ roomData }) => {
         case true:
           switch (phase) {
             case 'ready':
-              return (
-                <>
-                  <Button onClick={() => startRound()}>Start Round</Button>
-                  <Button onClick={() => backToWait()} color='secondary' variant='outlined'>
-                    Back to waiting room
-                  </Button>
-                </>
-              )
+              if (roomData.phase === 'play') {
+                return (
+                  <>
+                    <Button onClick={() => startRound()}>Start Round</Button>
+                    <Button onClick={() => backToWait()} color='secondary' variant='outlined'>
+                      Back to waiting room
+                    </Button>
+                  </>
+                )
+              }
+              break
             case 'end':
               return (
                 <>
