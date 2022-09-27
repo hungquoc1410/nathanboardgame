@@ -14,21 +14,23 @@ const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
   const roomRef = setRoomRef(roomId)
 
   const joinRoom = async () => {
-    setInfo({ roomId: roomId })
-    const info = await getInfo()
-    const { playerId, playerName, playerColor } = info
-    if (playerId && playerName && playerColor) {
-      const playerData = {
-        id: playerId,
-        name: playerName,
-        color: playerColor,
-        master: false,
-        phase: 'wait',
-        points: 0,
+    if (data) {
+      setInfo({ roomId: roomId, gameId: data.game })
+      const info = await getInfo()
+      const { playerId, playerName, playerColor } = info
+      if (playerId && playerName && playerColor) {
+        const playerData = {
+          id: playerId,
+          name: playerName,
+          color: playerColor,
+          master: false,
+          phase: 'wait',
+          points: 0,
+        }
+        createPlayer(roomId, playerId, playerData)
       }
-      createPlayer(roomId, playerId, playerData)
+      navigate(roomId)
     }
-    navigate(roomId)
   }
 
   React.useEffect(() => {

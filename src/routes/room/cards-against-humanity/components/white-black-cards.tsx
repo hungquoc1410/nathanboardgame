@@ -55,20 +55,22 @@ const WhiteBlackCards: React.FC<CAHProps> = ({ roomData }) => {
           />
         </div>
       )}
-      {whites &&
-        whites.map((card) => {
-          return (
-            <img
-              onClick={() => choseWhiteCard(card)}
-              className={`aspect-[492/683] w-1/3 laptop:w-1/4 ${
-                choseCard === card ? 'border-8 border-blue-500' : ''
-              }`}
-              src={`/games/cah/white-cards/${card}`}
-              alt='black-card'
-              key={card}
-            />
-          )
-        })}
+      <div className='max-h-60 laptop:max-h-72 flex flex-row overflow-x-scroll gap-6'>
+        {whites &&
+          whites.map((card) => {
+            return (
+              <img
+                onClick={() => choseWhiteCard(card)}
+                className={`aspect-[492/683] w-1/3 laptop:w-1/4 ${
+                  choseCard === card ? 'border-8 border-blue-500' : ''
+                }`}
+                src={`/games/cah/white-cards/${card}`}
+                alt='black-card'
+                key={card}
+              />
+            )
+          })}
+      </div>
     </>
   )
 }

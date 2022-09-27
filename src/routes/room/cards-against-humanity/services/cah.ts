@@ -40,7 +40,12 @@ export const CAHNewGame = (roomId: string, playersData: IRoomPlayers) => {
     if (player.master) {
       updatePlayer(roomId, player.id, { drawer: true, choseCard: '', currentWhites: [], points: 0 })
     } else {
-      updatePlayer(roomId, player.id, { drawer: false, choseCard: '', currentWhites: [] })
+      updatePlayer(roomId, player.id, {
+        drawer: false,
+        choseCard: '',
+        currentWhites: [],
+        points: 0,
+      })
     }
   })
   updateRoom(roomId, {
@@ -117,7 +122,7 @@ export const CAHPlayerPhase = (
 export const CAHRoomChoose = (roomData: ICAHRoom) => {
   const players: ICAHPlayer[] = createArrayFromObject(roomData.players)
   const distributedWhites = players.map((player) => player.choseCard)
-  updateRoom(roomData.id, { currentWhites: distributedWhites.filter((e) => e) })
+  updateRoom(roomData.id, { currentWhites: _.shuffle(distributedWhites.filter((e) => e)) })
 }
 
 export const CAHPlayerConfirmWhite = (roomId: string, playerData: ICAHPlayer) => {
@@ -137,7 +142,6 @@ export const CAHRoomConfirmWhite = async (roomData: ICAHRoom) => {
   } else {
     index += 1
   }
-  console.log(index)
   const nextDrawer = players[index].id
   players.forEach((player) => {
     if (player.phase === 'submit') {

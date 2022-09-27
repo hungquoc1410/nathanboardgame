@@ -31,7 +31,7 @@ export type IBSPlayer = {
 
 export const BSNewGame = (roomId: string, playersData: IRoomPlayers) => {
   playersData.forEach((player) => {
-  updatePlayer(roomId, player.id, { answer: '', points: 0 })
+    updatePlayer(roomId, player.id, { answer: '', points: 0 })
   })
   updateRoom(roomId, { words: wordsData, current: '' })
 }
