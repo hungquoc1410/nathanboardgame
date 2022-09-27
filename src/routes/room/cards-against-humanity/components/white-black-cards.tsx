@@ -47,7 +47,7 @@ const WhiteBlackCards: React.FC<CAHProps> = ({ roomData }) => {
   return (
     <>
       {black && (
-        <div className='max-h-72 aspect-[492/683]'>
+        <div className='max-h-60 laptop:max-h-72 aspect-[492/683]'>
           <img
             className='aspect-[492/683]'
             src={`/games/cards-against-humanity/black-cards/${black}`}
@@ -60,7 +60,7 @@ const WhiteBlackCards: React.FC<CAHProps> = ({ roomData }) => {
           return (
             <img
               onClick={() => choseWhiteCard(card)}
-              className={`aspect-[492/683] w-1/4 ${
+              className={`aspect-[492/683] w-1/3 laptop:w-1/4 ${
                 choseCard === card ? 'border-8 border-blue-500' : ''
               }`}
               src={`/games/cards-against-humanity/white-cards/${card}`}

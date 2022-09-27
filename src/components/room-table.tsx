@@ -30,7 +30,7 @@ const RoomTable: React.FC = () => {
 
   return (
     <div className='w-full flex justify-center'>
-      <div className='w-1/2 p-1 bg-gradient-to-br from-blue-500 to-pink-500'>
+      <div className='w-full laptop:w-1/2 p-1 bg-gradient-to-br from-blue-500 to-pink-500'>
         <TableContainer component={Paper} elevation={3}>
           <Table>
             <TableHead>

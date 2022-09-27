@@ -30,11 +30,18 @@ const BLIndex: React.FC = () => {
     }
 
     return (
-      <div className='col-span-1 row-span-1 flex'>
+      <>
+        <div className='hidden col-span-1 row-span-1 laptop:flex'>
+          {playersData && playersData.length >= index && (
+            <PlayerAvatar data={playersData[index - 1]} />
+          )}
+        </div>
         {playersData && playersData.length >= index && (
-          <PlayerAvatar data={playersData[index - 1]} />
+          <div className='laptop:hidden col-span-1 row-span-1 flex'>
+            <PlayerAvatar data={playersData[index - 1]} />
+          </div>
         )}
-      </div>
+      </>
     )
   }
 

@@ -22,12 +22,12 @@ const WhiteCards: React.FC<CAHProps> = ({ roomData }) => {
           switch (phase) {
             case 'receive':
               return (
-                <div className='max-h-72 flex flex-row overflow-x-scroll gap-6'>
+                <div className='max-h-60 laptop:max-h-72 flex flex-row overflow-x-scroll gap-6'>
                   {currentWhites.map((card) => {
                     return (
                       <img
                         onClick={() => setChose(card)}
-                        className={`aspect-[492/683] w-1/4 ${
+                        className={`aspect-[492/683] w-1/3 laptop:w-1/4 ${
                           chose === card ? 'border-8 border-blue-500' : ''
                         }`}
                         src={`/games/cards-against-humanity/white-cards/${card}`}
