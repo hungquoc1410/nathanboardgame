@@ -32,6 +32,7 @@ import {
 } from '../../services/firebase'
 import { getInfo } from '../../services/localforage'
 
+import { BSNewGame } from './blank-slate/services/blank-slate'
 import { CAHNewGame } from './cards-against-humanity/services/cah'
 
 const RoomIndex: React.FC = () => {
@@ -71,6 +72,9 @@ const RoomIndex: React.FC = () => {
         switch (game) {
           case 'cah':
             CAHNewGame(params.roomId, data)
+            break
+          case 'bs':
+            BSNewGame(params.roomId, data)
             break
           default:
             break

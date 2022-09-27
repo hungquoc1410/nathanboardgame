@@ -1,66 +1,39 @@
 import _ from 'underscore'
 
-import { grey } from '@mui/material/colors'
-
-import {
-  createPlayer,
-  createRoom,
-  getRoomInfo,
-  updatePlayer,
-  updateRoom,
-} from '../../../../services/firebase'
+import { getRoomInfo, IRoomPlayers, updatePlayer, updateRoom } from '../../../../services/firebase'
 
 import { createArrayFromObject } from './../../../../services/create-array-from-object'
 import { wordsData } from './words'
 
+export type IBSRoom = {
+  id: string
+  game: string
+  title: string
+  color: string
+  minPlayer: number
+  maxPlayer: number
+  numOfPlayers: number
+  phase: string
+  words: string[]
+  current: string
+  players: { [x: string]: IBSPlayer }
+}
+
 export type IBSPlayer = {
   id: string
   points: number
-  answer: string
   name: string
   color: string
   master: boolean
   phase: string
+  answer: string
 }
 
-export const BSNewGame = (roomId: string, playerId: string, name: string, color: string) => {
-  BSRoom(roomId)
-  BSPlayer(roomId, playerId, name, color, true)
-}
-
-export const BSRoom = (roomId: string) => {
-  const roomData = {
-    id: roomId,
-    game: 'bs',
-    title: 'Blank Slate',
-    color: grey[500],
-    minPlayer: 3,
-    maxPlayer: 8,
-    words: wordsData,
-    current: '',
-    numOfPlayers: 1,
-    phase: 'wait',
-  }
-  createRoom(roomId, roomData)
-}
-
-export const BSPlayer = (
-  roomId: string,
-  playerId: string,
-  name: string,
-  color: string,
-  master = false
-) => {
-  const playerData = {
-    id: playerId,
-    points: 0,
-    answer: '',
-    name: name,
-    color: color,
-    master,
-    phase: master === true ? 'ready' : 'wait',
-  }
-  createPlayer(roomId, playerId, playerData)
+export const BSNewGame = (roomId: string, playersData: IRoomPlayers) => {
+  playersData.forEach((player) => {
+    updatePlayer(roomId, player.id, { answer: '' })
+  })
+  updateRoom(roomId, { words: wordsData, current: '' })
 }
 
 export const BSRoomPlay = async (roomId: string) => {
@@ -73,14 +46,13 @@ export const BSRoomPlay = async (roomId: string) => {
   })
 }
 
-export const BSRoomStart = async (roomId: string) => {
-  const words = await getRoomInfo(roomId, 'words')
+export const BSRoomStart = async (roomData: IBSRoom) => {
+  const words = roomData.words
   const newWords = _.shuffle(words)
   const word = newWords.splice(0, 1)[0]
-  const snapshot = await getRoomInfo(roomId, 'players')
-  const players: IBSPlayer[] = createArrayFromObject(snapshot)
-  players.forEach((player) => updatePlayer(roomId, player.id, { phase: 'answer' }))
-  updateRoom(roomId, { current: word, words: newWords, phase: 'answer' })
+  const players: IBSPlayer[] = createArrayFromObject(roomData.players)
+  players.forEach((player) => updatePlayer(roomData.id, player.id, { phase: 'answer' }))
+  updateRoom(roomData.id, { current: word, words: newWords, phase: 'answer' })
 }
 
 export const BSRoomPoint = async (roomId: string) => {
@@ -122,13 +94,12 @@ export const BSRoomEnd = async (roomId: string) => {
   }
 }
 
-export const BSReset = async (roomId: string) => {
-  const snapshot = await getRoomInfo(roomId, 'players')
-  const players: IBSPlayer[] = createArrayFromObject(snapshot)
+export const BSReset = async (roomData: IBSRoom) => {
+  const players: IBSPlayer[] = createArrayFromObject(roomData.players)
   players.forEach((player) => {
-    updatePlayer(roomId, player.id, { points: 0, answer: '', phase: 'ready' })
+    updatePlayer(roomData.id, player.id, { points: 0, answer: '', phase: 'ready' })
   })
-  updateRoom(roomId, { words: wordsData, current: '' })
+  updateRoom(roomData.id, { words: wordsData, current: '' })
 }
 
 export const BSPlayerPhase = async (roomId: string, playerPhase: string, roomPhase: string) => {

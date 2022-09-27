@@ -3,36 +3,47 @@ import { onValue, Query } from 'firebase/database'
 import { useParams } from 'react-router-dom'
 
 import { createArrayFromObject } from '../../../services/create-array-from-object'
-import { checkMaster, setRoomKeyRef } from '../../../services/firebase'
+import { checkMaster, setRoomRef } from '../../../services/firebase'
 import PlayerAvatar from '../components/player-avatar'
 
 import BSPlayArea from './components/play-area'
 import BSPlayerActions from './components/player-actions'
-import { IBSPlayer } from './services/blank-slate'
+import { IBSRoom } from './services/blank-slate'
+
+export type BSProps = {
+  roomData: IBSRoom
+}
 
 const BLIndex: React.FC = () => {
   const params = useParams()
-  const [data, setData] = React.useState<IBSPlayer[]>()
+  const [data, setData] = React.useState<IBSRoom>()
 
-  let roomPlayersRef: Query
+  let roomRef: Query
   if (params.roomId) {
-    roomPlayersRef = setRoomKeyRef(params.roomId, 'players')
+    roomRef = setRoomRef(params.roomId)
   }
 
   const PlayerComponent: React.FC<{ index: number }> = ({ index }) => {
+    let playersData
+    if (data) {
+      playersData = createArrayFromObject(data.players)
+    }
+
     return (
       <div className='col-span-1 row-span-1 flex'>
-        {data && data.length >= index && <PlayerAvatar data={data[index - 1]} />}
+        {playersData && playersData.length >= index && (
+          <PlayerAvatar data={playersData[index - 1]} />
+        )}
       </div>
     )
   }
 
   React.useEffect(() => {
-    return onValue(roomPlayersRef, (snap) => {
-      if (snap.exists() && params.roomId) {
-        const result = createArrayFromObject(snap.val())
-        setData(result)
-        checkMaster(params.roomId, snap.val())
+    return onValue(roomRef, (snap) => {
+      if (snap.exists()) {
+        const roomData: IBSRoom = snap.val()
+        setData(roomData)
+        checkMaster(roomData.id, roomData.players)
       }
     })
   }, [])
@@ -50,7 +61,7 @@ const BLIndex: React.FC = () => {
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-start-10 col-end-12 row-start-1 row-end-5 flex'>
-          <BSPlayerActions />
+          {data && <BSPlayerActions roomData={data} />}
         </div>
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-start-2 col-end-9 row-start-2 row-end-5 flex'>

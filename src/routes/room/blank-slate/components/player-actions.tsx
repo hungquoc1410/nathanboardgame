@@ -1,46 +1,26 @@
 import React from 'react'
-import { onValue, Query } from 'firebase/database'
-import { useParams } from 'react-router-dom'
 
 import { Button, Paper } from '@mui/material'
 
-import { setPlayerRef, updateRoom } from '../../../../services/firebase'
-import { getInfo, IInfo } from '../../../../services/localforage'
-import { BSPlayerPhase, BSReset, BSRoomStart, IBSPlayer } from '../services/blank-slate'
+import { createArrayFromObject } from '../../../../services/create-array-from-object'
+import { updateRoom } from '../../../../services/firebase'
+import { getInfo } from '../../../../services/localforage'
+import { BSReset, BSRoomStart, IBSPlayer } from '../services/blank-slate'
+import { BSProps } from '..'
 
-const BSPlayerActions: React.FC = () => {
-  const params = useParams()
+const BSPlayerActions: React.FC<BSProps> = ({ roomData }) => {
   const [data, setData] = React.useState<IBSPlayer>()
-  const [info, setInfo] = React.useState<IInfo>()
-
-  getInfo().then((value) => {
-    if (value && value !== info) {
-      setInfo(value)
-    }
-  })
-
-  let playerRef: Query
-  if (info && info.playerId && params.roomId) {
-    playerRef = setPlayerRef(params.roomId, info.playerId)
-  }
 
   const startRound = () => {
-    if (params.roomId) {
-      BSRoomStart(params.roomId)
-    }
+    BSRoomStart(roomData)
   }
 
   const newGame = () => {
-    if (params.roomId) {
-      BSReset(params.roomId)
-    }
+    BSReset(roomData)
   }
 
   const backToWait = () => {
-    if (params.roomId) {
-      BSReset(params.roomId)
-      updateRoom(params.roomId, { phase: 'wait' })
-    }
+    updateRoom(roomData.id, { phase: 'wait' })
   }
 
   const actions = () => {
@@ -76,22 +56,14 @@ const BSPlayerActions: React.FC = () => {
   }
 
   React.useEffect(() => {
-    if (info) {
-      return onValue(playerRef, (snap) => {
-        if (snap.exists() && params.roomId) {
-          setData(snap.val())
-          switch (snap.val().phase) {
-            case 'submit':
-              BSPlayerPhase(params.roomId, 'submit', 'point')
-              break
-            case 'point':
-              BSPlayerPhase(params.roomId, 'point', 'end')
-              break
-          }
-        }
-      })
-    }
-  }, [info])
+    getInfo().then((value) => {
+      if (value) {
+        const info = value
+        const playersData: IBSPlayer[] = createArrayFromObject(roomData.players)
+        setData(playersData.filter((player) => player.id === info.playerId)[0])
+      }
+    })
+  }, [roomData])
 
   return (
     <div className='w-full flex flex-1 p-1 bg-gradient-to-br from-blue-500 to-pink-500 rounded-3xl'>
