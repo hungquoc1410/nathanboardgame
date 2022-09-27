@@ -16,7 +16,7 @@ const CAHPlayArea: React.FC<CAHProps> = ({ roomData }) => {
   React.useEffect(() => {
     switch (roomData.phase) {
       case 'wait':
-        navigate(-1)
+        navigate(`/${roomData.id}`)
         break
       case 'white':
         CAHRoomWhite(roomData)

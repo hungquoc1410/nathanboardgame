@@ -28,7 +28,7 @@ const BSPlayArea: React.FC<BSProps> = ({ roomData }) => {
         BSRoomEnd(roomData)
         break
       case 'wait':
-        navigate(-1)
+        navigate(`/${roomData.id}`)
         break
     }
   }, [roomData])

@@ -103,7 +103,7 @@ const RoomIndex: React.FC = () => {
       } else {
         result = false
       }
-      return true
+      return result
     }
   }
 
@@ -223,14 +223,14 @@ const RoomIndex: React.FC = () => {
                       {you && you.master ? (
                         <div className='flex flex-col gap-4'>
                           <Button onClick={() => newGame()}>New Game</Button>
-                          <Button onClick={() => navigate(-1)} variant='outlined' color='error'>
+                          <Button onClick={() => navigate('/')} variant='outlined' color='error'>
                             Leave Room
                           </Button>
                         </div>
                       ) : (
                         <div className='flex flex-col gap-4'>
                           <Button onClick={() => setReady(!ready)}>Ready</Button>
-                          <Button onClick={() => navigate(-1)} variant='outlined' color='error'>
+                          <Button onClick={() => navigate('/')} variant='outlined' color='error'>
                             Leave Room
                           </Button>
                         </div>
