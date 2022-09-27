@@ -31,11 +31,11 @@ const CAHPlayArea: React.FC<CAHProps> = ({ roomData }) => {
     <div className='p-1 flex-1 bg-gradient-to-br from-blue-500 to-pink-500 rounded-3xl max-w-full'>
       <Paper elevation={3} sx={{ borderRadius: 6 }}>
         <div className='flex w-full h-full py-10 px-20 justify-center items-center flex-col gap-4'>
-          {roomData.phase && (roomData.phase === 'black' || roomData.phase === 'submit') && (
+          {(roomData.phase === 'black' || roomData.phase === 'submit') && (
             <BlackCard roomData={roomData} />
           )}
-          {roomData.phase && roomData.phase === 'submit' && <WhiteCards roomData={roomData} />}
-          {roomData.phase && roomData.phase === 'choose' && <WhiteBlackCards roomData={roomData} />}
+          {roomData.phase === 'submit' && <WhiteCards roomData={roomData} />}
+          {roomData.phase === 'choose' && <WhiteBlackCards roomData={roomData} />}
         </div>
       </Paper>
     </div>

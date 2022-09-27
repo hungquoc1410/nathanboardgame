@@ -36,17 +36,16 @@ export const BSNewGame = (roomId: string, playersData: IRoomPlayers) => {
   updateRoom(roomId, { words: wordsData, current: '' })
 }
 
-export const BSRoomPlay = async (roomId: string) => {
-  const snapshot = await getRoomInfo(roomId, 'players')
-  const players: IBSPlayer[] = createArrayFromObject(snapshot)
+export const BSRoomPlay = (roomData: IBSRoom) => {
+  const players: IBSPlayer[] = createArrayFromObject(roomData.players)
   players.forEach((player) => {
     if (player.phase !== 'ready') {
-      updatePlayer(roomId, player.id, { phase: 'ready' })
+      updatePlayer(roomData.id, player.id, { phase: 'ready' })
     }
   })
 }
 
-export const BSRoomStart = async (roomData: IBSRoom) => {
+export const BSRoomStart = (roomData: IBSRoom) => {
   const words = roomData.words
   const newWords = _.shuffle(words)
   const word = newWords.splice(0, 1)[0]
@@ -55,42 +54,40 @@ export const BSRoomStart = async (roomData: IBSRoom) => {
   updateRoom(roomData.id, { current: word, words: newWords, phase: 'answer' })
 }
 
-export const BSRoomPoint = async (roomId: string) => {
-  const snapshot = await getRoomInfo(roomId, 'players')
-  const players: IBSPlayer[] = createArrayFromObject(snapshot)
+export const BSRoomPoint = (roomData: IBSRoom) => {
+  const players: IBSPlayer[] = createArrayFromObject(roomData.players)
   const allAnswers = players.map((player) => player.answer)
   players.forEach((player) => {
     if (player.phase === 'submit') {
       const repeatTimes = allAnswers.filter((answer) => answer === player.answer).length
       switch (repeatTimes) {
         case 1:
-          updatePlayer(roomId, player.id, { phase: 'point' })
+          updatePlayer(roomData.id, player.id, { phase: 'point' })
           break
         case 2:
-          updatePlayer(roomId, player.id, { phase: 'point', points: player.points + 3 })
+          updatePlayer(roomData.id, player.id, { phase: 'point', points: player.points + 3 })
           break
         default:
-          updatePlayer(roomId, player.id, { phase: 'point', points: player.points + 1 })
+          updatePlayer(roomData.id, player.id, { phase: 'point', points: player.points + 1 })
           break
       }
     }
   })
 }
 
-export const BSRoomEnd = async (roomId: string) => {
-  const snapshot = await getRoomInfo(roomId, 'players')
-  const players: IBSPlayer[] = createArrayFromObject(snapshot)
+export const BSRoomEnd = (roomData: IBSRoom) => {
+  const players: IBSPlayer[] = createArrayFromObject(roomData.players)
   const allPoints = players.map((player) => player.points)
   const maxPoint = Math.max(...allPoints)
   if (maxPoint < 7) {
-    updateRoom(roomId, { phase: 'play' })
+    updateRoom(roomData.id, { phase: 'play' })
   } else {
     players.forEach((player) => {
       if (player.phase === 'point') {
-        updatePlayer(roomId, player.id, { phase: 'end' })
+        updatePlayer(roomData.id, player.id, { phase: 'end' })
       }
     })
-    updateRoom(roomId, { phase: 'end' })
+    updateRoom(roomData.id, { phase: 'end' })
   }
 }
 

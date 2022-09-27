@@ -65,7 +65,7 @@ const BLIndex: React.FC = () => {
         </div>
         <div className='col-span-1 row-span-1 flex' />
         <div className='col-start-2 col-end-9 row-start-2 row-end-5 flex'>
-          <BSPlayArea />
+          {data && <BSPlayArea roomData={data}/>}
         </div>
         <div className='col-span-1 row-span-1 flex' />
         <PlayerComponent index={7} />
