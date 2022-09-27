@@ -103,7 +103,7 @@ const RoomIndex: React.FC = () => {
       } else {
         result = false
       }
-      return true
+      return result
     }
   }
 
