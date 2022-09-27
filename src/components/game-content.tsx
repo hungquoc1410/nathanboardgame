@@ -28,7 +28,7 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
 
   const newRoom = async () => {
     const id = Math.random().toString(36).substring(2, 8).toUpperCase()
-    setInfo({ roomId: id })
+    setInfo({ roomId: id, gameId: slug })
     const info = await getInfo()
     const { playerId, playerName, playerColor } = info
     if (playerId && playerName && playerColor) {

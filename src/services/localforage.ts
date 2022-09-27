@@ -5,6 +5,7 @@ export type IInfo = {
   roomId?: string
   playerName?: string
   playerColor?: string
+  gameId?: string
 }
 
 type IInfoKeys = keyof IInfo

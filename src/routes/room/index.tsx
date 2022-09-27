@@ -34,6 +34,7 @@ import { getInfo } from '../../services/localforage'
 
 import { BSNewGame } from './blank-slate/services/blank-slate'
 import { CAHNewGame } from './cards-against-humanity/services/cah'
+import Instructions from './components/instructions'
 
 const RoomIndex: React.FC = () => {
   const theme = useTheme()
@@ -249,7 +250,9 @@ const RoomIndex: React.FC = () => {
                 </TableHead>
                 <TableBody>
                   <TableRow>
-                    <TableCell align='center'>Some Instructions</TableCell>
+                    <TableCell align='center'>
+                      <Instructions />
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
