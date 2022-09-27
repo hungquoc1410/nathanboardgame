@@ -1,47 +1,36 @@
 import React from 'react'
-import { onValue, Query } from 'firebase/database'
-import { useParams } from 'react-router-dom'
 
 import { Button, Divider, Paper, Stack, TextField, Typography } from '@mui/material'
 
-import { setRoomKeyRef, updatePlayer } from '../../../../services/firebase'
-import { getInfo, IInfo } from '../../../../services/localforage'
+import { updatePlayer } from '../../../../services/firebase'
+import { getInfo } from '../../../../services/localforage'
+import { BSProps } from '..'
 
-const BSPlayerAnswer: React.FC = () => {
-  const params = useParams()
-  const [info, setInfo] = React.useState<IInfo>()
+const BSPlayerAnswer: React.FC<BSProps> = ({ roomData }) => {
   const [word, setWord] = React.useState<string>()
   const [answer, setAnswer] = React.useState<string>('')
   const [submit, setSubmit] = React.useState(false)
-
-  let roomWordRef: Query
-  if (params.roomId) {
-    roomWordRef = setRoomKeyRef(params.roomId, 'current')
-  }
-
-  getInfo().then((value) => {
-    if (value && value !== info) {
-      setInfo(value)
-    }
-  })
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswer(event.target.value)
   }
 
   React.useEffect(() => {
-    if (info && info.playerId && submit && params.roomId) {
-      updatePlayer(params.roomId, info.playerId, { answer: answer.toUpperCase(), phase: 'submit' })
+    if (submit) {
+      getInfo().then((value) => {
+        if (value && value.playerId) {
+          updatePlayer(roomData.id, value.playerId, {
+            answer: answer.toUpperCase(),
+            phase: 'submit',
+          })
+        }
+      })
     }
   }, [submit])
 
   React.useEffect(() => {
-    return onValue(roomWordRef, (snap) => {
-      if (snap.exists()) {
-        setWord(snap.val())
-      }
-    })
-  }, [])
+    setWord(roomData.current)
+  }, [roomData])
 
   return (
     <Paper className='w-full' elevation={6}>

@@ -44,6 +44,7 @@ export type IRoom = {
 
 export type IPlayer = {
   id: string
+  points: number
   name: string
   color: string
   master: boolean

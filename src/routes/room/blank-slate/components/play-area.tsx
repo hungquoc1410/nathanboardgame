@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom'
 
 import { Paper } from '@mui/material'
 
-import { BSRoomEnd, BSRoomPlay, BSRoomPoint } from '../services/blank-slate'
+import { BSRoomAnswer, BSRoomEnd, BSRoomPlay, BSRoomPoint } from '../services/blank-slate'
 import { BSProps } from '..'
 
 import BSPlayerAnswer from './player-answer'
 import BSPlayerTable from './player-table'
+import BSRoomTheEnd from './room-end'
 
 const BSPlayArea: React.FC<BSProps> = ({ roomData }) => {
   const navigate = useNavigate()
@@ -16,6 +17,9 @@ const BSPlayArea: React.FC<BSProps> = ({ roomData }) => {
     switch (roomData.phase) {
       case 'play':
         BSRoomPlay(roomData)
+        break
+      case 'answer':
+        BSRoomAnswer(roomData)
         break
       case 'point':
         BSRoomPoint(roomData)
@@ -34,8 +38,8 @@ const BSPlayArea: React.FC<BSProps> = ({ roomData }) => {
       <Paper elevation={3} sx={{ borderRadius: 6 }}>
         <div className='flex w-full h-full py-10 px-20 justify-center items-center'>
           {roomData.phase === 'play' && <BSPlayerTable roomData={roomData} />}
-          {roomData.phase === 'answer' && <BSPlayerAnswer />}
-          {roomData.phase === 'end' && <div>End</div>}
+          {roomData.phase === 'answer' && <BSPlayerAnswer roomData={roomData} />}
+          {roomData.phase === 'end' && <BSRoomTheEnd roomData={roomData} />}
         </div>
       </Paper>
     </div>

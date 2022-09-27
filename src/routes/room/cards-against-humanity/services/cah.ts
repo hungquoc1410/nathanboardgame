@@ -38,7 +38,7 @@ export type ICAHPlayer = {
 export const CAHNewGame = (roomId: string, playersData: IRoomPlayers) => {
   playersData.forEach((player) => {
     if (player.master) {
-      updatePlayer(roomId, player.id, { drawer: true, choseCard: '', currentWhites: [] })
+      updatePlayer(roomId, player.id, { drawer: true, choseCard: '', currentWhites: [], points: 0 })
     } else {
       updatePlayer(roomId, player.id, { drawer: false, choseCard: '', currentWhites: [] })
     }

@@ -48,6 +48,7 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
         color: playerColor,
         master: true,
         phase: 'ready',
+        points: 0,
       }
       newGameRoom(id, roomData, playerId, playerData)
     }

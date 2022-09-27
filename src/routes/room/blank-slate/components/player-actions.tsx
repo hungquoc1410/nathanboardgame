@@ -20,6 +20,7 @@ const BSPlayerActions: React.FC<BSProps> = ({ roomData }) => {
   }
 
   const backToWait = () => {
+    BSReset(roomData)
     updateRoom(roomData.id, { phase: 'wait' })
   }
 

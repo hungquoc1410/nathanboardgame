@@ -1,6 +1,6 @@
 import _ from 'underscore'
 
-import { getRoomInfo, IRoomPlayers, updatePlayer, updateRoom } from '../../../../services/firebase'
+import { IRoomPlayers, updatePlayer, updateRoom } from '../../../../services/firebase'
 
 import { createArrayFromObject } from './../../../../services/create-array-from-object'
 import { wordsData } from './words'
@@ -31,7 +31,7 @@ export type IBSPlayer = {
 
 export const BSNewGame = (roomId: string, playersData: IRoomPlayers) => {
   playersData.forEach((player) => {
-    updatePlayer(roomId, player.id, { answer: '' })
+  updatePlayer(roomId, player.id, { answer: '', points: 0 })
   })
   updateRoom(roomId, { words: wordsData, current: '' })
 }
@@ -54,8 +54,20 @@ export const BSRoomStart = (roomData: IBSRoom) => {
   updateRoom(roomData.id, { current: word, words: newWords, phase: 'answer' })
 }
 
+export const BSRoomAnswer = (roomData: IBSRoom) => {
+  const players: IBSPlayer[] = createArrayFromObject(roomData.players)
+  const allSubmit = !players.map((player) => player.phase === 'submit').includes(false)
+  if (allSubmit) {
+    updateRoom(roomData.id, { phase: 'point' })
+  }
+}
+
 export const BSRoomPoint = (roomData: IBSRoom) => {
   const players: IBSPlayer[] = createArrayFromObject(roomData.players)
+  const allPoint = !players.map((player) => player.phase === 'point').includes(false)
+  if (allPoint) {
+    return updateRoom(roomData.id, { phase: 'end' })
+  }
   const allAnswers = players.map((player) => player.answer)
   players.forEach((player) => {
     if (player.phase === 'submit') {
@@ -91,19 +103,10 @@ export const BSRoomEnd = (roomData: IBSRoom) => {
   }
 }
 
-export const BSReset = async (roomData: IBSRoom) => {
+export const BSReset = (roomData: IBSRoom) => {
   const players: IBSPlayer[] = createArrayFromObject(roomData.players)
   players.forEach((player) => {
     updatePlayer(roomData.id, player.id, { points: 0, answer: '', phase: 'ready' })
   })
   updateRoom(roomData.id, { words: wordsData, current: '' })
-}
-
-export const BSPlayerPhase = async (roomId: string, playerPhase: string, roomPhase: string) => {
-  const snapshot = await getRoomInfo(roomId, 'players')
-  const players: IBSPlayer[] = createArrayFromObject(snapshot)
-  const allSubmit = !players.map((player) => player.phase === playerPhase).includes(false)
-  if (allSubmit) {
-    updateRoom(roomId, { phase: roomPhase })
-  }
 }

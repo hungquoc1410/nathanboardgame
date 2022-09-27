@@ -29,6 +29,7 @@ const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
         color: playerColor,
         master: false,
         phase: 'wait',
+        points: 0,
       }
       createPlayer(roomId, playerId, playerData)
     }
