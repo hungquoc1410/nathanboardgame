@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { Button, Chip, TableCell, TableRow, useTheme } from '@mui/material'
 
-import { BSPlayer } from '../routes/room/blank-slate/services/blank-slate'
-import { getRoomInfo, setRoomKeyRef } from '../services/firebase'
+import { createPlayer, getRoomInfo, setRoomKeyRef } from '../services/firebase'
 import { getInfo, setInfo } from '../services/localforage'
 
 const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
@@ -24,7 +23,14 @@ const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
     const info = await getInfo()
     const { playerId, playerName, playerColor } = info
     if (playerId && playerName && playerColor) {
-      BSPlayer(roomId, playerId, playerName, playerColor)
+      const playerData = {
+        id: playerId,
+        name: playerName,
+        color: playerColor,
+        master: false,
+        phase: 'wait',
+      }
+      createPlayer(roomId, playerId, playerData)
     }
     navigate(roomId)
   }

@@ -31,6 +31,17 @@ export const connectedRef = ref(Database, '.info/connected')
 
 // Initialize type
 
+export type IRoom = {
+  id: string
+  game: string
+  title: string
+  color: string
+  minPlayer: number
+  maxPlayer: number
+  numOfPlayers: number
+  phase: string
+}
+
 export type IPlayer = {
   id: string
   name: string
@@ -64,6 +75,16 @@ export const createRoom = (roomId: string, data: object) => {
 export const createPlayer = (roomId: string, playerId: string, data: object) => {
   const playerRef = setPlayerRef(roomId, playerId)
   set(playerRef, data)
+}
+
+export const newGameRoom = (
+  roomId: string,
+  roomData: IRoom,
+  playerId: string,
+  playerData: IPlayer
+) => {
+  createRoom(roomId, roomData)
+  createPlayer(roomId, playerId, playerData)
 }
 
 // Remove data

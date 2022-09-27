@@ -13,8 +13,7 @@ import {
   Typography,
 } from '@mui/material'
 
-import { BSNewGame } from '../routes/room/blank-slate/services/blank-slate'
-import { CAHNewGame } from '../routes/room/cards-against-humanity/services/cah'
+import { newGameRoom } from '../services/firebase'
 import { GameInfo } from '../services/game-information'
 import { getInfo, setInfo } from '../services/localforage'
 
@@ -23,7 +22,7 @@ interface GameContentProps {
 }
 
 const GameContent: React.FC<GameContentProps> = ({ game }) => {
-  const { title, subtitle, image, players, playtime } = game
+  const { title, subtitle, image, players, playtime, color, slug, minPlayer, maxPlayer } = game
 
   const navigate = useNavigate()
 
@@ -33,14 +32,24 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
     const info = await getInfo()
     const { playerId, playerName, playerColor } = info
     if (playerId && playerName && playerColor) {
-      switch (title) {
-        case 'Blank Slate':
-          BSNewGame(id, playerId, playerName, playerColor)
-          break
-        case 'Cards Against Humanity':
-          CAHNewGame(id, playerId, playerName, playerColor)
-          break
+      const roomData = {
+        id: id,
+        game: slug,
+        title: title,
+        color: color,
+        minPlayer: minPlayer,
+        maxPlayer: maxPlayer,
+        numOfPlayers: 1,
+        phase: 'wait',
       }
+      const playerData = {
+        id: playerId,
+        name: playerName,
+        color: playerColor,
+        master: true,
+        phase: 'ready',
+      }
+      newGameRoom(id, roomData, playerId, playerData)
     }
     navigate(id)
   }
