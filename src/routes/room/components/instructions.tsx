@@ -3,6 +3,8 @@ import React from 'react'
 import { Box, Button, Modal } from '@mui/material'
 
 import { getInfo } from '../../../services/localforage'
+import BSInstructions from '../blank-slate/components/instructions'
+import CAHInstructions from '../cards-against-humanity/components/instructions'
 
 const style = {
   position: 'absolute',
@@ -16,14 +18,27 @@ const style = {
 
 const Instructions: React.FC = () => {
   const [open, setOpen] = React.useState(false)
-  const [file, setFile] = React.useState<string>()
+  const [game, setGame] = React.useState<string>()
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+
+  const gameInstructions = () => {
+    if (game) {
+      switch (game) {
+        case 'bs':
+          return <BSInstructions />
+        case 'cah':
+          return <CAHInstructions />
+        default:
+          break
+      }
+    }
+  }
 
   React.useEffect(() => {
     getInfo().then((value) => {
       if (value && value.gameId) {
-        setFile(`./games/${value.gameId}/instructions.png`)
+        setGame(value.gameId)
       }
     })
   }, [])
@@ -37,8 +52,14 @@ const Instructions: React.FC = () => {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-        <Box sx={style} className='overflow-y-auto w-11/12 laptop:w-4/5 max-h-screen'>
-          {file && <img src={file} alt='instructions' />}
+        <Box
+          sx={style}
+          className='overflow-y-auto max-h-screen w-11/12 laptop:w-4/5 flex flex-col p-4 gap-6'
+        >
+          <div className='flex justify-center items-center'>{game && gameInstructions()}</div>
+          <div className='flex justify-center items-center'>
+            <Button onClick={handleClose}>Close</Button>
+          </div>
         </Box>
       </Modal>
     </>
