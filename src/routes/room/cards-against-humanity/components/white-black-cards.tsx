@@ -23,7 +23,7 @@ const WhiteBlackCards: React.FC<CAHProps> = ({ roomData }) => {
   if (black !== roomData.currentBlack) {
     setBlack(roomData.currentBlack)
   }
-  
+
   if (whites !== roomData.currentWhites) {
     setWhites(roomData.currentWhites)
   }
@@ -50,7 +50,7 @@ const WhiteBlackCards: React.FC<CAHProps> = ({ roomData }) => {
         <div className='max-h-60 laptop:max-h-72 aspect-[492/683]'>
           <img
             className='aspect-[492/683]'
-            src={`/games/cards-against-humanity/black-cards/${black}`}
+            src={`/games/cah/black-cards/${black}`}
             alt='black-card'
           />
         </div>
@@ -63,7 +63,7 @@ const WhiteBlackCards: React.FC<CAHProps> = ({ roomData }) => {
               className={`aspect-[492/683] w-1/3 laptop:w-1/4 ${
                 choseCard === card ? 'border-8 border-blue-500' : ''
               }`}
-              src={`/games/cards-against-humanity/white-cards/${card}`}
+              src={`/games/cah/white-cards/${card}`}
               alt='black-card'
               key={card}
             />

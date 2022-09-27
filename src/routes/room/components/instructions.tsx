@@ -2,6 +2,8 @@ import React from 'react'
 
 import { Box, Button, Modal } from '@mui/material'
 
+import { getInfo } from '../../../services/localforage'
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -14,8 +16,17 @@ const style = {
 
 const Instructions: React.FC = () => {
   const [open, setOpen] = React.useState(false)
+  const [file, setFile] = React.useState<string>()
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+
+  React.useEffect(() => {
+    getInfo().then((value) => {
+      if (value && value.gameId) {
+        setFile(`./games/${value.gameId}/instructions.png`)
+      }
+    })
+  }, [])
 
   return (
     <>
@@ -27,7 +38,7 @@ const Instructions: React.FC = () => {
         aria-describedby='modal-modal-description'
       >
         <Box sx={style} className='overflow-y-auto w-11/12 laptop:w-4/5 max-h-screen'>
-          <img src='./games/bs/instructions.png' alt='instructions' />
+          {file && <img src={file} alt='instructions' />}
         </Box>
       </Modal>
     </>

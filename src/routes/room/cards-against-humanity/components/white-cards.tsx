@@ -30,7 +30,7 @@ const WhiteCards: React.FC<CAHProps> = ({ roomData }) => {
                         className={`aspect-[492/683] w-1/3 laptop:w-1/4 ${
                           chose === card ? 'border-8 border-blue-500' : ''
                         }`}
-                        src={`/games/cards-against-humanity/white-cards/${card}`}
+                        src={`/games/cah/white-cards/${card}`}
                         alt='black-card'
                         key={card}
                       />

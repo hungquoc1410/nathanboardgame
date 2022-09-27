@@ -15,7 +15,7 @@ const BlackCard: React.FC<CAHProps> = ({ roomData }) => {
         <div className='max-h-60 laptop:max-h-72 aspect-[492/683]'>
           <img
             className='aspect-[492/683]'
-            src={`/games/cards-against-humanity/black-cards/${black}`}
+            src={`/games/cah/black-cards/${black}`}
             alt='black-card'
           />
         </div>
