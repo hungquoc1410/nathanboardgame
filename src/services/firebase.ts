@@ -54,10 +54,6 @@ export const setRoomKeyRef = (roomId: string, key: string) => {
   return ref(Database, `rooms/${roomId}/${key}`)
 }
 
-export const setPlayerKeyRef = (roomId: string, playerId: string, key: string) => {
-  return ref(Database, `rooms/${roomId}/players/${playerId}/${key}`)
-}
-
 // Create data
 export const createRoom = (roomId: string, data: object) => {
   const roomRef = setRoomRef(roomId)
@@ -99,11 +95,6 @@ const getAllRoomsData = async () => {
 
 export const getRoomInfo = async (roomId: string, key: string) => {
   const snapshot = await get(query(ref(Database, `rooms/${roomId}/${key}`)))
-  return snapshot.val()
-}
-
-export const getPlayerInfo = async (roomId: string, playerId: string, key: string) => {
-  const snapshot = await get(query(ref(Database, `rooms/${roomId}/players/${playerId}/${key}`)))
   return snapshot.val()
 }
 
