@@ -53,7 +53,7 @@ const BSPlayerActions: React.FC = () => {
               return (
                 <>
                   <Button onClick={() => startRound()}>Start Round</Button>
-                  <Button onClick={() => backToWait()} color='secondary'>
+                  <Button onClick={() => backToWait()} color='secondary' variant='outlined'>
                     Back to waiting room
                   </Button>
                 </>
@@ -62,7 +62,7 @@ const BSPlayerActions: React.FC = () => {
               return (
                 <>
                   <Button onClick={() => newGame()}>Start a new game</Button>
-                  <Button onClick={() => backToWait()} color='secondary'>
+                  <Button onClick={() => backToWait()} color='secondary' variant='outlined'>
                     Back to waiting room
                   </Button>
                 </>

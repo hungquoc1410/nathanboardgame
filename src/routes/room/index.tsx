@@ -32,8 +32,6 @@ import {
 } from '../../services/firebase'
 import { getInfo } from '../../services/localforage'
 
-import { IBSPlayer } from './blank-slate/services/blank-slate'
-
 const RoomIndex: React.FC = () => {
   const theme = useTheme()
   const params = useParams()
@@ -63,7 +61,7 @@ const RoomIndex: React.FC = () => {
     setOpenNoti(false)
   }
 
-  const startGame = async () => {
+  const newGame = async () => {
     if (params.roomId) {
       const result = await checkGame()
       if (result) {
@@ -75,18 +73,20 @@ const RoomIndex: React.FC = () => {
   const checkGame = async () => {
     if (params.roomId) {
       let result = true
-      const snapshot = await getRoomInfo(params.roomId, 'players')
-      const players: IBSPlayer[] = createArrayFromObject(snapshot)
-      const minPlayer = await getRoomInfo(params.roomId, 'minPlayer')
-      const numOfPlayers = await getRoomInfo(params.roomId, 'numOfPlayers')
-      const allReady = !players.map((player) => player.phase === 'ready').includes(false)
-      if (!allReady) {
-        setNotiMessage('All players must be ready!')
-        setOpenNoti(true)
-        result = false
-      } else if (numOfPlayers < minPlayer) {
-        setNotiMessage('Does not have enough players!')
-        setOpenNoti(true)
+      if (data) {
+        const minPlayer = await getRoomInfo(params.roomId, 'minPlayer')
+        const numOfPlayers = await getRoomInfo(params.roomId, 'numOfPlayers')
+        const allReady = !data.map((player) => player.phase === 'ready').includes(false)
+        if (!allReady) {
+          setNotiMessage('All players must be ready!')
+          setOpenNoti(true)
+          result = false
+        } else if (numOfPlayers < minPlayer) {
+          setNotiMessage('Does not have enough players!')
+          setOpenNoti(true)
+          result = false
+        }
+      } else {
         result = false
       }
       return true
@@ -208,7 +208,7 @@ const RoomIndex: React.FC = () => {
                     <TableCell align='center'>
                       {you && you.master ? (
                         <div className='flex flex-col gap-4'>
-                          <Button onClick={() => startGame()}>Start Game</Button>
+                          <Button onClick={() => newGame()}>New Game</Button>
                           <Button onClick={() => navigate(-1)} variant='outlined' color='error'>
                             Leave Room
                           </Button>

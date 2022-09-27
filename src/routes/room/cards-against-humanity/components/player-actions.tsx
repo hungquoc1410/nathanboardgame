@@ -59,7 +59,7 @@ const CAHPlayerActions: React.FC<CAHProps> = ({ roomData }) => {
                 return (
                   <>
                     <Button onClick={() => startRound()}>Start Round</Button>
-                    <Button onClick={() => backToWait()} color='secondary'>
+                    <Button onClick={() => backToWait()} color='secondary' variant='outlined'>
                       Back to waiting room
                     </Button>
                   </>
@@ -80,7 +80,7 @@ const CAHPlayerActions: React.FC<CAHProps> = ({ roomData }) => {
               return (
                 <>
                   <Button onClick={() => drawCard()}>Draw a card</Button>
-                  <Button onClick={() => confirmRoomBlackCard()} color='secondary'>
+                  <Button onClick={() => confirmRoomBlackCard()} color='secondary' variant='outlined'>
                     Confirm
                   </Button>
                 </>
