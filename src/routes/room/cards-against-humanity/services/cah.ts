@@ -1,9 +1,7 @@
 import _ from 'underscore'
 
-import { grey } from '@mui/material/colors'
-
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
-import { createPlayer, createRoom, updatePlayer, updateRoom } from '../../../../services/firebase'
+import { IRoomPlayers, updatePlayer, updateRoom } from '../../../../services/firebase'
 
 import { blackCardsData } from './black-cards'
 import { whiteCardsData } from './white-cards'
@@ -31,56 +29,27 @@ export type ICAHPlayer = {
   name: string
   color: string
   master: boolean
-  drawer: boolean
   phase: string
+  drawer: boolean
   choseCard: string
   currentWhites: string[]
 }
 
-export const CAHNewGame = (roomId: string, playerId: string, name: string, color: string) => {
-  CAHRoom(roomId)
-  CAHPlayer(roomId, playerId, name, color, true, true)
-}
-
-export const CAHRoom = (roomId: string) => {
-  const roomData = {
-    id: roomId,
-    game: 'cah',
-    title: 'Cards Against Humanity',
-    color: grey[900],
-    minPlayer: 4,
-    maxPlayer: 10,
-    numOfPlayers: 1,
-    phase: 'wait',
+export const CAHNewGame = (roomId: string, playersData: IRoomPlayers) => {
+  playersData.forEach((player) => {
+    if (player.master) {
+      updatePlayer(roomId, player.id, { drawer: true, choseCard: '', currentWhites: [] })
+    } else {
+      updatePlayer(roomId, player.id, { drawer: false, choseCard: '', currentWhites: [] })
+    }
+  })
+  updateRoom(roomId, {
     blackCards: blackCardsData,
     whiteCards: whiteCardsData,
     currentBlack: '',
     currentWhites: [],
     choseCard: '',
-  }
-  createRoom(roomId, roomData)
-}
-
-export const CAHPlayer = (
-  roomId: string,
-  playerId: string,
-  name: string,
-  color: string,
-  master = false,
-  drawer = false
-) => {
-  const playerData = {
-    id: playerId,
-    points: 0,
-    name: name,
-    color: color,
-    master,
-    drawer,
-    phase: master === true ? 'ready' : 'wait',
-    choseCard: '',
-    currentWhites: [],
-  }
-  createPlayer(roomId, playerId, playerData)
+  })
 }
 
 export const CAHStart = (roomData: ICAHRoom) => {

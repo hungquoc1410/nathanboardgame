@@ -32,6 +32,8 @@ import {
 } from '../../services/firebase'
 import { getInfo } from '../../services/localforage'
 
+import { CAHNewGame } from './cards-against-humanity/services/cah'
+
 const RoomIndex: React.FC = () => {
   const theme = useTheme()
   const params = useParams()
@@ -62,9 +64,17 @@ const RoomIndex: React.FC = () => {
   }
 
   const newGame = async () => {
-    if (params.roomId) {
+    if (params.roomId && data) {
       const result = await checkGame()
       if (result) {
+        const game = await getRoomInfo(params.roomId, 'game')
+        switch (game) {
+          case 'cah':
+            CAHNewGame(params.roomId, data)
+            break
+          default:
+            break
+        }
         updateRoom(params.roomId, { phase: 'play' })
       }
     }
