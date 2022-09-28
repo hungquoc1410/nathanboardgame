@@ -31,6 +31,7 @@ const DIXITInstructions: React.FC = () => {
           Tất cả người chơi &#40;trừ người kể chuyện&#41; lần lượt chọn lá bài mà họ nghĩ là của
           người kể chuyện.
         </Typography>
+        <Typography variant='body1'>Không được chọn lá của chính mình.</Typography>
         <Typography variant='body1'>
           Nếu không ai &#40;hoặc tất cả mọi người&#41; chọn trúng lá của người kể chuyện.
         </Typography>
