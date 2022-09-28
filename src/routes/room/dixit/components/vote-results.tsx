@@ -14,14 +14,14 @@ const VoteResults: React.FC<DIXITProps> = ({ roomData }) => {
     const allPlayers = players.filter((player) => player.voteCard === card)
 
     return (
-      <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-4 w-48'>
         <img
-          className='aspect-[82/125] h-72'
+          className='aspect-[82/125] h-72 self-center'
           src={`/games/dixit/${card}`}
           alt='dixit-card'
           key={card}
         />
-        <div className='flex min-w-0 gap-4 justify-center items-center'>
+        <div className='flex flex-wrap w-full gap-4 justify-center items-center'>
           {allPlayers.map((player) => {
             return (
               <div key={player.id} className='flex'>

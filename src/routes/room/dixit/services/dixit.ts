@@ -88,7 +88,12 @@ export const DIXITRoomPrompt = (roomData: IDIXITRoom) => {
     updatePlayer(roomData.id, currentMaster.id, { teller: true })
   } else {
     const currentTeller = hasTeller[0]
-    const nextTellerIndex = players.indexOf(currentTeller)
+    let nextTellerIndex = players.indexOf(currentTeller)
+    if (nextTellerIndex === roomData.numOfPlayers - 1) {
+      nextTellerIndex = 0
+    } else {
+      nextTellerIndex += 1
+    }
     players.forEach((player, index) => {
       if (index === nextTellerIndex) {
         updatePlayer(roomData.id, player.id, { teller: true })
@@ -174,6 +179,25 @@ export const DIXITRoomPoint = (roomData: IDIXITRoom) => {
           }
           updatePlayer(roomData.id, player.id, { phase: 'point', points: newPoints })
         }
+      }
+    })
+  }
+}
+
+export const DIXITRoomEnd = (roomData: IDIXITRoom) => {
+  const players: IDIXITPlayer[] = createArrayFromObject(roomData.players)
+  const allPoints = players.map((player) => player.points)
+  const maxPoint = Math.max(...allPoints)
+  if (maxPoint < 30) {
+    players.forEach((player) => {
+      if (player.phase === 'point') {
+        updatePlayer(roomData.id, player.id, { phase: 'ready' })
+      }
+    })
+  } else {
+    players.forEach((player) => {
+      if (player.phase === 'point') {
+        updatePlayer(roomData.id, player.id, { phase: 'end' })
       }
     })
   }

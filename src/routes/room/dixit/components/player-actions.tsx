@@ -5,7 +5,7 @@ import { Button, Paper } from '@mui/material'
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { updateRoom } from '../../../../services/firebase'
 import { getInfo } from '../../../../services/localforage'
-import { DIXITNewGame, IDIXITPlayer } from '../services/dixit'
+import { DIXITNewGame, DIXITRoomPrompt, IDIXITPlayer } from '../services/dixit'
 import { DIXITProps } from '..'
 
 const DIXITPlayerActions: React.FC<DIXITProps> = ({ roomData }) => {
@@ -13,6 +13,7 @@ const DIXITPlayerActions: React.FC<DIXITProps> = ({ roomData }) => {
 
   const startRound = () => {
     updateRoom(roomData.id, { phase: 'divide' })
+    DIXITRoomPrompt(roomData)
   }
 
   const newGame = () => {
@@ -31,7 +32,7 @@ const DIXITPlayerActions: React.FC<DIXITProps> = ({ roomData }) => {
         case true:
           switch (phase) {
             case 'ready':
-              if (roomData.phase === 'play') {
+              if (roomData.phase === 'play' || roomData.phase === 'end') {
                 return (
                   <>
                     <Button onClick={() => startRound()}>Start Round</Button>

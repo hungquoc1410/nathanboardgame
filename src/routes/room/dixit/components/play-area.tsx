@@ -5,8 +5,8 @@ import { Paper } from '@mui/material'
 
 import {
   DIXITRoomDivide,
+  DIXITRoomEnd,
   DIXITRoomPoint,
-  DIXITRoomPrompt,
   DIXITRoomSubmit,
   DIXITRoomVote,
 } from '../services/dixit'
@@ -28,9 +28,6 @@ const DIXITPlayArea: React.FC<DIXITProps> = ({ roomData }) => {
       case 'divide':
         DIXITRoomDivide(roomData)
         break
-      case 'prompt':
-        DIXITRoomPrompt(roomData)
-        break
       case 'submit':
         DIXITRoomSubmit(roomData)
         break
@@ -39,6 +36,9 @@ const DIXITPlayArea: React.FC<DIXITProps> = ({ roomData }) => {
         break
       case 'point':
         DIXITRoomPoint(roomData)
+        break
+      case 'end':
+        DIXITRoomEnd(roomData)
         break
     }
   }, [roomData])

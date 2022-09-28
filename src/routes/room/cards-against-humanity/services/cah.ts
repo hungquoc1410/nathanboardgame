@@ -137,7 +137,6 @@ export const CAHRoomConfirmWhite = async (roomData: ICAHRoom) => {
   } else {
     index += 1
   }
-  console.log(index)
   const nextDrawer = players[index].id
   players.forEach((player) => {
     if (player.phase === 'submit') {
