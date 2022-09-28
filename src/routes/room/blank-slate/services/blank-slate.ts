@@ -72,16 +72,12 @@ export const BSRoomPoint = (roomData: IBSRoom) => {
   players.forEach((player) => {
     if (player.phase === 'submit') {
       const repeatTimes = allAnswers.filter((answer) => answer === player.answer).length
-      switch (repeatTimes) {
-        case 1:
-          updatePlayer(roomData.id, player.id, { phase: 'point' })
-          break
-        case 2:
-          updatePlayer(roomData.id, player.id, { phase: 'point', points: player.points + 3 })
-          break
-        default:
-          updatePlayer(roomData.id, player.id, { phase: 'point', points: player.points + 1 })
-          break
+      if (repeatTimes === 1) {
+        updatePlayer(roomData.id, player.id, { phase: 'point' })
+      } else if (repeatTimes === 2) {
+        updatePlayer(roomData.id, player.id, { phase: 'point', points: player.points + 3 })
+      } else {
+        updatePlayer(roomData.id, player.id, { phase: 'point', points: player.points + 1 })
       }
     }
   })
