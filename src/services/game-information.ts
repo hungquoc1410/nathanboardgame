@@ -1,4 +1,4 @@
-import { grey } from '@mui/material/colors'
+import { grey, orange } from '@mui/material/colors'
 
 export type GameInfo = {
   title: string
@@ -36,5 +36,17 @@ export const gameInfo: GameInfo[] = [
     slug: 'cah',
     minPlayer: 4,
     maxPlayer: 10,
+  },
+  {
+    title: 'Dixit',
+    subtitle: 'Give the perfect clue so most (not all) players guess the right surreal image card.',
+    image:
+      'https://cf.geekdo-images.com/J0PlHArkZDJ57H-brXW2Fw__itemrep/img/tsmN3sAHJ6trDaWNbq08BZXtq7g=/fit-in/246x300/filters:strip_icc()/pic6738336.jpg',
+    players: '3-6 Players',
+    playtime: '30 Mintues',
+    color: orange[500],
+    slug: 'dixit',
+    minPlayer: 3,
+    maxPlayer: 6,
   },
 ]
