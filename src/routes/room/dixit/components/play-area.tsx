@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom'
 
 import { Paper } from '@mui/material'
 
-import { DIXITRoomDivide, DIXITRoomPrompt } from '../services/dixit'
+import { DIXITRoomDivide, DIXITRoomPrompt, DIXITRoomSubmit } from '../services/dixit'
 import { DIXITProps } from '..'
 
+import PlayersSubmit from './players-submit'
 import TellerPrompt from './teller-prompt'
 
 const DIXITPlayArea: React.FC<DIXITProps> = ({ roomData }) => {
@@ -22,6 +23,9 @@ const DIXITPlayArea: React.FC<DIXITProps> = ({ roomData }) => {
       case 'prompt':
         DIXITRoomPrompt(roomData)
         break
+      case 'submit':
+        DIXITRoomSubmit(roomData)
+        break
     }
   }, [roomData])
 
@@ -30,6 +34,7 @@ const DIXITPlayArea: React.FC<DIXITProps> = ({ roomData }) => {
       <Paper elevation={3} sx={{ borderRadius: 6 }}>
         <div className='flex w-full h-full py-4 laptop:py-10 px-4 laptop:px-20 justify-center items-center'>
           {roomData.phase === 'prompt' && <TellerPrompt roomData={roomData} />}
+          {roomData.phase === 'submit' && <PlayersSubmit roomData={roomData} />}
         </div>
       </Paper>
     </div>

@@ -1,21 +1,16 @@
 import React from 'react'
 
-import { Alert, Button, Snackbar, Stack, TextField, Typography } from '@mui/material'
+import { Alert, Button, Snackbar, Stack, Typography } from '@mui/material'
 
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { getInfo } from '../../../../services/localforage'
-import { DIXITTellerPrompt, IDIXITPlayer } from '../services/dixit'
+import { DIXITPlayerSubmit, IDIXITPlayer } from '../services/dixit'
 import { DIXITProps } from '..'
 
-const TellerPrompt: React.FC<DIXITProps> = ({ roomData }) => {
+const PlayersSubmit: React.FC<DIXITProps> = ({ roomData }) => {
   const [data, setData] = React.useState<IDIXITPlayer>()
-  const [prompt, setPrompt] = React.useState<string>()
   const [chose, setChose] = React.useState<string>()
   const [openNoti, setOpenNoti] = React.useState(false)
-
-  const changePrompt = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPrompt(event.target.value)
-  }
 
   const handleNotiClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -25,8 +20,8 @@ const TellerPrompt: React.FC<DIXITProps> = ({ roomData }) => {
   }
 
   const confirmPrompt = () => {
-    if (chose && prompt && data && data.id) {
-      DIXITTellerPrompt(roomData, data.id, prompt, chose)
+    if (chose && data && data.id) {
+      DIXITPlayerSubmit(roomData, data.id, chose)
     } else {
       setOpenNoti(true)
     }
@@ -43,14 +38,11 @@ const TellerPrompt: React.FC<DIXITProps> = ({ roomData }) => {
 
   return (
     <>
-      {data && data.teller && data.cards && (
-        <Stack spacing={2} className='w-full flex items-center'>
-          <Stack spacing={1} className='w-1/3'>
-            <Typography variant='h6' align='center'>
-              Enter Your Prompt
-            </Typography>
-            <TextField variant='outlined' label='Prompt' value={prompt} onChange={changePrompt} />
-          </Stack>
+      <Stack spacing={2} className='w-full'>
+        <Typography variant='h5' align='center'>
+          {`Story Teller Prompt: ${roomData.prompt}`}
+        </Typography>
+        {data && !data.teller && (
           <Stack spacing={1} className='w-full'>
             <Typography variant='h6' align='center'>
               Choose Your Card
@@ -70,10 +62,12 @@ const TellerPrompt: React.FC<DIXITProps> = ({ roomData }) => {
                 )
               })}
             </div>
+            <div className='self-center'>
+              <Button onClick={() => confirmPrompt()}>Confirm</Button>
+            </div>
           </Stack>
-          <Button onClick={() => confirmPrompt()}>Confirm</Button>
-        </Stack>
-      )}
+        )}
+      </Stack>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={openNoti}
@@ -81,11 +75,11 @@ const TellerPrompt: React.FC<DIXITProps> = ({ roomData }) => {
         onClose={handleNotiClose}
       >
         <Alert onClose={handleNotiClose} severity='error' sx={{ maxWidth: 300 }}>
-          Please enter your prompt and choose your card!
+          Please choose your card!
         </Alert>
       </Snackbar>
     </>
   )
 }
 
-export default TellerPrompt
+export default PlayersSubmit

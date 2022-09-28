@@ -1,4 +1,4 @@
-import { grey, yellow } from '@mui/material/colors'
+import { grey, orange } from '@mui/material/colors'
 
 export type GameInfo = {
   title: string
@@ -44,7 +44,7 @@ export const gameInfo: GameInfo[] = [
       'https://cf.geekdo-images.com/J0PlHArkZDJ57H-brXW2Fw__itemrep/img/tsmN3sAHJ6trDaWNbq08BZXtq7g=/fit-in/246x300/filters:strip_icc()/pic6738336.jpg',
     players: '3-6 Players',
     playtime: '30 Mintues',
-    color: yellow[500],
+    color: orange[500],
     slug: 'dixit',
     minPlayer: 3,
     maxPlayer: 6,

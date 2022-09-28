@@ -102,3 +102,20 @@ export const DIXITTellerPrompt = (
   updatePlayer(roomData.id, tellerId, { phase: 'vote', cards: newCards })
   updateRoom(roomData.id, { tellerCard: choseCard, prompt: prompt, phase: 'submit' })
 }
+
+export const DIXITPlayerSubmit = (roomData: IDIXITRoom, playerId: string, choseCard: string) => {
+  const players: IDIXITPlayer[] = createArrayFromObject(roomData.players)
+  const player = players.filter((player) => player.id === playerId)[0]
+  const cards = player.cards
+  const newCards = _.difference(cards, [choseCard])
+  updatePlayer(roomData.id, playerId, { phase: 'submit', cards: newCards })
+}
+
+export const DIXITRoomSubmit = (roomData: IDIXITRoom) => {
+  const players: IDIXITPlayer[] = createArrayFromObject(roomData.players)
+  const playersNoTeller = players.filter((player) => !player.teller)
+  const allSubmit = !playersNoTeller.map((player) => player.phase === 'submit').includes(false)
+  if (allSubmit) {
+    updateRoom(roomData.id, { phase: 'vote' })
+  }
+}
