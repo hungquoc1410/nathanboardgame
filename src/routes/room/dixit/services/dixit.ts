@@ -1,3 +1,5 @@
+import _ from 'underscore'
+
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { IRoomPlayers, updatePlayer, updateRoom } from '../../../../services/firebase'
 
@@ -12,8 +14,8 @@ export type IDIXITRoom = {
   maxPlayer: number
   numOfPlayers: number
   phase: string
-  words: string[]
-  current: string
+  cards: string[]
+  prompt: string
   players: { [x: string]: IDIXITPlayer }
 }
 
@@ -26,17 +28,45 @@ export type IDIXITPlayer = {
   phase: string
   answer: string
   teller: boolean
+  cards: string[]
 }
 
 export const DIXITNewGame = (roomId: string, playersData: IRoomPlayers) => {
   playersData.forEach((player) => {
-    updatePlayer(roomId, player.id, { answer: '', points: 0, teller: false, phase: 'ready' })
+    updatePlayer(roomId, player.id, {
+      answer: '',
+      points: 0,
+      teller: false,
+      phase: 'ready',
+      cards: [],
+    })
   })
-  updateRoom(roomId, { words: cardsData, current: '', phase: 'play' })
+  updateRoom(roomId, { cards: cardsData, prompt: '', phase: 'play' })
 }
 
-export const DIXITRoomPlay = (roomData: IDIXITRoom) => {
-  updateRoom(roomData.id, { phase: 'prompt' })
+export const DIXITRoomDivide = (roomData: IDIXITRoom) => {
+  const roomCards = roomData.cards
+  const players: IDIXITPlayer[] = createArrayFromObject(roomData.players)
+  const allPlayerCards = players.map((player) => player.cards).flat()
+  const remainingCards = _.difference(roomCards, allPlayerCards)
+  const allReceive = !players.map((player) => player.phase === 'receive').includes(false)
+  if (allReceive) {
+    updateRoom(roomData.id, { phase: 'prompt', cards: remainingCards })
+  } else {
+    players.forEach((player) => {
+      if (player.phase === 'ready') {
+        const playerCards = player.cards
+        let newCards: string[]
+        if (playerCards) {
+          const cardNeeded = 6 - playerCards.length
+          newCards = playerCards.concat(_.shuffle(remainingCards).splice(0, cardNeeded))
+        } else {
+          newCards = _.shuffle(remainingCards).splice(0, 6)
+        }
+        updatePlayer(roomData.id, player.id, { cards: newCards, phase: 'receive' })
+      }
+    })
+  }
 }
 
 export const DIXITRoomPrompt = (roomData: IDIXITRoom) => {

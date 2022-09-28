@@ -12,7 +12,7 @@ const DIXITPlayerActions: React.FC<DIXITProps> = ({ roomData }) => {
   const [data, setData] = React.useState<IDIXITPlayer>()
 
   const startRound = () => {
-    updateRoom(roomData.id, { phase: 'prompt' })
+    updateRoom(roomData.id, { phase: 'divide' })
   }
 
   const newGame = () => {
