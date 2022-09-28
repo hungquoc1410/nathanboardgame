@@ -60,7 +60,7 @@ const TellerPrompt: React.FC<DIXITProps> = ({ roomData }) => {
                 return (
                   <img
                     onClick={() => setChose(card)}
-                    className={`aspect-[82/125] w-1/3 ${
+                    className={`aspect-[82/125] h-72 ${
                       chose === card ? 'border-8 border-blue-500' : ''
                     }`}
                     src={`/games/dixit/${card}`}
@@ -74,6 +74,7 @@ const TellerPrompt: React.FC<DIXITProps> = ({ roomData }) => {
           <Button onClick={() => confirmPrompt()}>Confirm</Button>
         </Stack>
       )}
+      {data && !data.teller && <Typography variant='h5'>Waiting for the Story Teller...</Typography>}
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={openNoti}

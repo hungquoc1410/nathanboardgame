@@ -52,7 +52,7 @@ const PlayersSubmit: React.FC<DIXITProps> = ({ roomData }) => {
                 return (
                   <img
                     onClick={() => setChose(card)}
-                    className={`aspect-[82/125] w-1/3 ${
+                    className={`aspect-[82/125] h-72 ${
                       chose === card ? 'border-8 border-blue-500' : ''
                     }`}
                     src={`/games/dixit/${card}`}
@@ -67,6 +67,7 @@ const PlayersSubmit: React.FC<DIXITProps> = ({ roomData }) => {
             </div>
           </Stack>
         )}
+        {data && data.teller && <Typography variant='h5' align='center'>Waiting for other players to submit...</Typography>}
       </Stack>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}

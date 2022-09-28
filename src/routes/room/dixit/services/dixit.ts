@@ -15,6 +15,7 @@ export type IDIXITRoom = {
   numOfPlayers: number
   phase: string
   cards: string[]
+  submitCards: string[]
   prompt: string
   tellerCard: string
   players: { [x: string]: IDIXITPlayer }
@@ -27,9 +28,10 @@ export type IDIXITPlayer = {
   color: string
   master: boolean
   phase: string
-  answer: string
   teller: boolean
   cards: string[]
+  submitCard: string
+  voteCard: string
 }
 
 export const DIXITNewGame = (roomId: string, playersData: IRoomPlayers) => {
@@ -40,9 +42,17 @@ export const DIXITNewGame = (roomId: string, playersData: IRoomPlayers) => {
       teller: false,
       phase: 'ready',
       cards: [],
+      submitCard: '',
+      voteCard: '',
     })
   })
-  updateRoom(roomId, { cards: cardsData, prompt: '', phase: 'play', tellerCard: '' })
+  updateRoom(roomId, {
+    cards: cardsData,
+    prompt: '',
+    phase: 'play',
+    tellerCard: '',
+    submitCards: [],
+  })
 }
 
 export const DIXITRoomDivide = (roomData: IDIXITRoom) => {
@@ -108,7 +118,7 @@ export const DIXITPlayerSubmit = (roomData: IDIXITRoom, playerId: string, choseC
   const player = players.filter((player) => player.id === playerId)[0]
   const cards = player.cards
   const newCards = _.difference(cards, [choseCard])
-  updatePlayer(roomData.id, playerId, { phase: 'submit', cards: newCards })
+  updatePlayer(roomData.id, playerId, { phase: 'submit', cards: newCards, submitCard: choseCard })
 }
 
 export const DIXITRoomSubmit = (roomData: IDIXITRoom) => {
@@ -116,6 +126,19 @@ export const DIXITRoomSubmit = (roomData: IDIXITRoom) => {
   const playersNoTeller = players.filter((player) => !player.teller)
   const allSubmit = !playersNoTeller.map((player) => player.phase === 'submit').includes(false)
   if (allSubmit) {
-    updateRoom(roomData.id, { phase: 'vote' })
+    const allSubmitCards = playersNoTeller.map((player) => player.submitCard)
+    updateRoom(roomData.id, { phase: 'vote', submitCards: allSubmitCards })
+  }
+}
+
+export const DIXITPlayerVote = (roomData: IDIXITRoom, playerId: string, choseCard: string) => {
+  updatePlayer(roomData.id, playerId, { phase: 'vote', voteCard: choseCard })
+}
+
+export const DIXITRoomVote = (roomData: IDIXITRoom) => {
+  const players: IDIXITPlayer[] = createArrayFromObject(roomData.players)
+  const allVote = !players.map((player) => player.phase === 'vote').includes(false)
+  if (allVote) {
+    updateRoom(roomData.id, { phase: 'point' })
   }
 }
