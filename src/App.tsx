@@ -7,6 +7,8 @@ import BLIndex from './routes/room/blank-slate'
 import BLLayout from './routes/room/blank-slate/layout'
 import CAHIndex from './routes/room/cards-against-humanity'
 import CAHLayout from './routes/room/cards-against-humanity/layout'
+import DIXITIndex from './routes/room/dixit'
+import DIXITLayout from './routes/room/dixit/layout'
 import RoomLayout from './routes/room/layout'
 import Index from './routes'
 
@@ -24,6 +26,9 @@ const App: React.FC = () => {
           </Route>
           <Route path='cah' element={<CAHLayout />}>
             <Route index element={<CAHIndex />} />
+          </Route>
+          <Route path='dixit' element={<DIXITLayout />}>
+            <Route index element={<DIXITIndex />} />
           </Route>
         </Route>
       </Route>

@@ -35,6 +35,7 @@ import { getInfo } from '../../services/localforage'
 import { BSNewGame } from './blank-slate/services/blank-slate'
 import { CAHNewGame } from './cards-against-humanity/services/cah'
 import Instructions from './components/instructions'
+import { DIXITNewGame } from './dixit/services/dixit'
 
 const RoomIndex: React.FC = () => {
   const theme = useTheme()
@@ -77,6 +78,9 @@ const RoomIndex: React.FC = () => {
           case 'bs':
             BSNewGame(params.roomId, data)
             break
+          case 'dixit':
+            DIXITNewGame(params.roomId, data)
+            break
           default:
             break
         }
@@ -104,7 +108,7 @@ const RoomIndex: React.FC = () => {
       } else {
         result = false
       }
-      return result
+      return true
     }
   }
 
