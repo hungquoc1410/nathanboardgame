@@ -127,7 +127,10 @@ export const DIXITRoomSubmit = (roomData: IDIXITRoom) => {
   const allSubmit = !playersNoTeller.map((player) => player.phase === 'submit').includes(false)
   if (allSubmit) {
     const allSubmitCards = playersNoTeller.map((player) => player.submitCard)
-    updateRoom(roomData.id, { phase: 'vote', submitCards: allSubmitCards })
+    updateRoom(roomData.id, {
+      phase: 'vote',
+      submitCards: allSubmitCards.concat([roomData.tellerCard]),
+    })
   }
 }
 
@@ -140,5 +143,38 @@ export const DIXITRoomVote = (roomData: IDIXITRoom) => {
   const allVote = !players.map((player) => player.phase === 'vote').includes(false)
   if (allVote) {
     updateRoom(roomData.id, { phase: 'point' })
+  }
+}
+
+export const DIXITRoomPoint = (roomData: IDIXITRoom) => {
+  const players: IDIXITPlayer[] = createArrayFromObject(roomData.players)
+  const allPoint = !players.map((player) => player.phase === 'point').includes(false)
+  if (allPoint) {
+    updateRoom(roomData.id, { phase: 'end' })
+  } else {
+    const allVotes = players.map((player) => player.voteCard).filter((e) => e)
+    const repeatTimes = allVotes.filter((vote) => vote === roomData.tellerCard).length
+    players.forEach((player) => {
+      if (player.phase === 'vote') {
+        if (player.teller) {
+          let newPoints = player.points
+          if (repeatTimes !== 0 && repeatTimes !== roomData.numOfPlayers - 1) {
+            newPoints += 3
+          }
+          updatePlayer(roomData.id, player.id, { phase: 'point', points: newPoints })
+        } else {
+          const voteForPlayer = allVotes.filter((vote) => vote === player.submitCard).length
+          let newPoints = player.points + voteForPlayer
+          if (repeatTimes === 0 || repeatTimes === roomData.numOfPlayers - 1) {
+            newPoints += 2
+          } else {
+            if (player.voteCard === roomData.tellerCard) {
+              newPoints += 3
+            }
+          }
+          updatePlayer(roomData.id, player.id, { phase: 'point', points: newPoints })
+        }
+      }
+    })
   }
 }

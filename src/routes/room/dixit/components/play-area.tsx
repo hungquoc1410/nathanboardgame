@@ -3,12 +3,19 @@ import { useNavigate } from 'react-router-dom'
 
 import { Paper } from '@mui/material'
 
-import { DIXITRoomDivide, DIXITRoomPrompt, DIXITRoomSubmit, DIXITRoomVote } from '../services/dixit'
+import {
+  DIXITRoomDivide,
+  DIXITRoomPoint,
+  DIXITRoomPrompt,
+  DIXITRoomSubmit,
+  DIXITRoomVote,
+} from '../services/dixit'
 import { DIXITProps } from '..'
 
 import PlayersSubmit from './players-submit'
 import PlayersVote from './players-vote'
 import TellerPrompt from './teller-prompt'
+import VoteResults from './vote-results'
 
 const DIXITPlayArea: React.FC<DIXITProps> = ({ roomData }) => {
   const navigate = useNavigate()
@@ -30,6 +37,9 @@ const DIXITPlayArea: React.FC<DIXITProps> = ({ roomData }) => {
       case 'vote':
         DIXITRoomVote(roomData)
         break
+      case 'point':
+        DIXITRoomPoint(roomData)
+        break
     }
   }, [roomData])
 
@@ -40,6 +50,7 @@ const DIXITPlayArea: React.FC<DIXITProps> = ({ roomData }) => {
           {roomData.phase === 'prompt' && <TellerPrompt roomData={roomData} />}
           {roomData.phase === 'submit' && <PlayersSubmit roomData={roomData} />}
           {roomData.phase === 'vote' && <PlayersVote roomData={roomData} />}
+          {roomData.phase === 'end' && <VoteResults roomData={roomData} />}
         </div>
       </Paper>
     </div>
