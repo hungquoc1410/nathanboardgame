@@ -1,3 +1,4 @@
+import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { IRoomPlayers, updatePlayer, updateRoom } from '../../../../services/firebase'
 
 import { cardsData } from './cards'
@@ -36,4 +37,23 @@ export const DIXITNewGame = (roomId: string, playersData: IRoomPlayers) => {
 
 export const DIXITRoomPlay = (roomData: IDIXITRoom) => {
   updateRoom(roomData.id, { phase: 'prompt' })
+}
+
+export const DIXITRoomPrompt = (roomData: IDIXITRoom) => {
+  const players: IDIXITPlayer[] = createArrayFromObject(roomData.players)
+  const hasTeller = players.filter((player) => player.teller)
+  if (hasTeller.length === 0) {
+    const currentMaster = players.filter((player) => player.master)[0]
+    updatePlayer(roomData.id, currentMaster.id, { teller: true })
+  } else {
+    const currentTeller = hasTeller[0]
+    const nextTellerIndex = players.indexOf(currentTeller)
+    players.forEach((player, index) => {
+      if (index === nextTellerIndex) {
+        updatePlayer(roomData.id, player.id, { teller: true })
+      } else {
+        updatePlayer(roomData.id, player.id, { teller: false })
+      }
+    })
+  }
 }

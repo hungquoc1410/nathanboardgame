@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { Paper } from '@mui/material'
 
+import { DIXITRoomPrompt } from '../services/dixit'
 import { DIXITProps } from '..'
 
 const DIXITPlayArea: React.FC<DIXITProps> = ({ roomData }) => {
@@ -12,6 +13,9 @@ const DIXITPlayArea: React.FC<DIXITProps> = ({ roomData }) => {
     switch (roomData.phase) {
       case 'wait':
         navigate(`/${roomData.id}`)
+        break
+      case 'prompt':
+        DIXITRoomPrompt(roomData)
         break
     }
   }, [roomData])

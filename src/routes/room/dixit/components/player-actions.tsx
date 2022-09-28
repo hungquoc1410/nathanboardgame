@@ -5,7 +5,7 @@ import { Button, Paper } from '@mui/material'
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { updateRoom } from '../../../../services/firebase'
 import { getInfo } from '../../../../services/localforage'
-import { IDIXITPlayer } from '../services/dixit'
+import { DIXITNewGame, IDIXITPlayer } from '../services/dixit'
 import { DIXITProps } from '..'
 
 const DIXITPlayerActions: React.FC<DIXITProps> = ({ roomData }) => {
@@ -16,7 +16,8 @@ const DIXITPlayerActions: React.FC<DIXITProps> = ({ roomData }) => {
   }
 
   const newGame = () => {
-    console.log('run')
+    const playersData = createArrayFromObject(roomData.players)
+    DIXITNewGame(roomData.id, playersData)
   }
 
   const backToWait = () => {
