@@ -71,6 +71,22 @@ const DIXITIndex: React.FC = () => {
           <div className='flex-1 min-w-0 flex'>{data && <DIXITPlayArea roomData={data} />}</div>
         </div>
       </div>
+      <div className='flex flex-col laptop:hidden mb-8'>
+        <div className='flex flex-col justify-center items-center gap-4'>
+          <div className='flex justify-evenly gap-4'>
+            <PlayerComponent index={1} />
+            <PlayerComponent index={2} />
+            <PlayerComponent index={3} />
+          </div>
+          <div className='flex justify-evenly'>
+            <PlayerComponent index={4} />
+            <PlayerComponent index={5} />
+            <PlayerComponent index={6} />
+          </div>
+          {data && <DIXITPlayArea roomData={data} />}
+          {data && <DIXITPlayerActions roomData={data} />}
+        </div>
+      </div>
     </>
   )
 }

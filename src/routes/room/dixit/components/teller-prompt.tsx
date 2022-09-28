@@ -45,7 +45,7 @@ const TellerPrompt: React.FC<DIXITProps> = ({ roomData }) => {
     <>
       {data && data.teller && data.cards && (
         <Stack spacing={2} className='w-full flex items-center'>
-          <Stack spacing={1} className='w-1/3'>
+          <Stack spacing={1} className='w-full laptop:w-1/3'>
             <Typography variant='h6' align='center'>
               Enter Your Prompt
             </Typography>
@@ -55,12 +55,12 @@ const TellerPrompt: React.FC<DIXITProps> = ({ roomData }) => {
             <Typography variant='h6' align='center'>
               Choose Your Card
             </Typography>
-            <div className='max-h-60 laptop:max-h-72 flex flex-row gap-6'>
+            <div className='flex flex-row justify-start laptop:justify-evenly gap-6 overflow-x-scroll laptop:overflow-hidden'>
               {data.cards.map((card) => {
                 return (
                   <img
                     onClick={() => setChose(card)}
-                    className={`aspect-[82/125] h-72 ${
+                    className={`aspect-[82/125] h-60 laptop:h-64 ${
                       chose === card ? 'border-8 border-blue-500' : ''
                     }`}
                     src={`/games/dixit/${card}`}
@@ -74,7 +74,9 @@ const TellerPrompt: React.FC<DIXITProps> = ({ roomData }) => {
           <Button onClick={() => confirmPrompt()}>Confirm</Button>
         </Stack>
       )}
-      {data && !data.teller && <Typography variant='h5'>Waiting for the Story Teller...</Typography>}
+      {data && !data.teller && (
+        <Typography variant='h5'>Wait for the Story Teller...</Typography>
+      )}
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={openNoti}

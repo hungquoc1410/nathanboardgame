@@ -16,7 +16,7 @@ const VoteResults: React.FC<DIXITProps> = ({ roomData }) => {
     return (
       <div className='flex flex-col gap-4 w-48'>
         <img
-          className='aspect-[82/125] h-72 self-center'
+          className='aspect-[82/125] h-60 laptop:h-64 self-center'
           src={`/games/dixit/${card}`}
           alt='dixit-card'
           key={card}
@@ -40,7 +40,7 @@ const VoteResults: React.FC<DIXITProps> = ({ roomData }) => {
         {`Story Teller Prompt: ${roomData.prompt}`}
       </Typography>
       <Stack spacing={1} className='w-full'>
-        <div className='flex justify-center flex-row gap-6'>
+        <div className='flex justify-start flex-row gap-6 overflow-scroll laptop:overflow-hidden laptop:justify-evenly'>
           {roomData.submitCards.map((card) => {
             return <VoteCard key={card} card={card} />
           })}

@@ -46,20 +46,27 @@ const PlayersVote: React.FC<DIXITProps> = ({ roomData }) => {
     <>
       <Stack spacing={2} className='w-full'>
         <Typography variant='h5' align='center'>
-          {`Story Teller Prompt: ${roomData.prompt}`}
+          Story Teller Prompt
+        </Typography>
+        <Typography variant='h5' align='center' className='text-pink-500'>
+          {roomData.prompt}
         </Typography>
         <Stack spacing={1} className='w-full'>
-          {data && !data.teller && (
+          {data && data.teller ? (
+            <Typography variant='h6' align='center'>
+              Wait for others vote...
+            </Typography>
+          ) : (
             <Typography variant='h6' align='center'>
               Choose Your Vote Card
             </Typography>
           )}
-          <div className='max-h-60 laptop:max-h-72 flex justify-center flex-row gap-6'>
+          <div className='flex flex-row gap-6 overflow-scroll laptop:overflow-hidden justify-start laptop:justify-evenly'>
             {roomData.submitCards.map((card) => {
               return (
                 <img
                   onClick={() => changeChose(card)}
-                  className={`aspect-[82/125] h-72 ${
+                  className={`aspect-[82/125] h-60 laptop:h-64 ${
                     chose === card ? 'border-8 border-blue-500' : ''
                   }`}
                   src={`/games/dixit/${card}`}

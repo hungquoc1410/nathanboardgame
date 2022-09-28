@@ -40,19 +40,22 @@ const PlayersSubmit: React.FC<DIXITProps> = ({ roomData }) => {
     <>
       <Stack spacing={2} className='w-full'>
         <Typography variant='h5' align='center'>
-          {`Story Teller Prompt: ${roomData.prompt}`}
+          Story Teller Prompt
+        </Typography>
+        <Typography variant='h5' align='center' className='text-pink-500'>
+          {roomData.prompt}
         </Typography>
         {data && !data.teller && (
           <Stack spacing={1} className='w-full'>
             <Typography variant='h6' align='center'>
               Choose Your Card
             </Typography>
-            <div className='max-h-60 laptop:max-h-72 flex flex-row gap-6'>
+            <div className='flex justify-start overflow-x-scroll laptop:justify-evenly laptop:overflow-hidden flex-row gap-6 '>
               {data.cards.map((card) => {
                 return (
                   <img
                     onClick={() => setChose(card)}
-                    className={`aspect-[82/125] h-72 ${
+                    className={`aspect-[82/125] h-60 laptop:h-64 ${
                       chose === card ? 'border-8 border-blue-500' : ''
                     }`}
                     src={`/games/dixit/${card}`}
@@ -67,7 +70,11 @@ const PlayersSubmit: React.FC<DIXITProps> = ({ roomData }) => {
             </div>
           </Stack>
         )}
-        {data && data.teller && <Typography variant='h5' align='center'>Waiting for other players to submit...</Typography>}
+        {data && data.teller && (
+          <Typography variant='h5' align='center'>
+            Wait for other players to submit...
+          </Typography>
+        )}
       </Stack>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
