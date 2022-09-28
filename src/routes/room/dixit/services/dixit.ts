@@ -16,6 +16,7 @@ export type IDIXITRoom = {
   phase: string
   cards: string[]
   prompt: string
+  tellerCard: string
   players: { [x: string]: IDIXITPlayer }
 }
 
@@ -41,7 +42,7 @@ export const DIXITNewGame = (roomId: string, playersData: IRoomPlayers) => {
       cards: [],
     })
   })
-  updateRoom(roomId, { cards: cardsData, prompt: '', phase: 'play' })
+  updateRoom(roomId, { cards: cardsData, prompt: '', phase: 'play', tellerCard: '' })
 }
 
 export const DIXITRoomDivide = (roomData: IDIXITRoom) => {
@@ -86,4 +87,18 @@ export const DIXITRoomPrompt = (roomData: IDIXITRoom) => {
       }
     })
   }
+}
+
+export const DIXITTellerPrompt = (
+  roomData: IDIXITRoom,
+  tellerId: string,
+  prompt: string,
+  choseCard: string
+) => {
+  const players: IDIXITPlayer[] = createArrayFromObject(roomData.players)
+  const teller = players.filter((player) => player.teller)[0]
+  const tellerCards = teller.cards
+  const newCards = _.difference(tellerCards, [choseCard])
+  updatePlayer(roomData.id, tellerId, { phase: 'vote', cards: newCards })
+  updateRoom(roomData.id, { tellerCard: choseCard, prompt: prompt, phase: 'submit' })
 }

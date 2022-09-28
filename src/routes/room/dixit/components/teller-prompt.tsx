@@ -1,12 +1,36 @@
 import React from 'react'
 
+import { Alert, Button, Snackbar, Stack, TextField, Typography } from '@mui/material'
+
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { getInfo } from '../../../../services/localforage'
-import { IDIXITPlayer } from '../services/dixit'
+import { DIXITTellerPrompt, IDIXITPlayer } from '../services/dixit'
 import { DIXITProps } from '..'
 
 const TellerPrompt: React.FC<DIXITProps> = ({ roomData }) => {
   const [data, setData] = React.useState<IDIXITPlayer>()
+  const [prompt, setPrompt] = React.useState<string>()
+  const [chose, setChose] = React.useState<string>()
+  const [openNoti, setOpenNoti] = React.useState(false)
+
+  const changePrompt = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPrompt(event.target.value)
+  }
+
+  const handleNotiClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpenNoti(false)
+  }
+
+  const confirmPrompt = () => {
+    if (chose && prompt && data && data.id) {
+      DIXITTellerPrompt(roomData, data.id, prompt, chose)
+    } else {
+      setOpenNoti(true)
+    }
+  }
 
   React.useEffect(() => {
     getInfo().then((value) => {
@@ -17,7 +41,47 @@ const TellerPrompt: React.FC<DIXITProps> = ({ roomData }) => {
     })
   }, [roomData])
 
-  return <>{data && data.teller && <div>Teller</div>}</>
+  return (
+    <>
+      {data && data.teller && data.cards && (
+        <Stack spacing={2} className='w-full flex items-center'>
+          <Stack spacing={1} className='w-1/3'>
+            <Typography variant='h6'>Enter Your Prompt</Typography>
+            <TextField variant='outlined' label='Prompt' value={prompt} onChange={changePrompt} />
+          </Stack>
+          <Stack spacing={1} className='w-full'>
+            <Typography variant='h6'>Choose Your Card</Typography>
+            <div className='max-h-60 laptop:max-h-72 flex flex-row gap-6'>
+              {data.cards.map((card) => {
+                return (
+                  <img
+                    onClick={() => setChose(card)}
+                    className={`aspect-[82/125] w-1/3 laptop:w-1/3 ${
+                      chose === card ? 'border-8 border-blue-500' : ''
+                    }`}
+                    src={`/games/dixit/${card}`}
+                    alt='dixit-card'
+                    key={card}
+                  />
+                )
+              })}
+            </div>
+          </Stack>
+          <Button onClick={() => confirmPrompt()}>Confirm</Button>
+        </Stack>
+      )}
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={openNoti}
+        autoHideDuration={3000}
+        onClose={handleNotiClose}
+      >
+        <Alert onClose={handleNotiClose} severity='error' sx={{ maxWidth: 300 }}>
+          Please enter your prompt and choose your card!
+        </Alert>
+      </Snackbar>
+    </>
+  )
 }
 
 export default TellerPrompt

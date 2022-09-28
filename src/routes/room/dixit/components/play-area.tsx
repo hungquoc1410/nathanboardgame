@@ -26,7 +26,7 @@ const DIXITPlayArea: React.FC<DIXITProps> = ({ roomData }) => {
   }, [roomData])
 
   return (
-    <div className='p-1 flex-1 w-full bg-gradient-to-br from-blue-500 to-pink-500 rounded-3xl'>
+    <div className='p-1 flex-1 w-full bg-gradient-to-br from-blue-500 to-pink-500 rounded-3xl mb-8'>
       <Paper elevation={3} sx={{ borderRadius: 6 }}>
         <div className='flex w-full h-full py-4 laptop:py-10 px-4 laptop:px-20 justify-center items-center'>
           {roomData.phase === 'prompt' && <TellerPrompt roomData={roomData} />}
