@@ -5,6 +5,7 @@ import { Box, Button, Modal } from '@mui/material'
 import { getInfo } from '../../../services/localforage'
 import BSInstructions from '../blank-slate/components/instructions'
 import CAHInstructions from '../cards-against-humanity/components/instructions'
+import DIXITInstructions from '../dixit/components/instructions'
 
 const style = {
   position: 'absolute',
@@ -29,8 +30,8 @@ const Instructions: React.FC = () => {
           return <BSInstructions />
         case 'cah':
           return <CAHInstructions />
-        default:
-          break
+        case 'dixit':
+          return <DIXITInstructions />
       }
     }
   }
