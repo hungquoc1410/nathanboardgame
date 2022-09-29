@@ -78,7 +78,7 @@ const DIXITIndex: React.FC = () => {
             <PlayerComponent index={2} />
             <PlayerComponent index={3} />
           </div>
-          <div className='flex justify-evenly'>
+          <div className='flex justify-evenly gap-4'>
             <PlayerComponent index={4} />
             <PlayerComponent index={5} />
             <PlayerComponent index={6} />

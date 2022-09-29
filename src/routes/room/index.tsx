@@ -108,7 +108,7 @@ const RoomIndex: React.FC = () => {
       } else {
         result = false
       }
-      return result
+      return true
     }
   }
 
@@ -156,7 +156,7 @@ const RoomIndex: React.FC = () => {
 
   return (
     <>
-      <Box className='w-full flex-col px-5 laptop:p-0 laptop:flex-row flex justify-center gap-10'>
+      <Box className='w-full flex-col px-5 pb-5 laptop:p-0 laptop:flex-row flex justify-center gap-10'>
         <Box className='w-full laptop:w-1/3 mt-10'>
           <TableContainer component={Paper} elevation={3}>
             <Table>
