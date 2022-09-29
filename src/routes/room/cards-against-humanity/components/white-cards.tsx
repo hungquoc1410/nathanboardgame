@@ -17,17 +17,21 @@ const WhiteCards: React.FC<CAHProps> = ({ roomData }) => {
       const { drawer, phase, currentWhites } = data
       switch (drawer) {
         case true:
-          break
+          return (
+            <Typography variant='h6' align='center'>
+              Waiting for other players...
+            </Typography>
+          )
         default:
           switch (phase) {
             case 'receive':
               return (
-                <div className='max-h-60 laptop:max-h-72 flex flex-row overflow-x-scroll gap-6'>
+                <div className='flex flex-row overflow-auto gap-6 mt-3'>
                   {currentWhites.map((card) => {
                     return (
                       <img
                         onClick={() => setChose(card)}
-                        className={`aspect-[492/683] w-1/3 laptop:w-1/4 ${
+                        className={`aspect-[256/360] h-64 laptop:h-72 ${
                           chose === card ? 'border-8 border-blue-500' : ''
                         }`}
                         src={`/games/cah/white-cards/${card}`}

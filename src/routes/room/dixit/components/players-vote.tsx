@@ -61,7 +61,7 @@ const PlayersVote: React.FC<DIXITProps> = ({ roomData }) => {
               Choose Your Vote Card
             </Typography>
           )}
-          <div className='flex flex-row gap-6 overflow-scroll laptop:overflow-hidden justify-start laptop:justify-evenly'>
+          <div className='flex flex-row gap-6 overflow-x-auto justify-start laptop:justify-evenly'>
             {roomData.submitCards.map((card) => {
               return (
                 <img

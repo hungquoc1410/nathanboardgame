@@ -140,7 +140,7 @@ const CAHPlayerActions: React.FC<CAHProps> = ({ roomData }) => {
   return (
     <div className='w-full flex flex-1 p-1 bg-gradient-to-br from-blue-500 to-pink-500 rounded-3xl'>
       <Paper
-        className='w-full flex flex-1 p-4 laptop:p-0 justify-center items-center'
+        className='w-full flex flex-1 p-4 justify-center items-center'
         elevation={3}
         sx={{ borderRadius: 6 }}
       >

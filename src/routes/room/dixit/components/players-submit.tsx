@@ -50,7 +50,7 @@ const PlayersSubmit: React.FC<DIXITProps> = ({ roomData }) => {
             <Typography variant='h6' align='center'>
               Choose Your Card
             </Typography>
-            <div className='flex justify-start overflow-x-scroll laptop:justify-evenly laptop:overflow-hidden flex-row gap-6 '>
+            <div className='flex justify-start overflow-x-auto laptop:justify-evenly flex-row gap-6 '>
               {data.cards.map((card) => {
                 return (
                   <img

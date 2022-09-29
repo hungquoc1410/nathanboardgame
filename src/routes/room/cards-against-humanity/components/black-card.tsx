@@ -12,9 +12,9 @@ const BlackCard: React.FC<CAHProps> = ({ roomData }) => {
   return (
     <>
       {black && (
-        <div className='max-h-60 laptop:max-h-72 aspect-[492/683]'>
+        <div className='aspect-[256/360]'>
           <img
-            className='aspect-[492/683]'
+            className='aspect-[256/360] h-72 laptopp:h-80'
             src={`/games/cah/black-cards/${black}`}
             alt='black-card'
           />

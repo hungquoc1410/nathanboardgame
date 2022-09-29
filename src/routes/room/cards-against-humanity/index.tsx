@@ -31,13 +31,8 @@ const CAHIndex: React.FC = () => {
 
     return (
       <>
-        <div className='hidden col-span-1 row-span-1 laptop:flex'>
-          {playersData && playersData.length >= index && (
-            <PlayerAvatar data={playersData[index - 1]} />
-          )}
-        </div>
         {playersData && playersData.length >= index && (
-          <div className='laptop:hidden col-span-1 row-span-1 flex'>
+          <div className='flex'>
             <PlayerAvatar data={playersData[index - 1]} />
           </div>
         )}
@@ -57,41 +52,28 @@ const CAHIndex: React.FC = () => {
 
   return (
     <>
-      <div className='w-full px-20 hidden laptop:block'>
-        <div className='grid grid-cols-11 grid-rows-9 gap-2'>
-          <div className='col-span-1 row-span-1 flex' />
-          <div className='col-span-1 row-span-1 flex' />
-          <PlayerComponent index={1} />
-          <div className='col-span-1 row-span-1 flex' />
-          <PlayerComponent index={5} />
-          <div className='col-span-1 row-span-1 flex' />
-          <PlayerComponent index={3} />
-          <div className='col-span-1 row-span-1 flex' />
-          <div className='col-span-1 row-span-1 flex' />
-          <div className='col-start-10 col-end-12 row-start-1 row-end-7 flex'>
-            {data && <CAHPlayerActions roomData={data} />}
+      <div className='hidden laptop:flex w-full px-20 mb-8'>
+        <div className='w-full flex flex-col gap-4'>
+          <div className='flex-1 min-w-0 flex'>
+            <div className='basis-3/4 min-w-0 flex-col justify-center items-center flex gap-4'>
+              <div className='flex justify-evenly gap-8 min-w-0'>
+                <PlayerComponent index={1} />
+                <PlayerComponent index={2} />
+                <PlayerComponent index={3} />
+                <PlayerComponent index={4} />
+                <PlayerComponent index={5} />
+                <PlayerComponent index={6} />
+                <PlayerComponent index={7} />
+                <PlayerComponent index={8} />
+                <PlayerComponent index={9} />
+                <PlayerComponent index={10} />
+              </div>
+            </div>
+            <div className='basis-1/4 min-w-0 flex'>
+              {data && <CAHPlayerActions roomData={data} />}
+            </div>
           </div>
-          <div className='col-span-1 row-span-1 flex' />
-          <div className='col-start-2 col-end-9 row-start-2 row-end-6 flex'>
-            {data && <CAHPlayArea roomData={data} />}
-          </div>
-          <div className='col-span-1 row-span-1 flex' />
-          <PlayerComponent index={7} />
-          <PlayerComponent index={8} />
-          <div className='col-span-1 row-span-1 flex' />
-          <div className='col-span-1 row-span-1 flex' />
-          <PlayerComponent index={9} />
-          <PlayerComponent index={10} />
-          <div className='col-span-1 row-span-1 flex' />
-          <div className='col-span-1 row-span-1 flex' />
-          <PlayerComponent index={2} />
-          <div className='col-span-1 row-span-1 flex' />
-          <PlayerComponent index={6} />
-          <div className='col-span-1 row-span-1 flex' />
-          <PlayerComponent index={4} />
-          <div className='col-span-1 row-span-1 flex' />
-          <div className='col-span-1 row-span-1 flex' />
-          <div id='information' className='col-start-1 col-end-12 row-start-8 row-end-9 flex'></div>
+          <div className='flex-1 min-w-0 flex'>{data && <CAHPlayArea roomData={data} />}</div>
         </div>
       </div>
       <div className='flex flex-col laptop:hidden mb-8'>
@@ -103,15 +85,15 @@ const CAHIndex: React.FC = () => {
             <PlayerComponent index={4} />
             <PlayerComponent index={5} />
           </div>
-          <div className='flex justify-evenly'>
+          <div className='flex justify-evenly gap-4'>
             <PlayerComponent index={6} />
             <PlayerComponent index={7} />
             <PlayerComponent index={8} />
             <PlayerComponent index={9} />
             <PlayerComponent index={10} />
           </div>
-          {data && <CAHPlayerActions roomData={data} />}
           {data && <CAHPlayArea roomData={data} />}
+          {data && <CAHPlayerActions roomData={data} />}
         </div>
       </div>
     </>

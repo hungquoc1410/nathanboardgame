@@ -55,7 +55,7 @@ const TellerPrompt: React.FC<DIXITProps> = ({ roomData }) => {
             <Typography variant='h6' align='center'>
               Choose Your Card
             </Typography>
-            <div className='flex flex-row justify-start laptop:justify-evenly gap-6 overflow-x-scroll laptop:overflow-hidden'>
+            <div className='flex flex-row justify-start laptop:justify-evenly gap-6 overflow-x-auto'>
               {data.cards.map((card) => {
                 return (
                   <img

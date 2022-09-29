@@ -40,7 +40,7 @@ const VoteResults: React.FC<DIXITProps> = ({ roomData }) => {
         {`Story Teller Prompt: ${roomData.prompt}`}
       </Typography>
       <Stack spacing={1} className='w-full'>
-        <div className='flex justify-start flex-row gap-6 overflow-scroll laptop:overflow-hidden laptop:justify-evenly'>
+        <div className='flex justify-start flex-row gap-6 overflow-x-auto laptop:justify-evenly'>
           {roomData.submitCards.map((card) => {
             return <VoteCard key={card} card={card} />
           })}
