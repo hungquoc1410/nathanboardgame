@@ -1,4 +1,4 @@
-import { grey, orange } from '@mui/material/colors'
+import { grey, indigo, orange } from '@mui/material/colors'
 
 export type GameInfo = {
   title: string
@@ -48,5 +48,16 @@ export const gameInfo: GameInfo[] = [
     slug: 'dixit',
     minPlayer: 3,
     maxPlayer: 6,
+  },
+  {
+    title: 'Lucky Dog',
+    subtitle: 'The dice game where the dog always wins!',
+    image: './games/ld/logo.jpeg',
+    players: '2-4 Players',
+    playtime: '5-15 Mintues',
+    color: indigo[400],
+    slug: 'ld',
+    minPlayer: 2,
+    maxPlayer: 4,
   },
 ]
