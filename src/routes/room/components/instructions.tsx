@@ -6,6 +6,7 @@ import { getInfo } from '../../../services/localforage'
 import BSInstructions from '../blank-slate/components/instructions'
 import CAHInstructions from '../cards-against-humanity/components/instructions'
 import DIXITInstructions from '../dixit/components/instructions'
+import LDInstructions from '../lucky-dog/components/instructions'
 
 const style = {
   position: 'absolute',
@@ -32,6 +33,8 @@ const Instructions: React.FC = () => {
           return <CAHInstructions />
         case 'dixit':
           return <DIXITInstructions />
+        case 'ld':
+          return <LDInstructions />
       }
     }
   }
