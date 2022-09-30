@@ -2,6 +2,7 @@ import _ from 'underscore'
 
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { IRoomPlayers, updatePlayer, updateRoom } from '../../../../services/firebase'
+import { getInfo } from '../../../../services/localforage'
 
 import { blackCardsData } from './black-cards'
 import { whiteCardsData } from './white-cards'
@@ -59,11 +60,8 @@ export const CAHNewGame = (roomId: string, playersData: IRoomPlayers) => {
 
 export const CAHStart = (roomData: ICAHRoom) => {
   const players: ICAHPlayer[] = createArrayFromObject(roomData.players)
-  players.forEach((player) => {
-    if (player.drawer) {
-      updatePlayer(roomData.id, player.id, { phase: 'draw' })
-    }
-  })
+  const drawer = players.filter((player) => player.drawer)[0]
+  updatePlayer(roomData.id, drawer.id, { phase: 'draw' })
   updateRoom(roomData.id, { phase: 'black' })
 }
 
@@ -75,60 +73,70 @@ export const CAHPlayerDraw = (roomData: ICAHRoom) => {
   updateRoom(roomData.id, { currentBlack: blackCard, blackCards: blackCards })
 }
 
+const CAHRoomNextPhase = (
+  roomId: string,
+  playersData: ICAHPlayer[],
+  playerPhase: string,
+  roomPhase: string
+) => {
+  const allTrue = !playersData
+    .filter((player) => !player.drawer)
+    .map((player) => player.phase === playerPhase)
+    .includes(false)
+  if (allTrue) {
+    updateRoom(roomId, { phase: roomPhase })
+  }
+}
+
 export const CAHRoomWhite = (roomData: ICAHRoom) => {
   const whiteCards = roomData.whiteCards
   const players: ICAHPlayer[] = createArrayFromObject(roomData.players)
+  CAHRoomNextPhase(roomData.id, players, 'receive', 'submit')
   const distributedWhites = players.map((player) => player.currentWhites || []).flat()
   const remainingWhites = _.difference(whiteCards, distributedWhites)
-  players.forEach((player) => {
-    if (player.phase === 'ready') {
-      const playerCards = player.currentWhites
-      let newCards
-      if (!playerCards) {
-        newCards = _.shuffle(remainingWhites).splice(1, 10)
-      } else {
-        if (playerCards.length === 10) {
-          newCards = playerCards
-        } else if (playerCards.length > 0) {
-          newCards = playerCards.concat(
-            _.shuffle(remainingWhites).splice(1, 10 - playerCards.length)
-          )
+  getInfo().then((value) => {
+    if (value && value.playerId) {
+      const player = players.filter((player) => player.id === value.playerId)[0]
+      if (player.phase === 'ready') {
+        const playerCards = player.currentWhites
+        let newCards
+        if (!playerCards) {
+          newCards = _.shuffle(remainingWhites).splice(1, 10)
+        } else {
+          if (playerCards.length === 10) {
+            newCards = playerCards
+          } else if (playerCards.length > 0) {
+            newCards = playerCards.concat(
+              _.shuffle(remainingWhites).splice(1, 10 - playerCards.length)
+            )
+          }
         }
+        updatePlayer(roomData.id, player.id, { currentWhites: newCards, phase: 'receive' })
       }
-      updatePlayer(roomData.id, player.id, { currentWhites: newCards, phase: 'receive' })
-    } else {
-      updatePlayer(roomData.id, player.id, { phase: 'receive' })
+      if (player.drawer) {
+        updatePlayer(roomData.id, player.id, { phase: 'submit' })
+      }
     }
   })
 }
 
-export const CAHPlayerPhase = (
-  roomData: ICAHRoom,
-  playerPhase: string,
-  roomPhase: string,
-  playerNextPhase = ''
-) => {
+export const CAHRoomSubmit = (roomData: ICAHRoom) => {
   const players: ICAHPlayer[] = createArrayFromObject(roomData.players)
-  const allSubmit = !players.map((player) => player.phase === playerPhase).includes(false)
-  const drawerPlayer = players.filter((player) => player.drawer)[0]
-  if (allSubmit) {
-    if (playerNextPhase) {
-      updatePlayer(roomData.id, drawerPlayer.id, { phase: playerNextPhase })
-    }
-    updateRoom(roomData.id, { phase: roomPhase })
-  }
+  CAHRoomNextPhase(roomData.id, players, 'submit', 'gather')
 }
 
-export const CAHRoomChoose = (roomData: ICAHRoom) => {
+export const CAHRoomGather = (roomData: ICAHRoom) => {
   const players: ICAHPlayer[] = createArrayFromObject(roomData.players)
   const distributedWhites = players.map((player) => player.choseCard)
-  updateRoom(roomData.id, { currentWhites: _.shuffle(distributedWhites.filter((e) => e)) })
+  updateRoom(roomData.id, {
+    currentWhites: _.shuffle(distributedWhites.filter((e) => e)),
+    phase: 'choose',
+  })
 }
 
 export const CAHPlayerConfirmWhite = (roomId: string, playerData: ICAHPlayer) => {
-  const choseWhite = playerData.choseCard
-  const currentWhites = playerData.currentWhites
-  const index = playerData.currentWhites.indexOf(choseWhite)
+  const { choseCard, currentWhites } = playerData
+  const index = playerData.currentWhites.indexOf(choseCard)
   currentWhites.splice(index, 1)
   updatePlayer(roomId, playerData.id, { currentWhites: currentWhites, phase: 'submit' })
 }

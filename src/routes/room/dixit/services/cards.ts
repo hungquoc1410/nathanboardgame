@@ -220,5 +220,4 @@ export const cardsData = [
   'dixit_218.png',
   'dixit_219.png',
   'dixit_220.png',
-  'dixit_221.png',
 ]

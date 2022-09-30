@@ -8,7 +8,6 @@ import { getInfo } from '../../../../services/localforage'
 import {
   CAHPlayerConfirmWhite,
   CAHPlayerDraw,
-  CAHPlayerPhase,
   CAHRoomConfirmWhite,
   CAHStart,
   ICAHPlayer,
@@ -113,17 +112,6 @@ const CAHPlayerActions: React.FC<CAHProps> = ({ roomData }) => {
           }
           break
       }
-    }
-  }
-
-  if (data) {
-    switch (data.phase) {
-      case 'receive':
-        CAHPlayerPhase(roomData, 'receive', 'submit', 'submit')
-        break
-      case 'submit':
-        CAHPlayerPhase(roomData, 'submit', 'choose')
-        break
     }
   }
 

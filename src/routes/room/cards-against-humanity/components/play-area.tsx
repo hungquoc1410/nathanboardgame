@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { Paper } from '@mui/material'
 
-import { CAHRoomChoose, CAHRoomWhite } from '../services/cah'
+import { CAHRoomGather, CAHRoomSubmit, CAHRoomWhite } from '../services/cah'
 import { CAHProps } from '..'
 
 import BlackCard from './black-card'
@@ -21,8 +21,11 @@ const CAHPlayArea: React.FC<CAHProps> = ({ roomData }) => {
       case 'white':
         CAHRoomWhite(roomData)
         break
-      case 'choose':
-        CAHRoomChoose(roomData)
+      case 'submit':
+        CAHRoomSubmit(roomData)
+        break
+      case 'gather':
+        CAHRoomGather(roomData)
         break
     }
   }, [roomData])
