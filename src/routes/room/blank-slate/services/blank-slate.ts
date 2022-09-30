@@ -3,6 +3,7 @@ import _ from 'underscore'
 import { IRoomPlayers, updatePlayer, updateRoom } from '../../../../services/firebase'
 
 import { createArrayFromObject } from './../../../../services/create-array-from-object'
+import { getInfo } from './../../../../services/localforage'
 import { wordsData } from './words'
 
 export type IBSRoom = {
@@ -69,15 +70,18 @@ export const BSRoomPoint = (roomData: IBSRoom) => {
     return updateRoom(roomData.id, { phase: 'end' })
   }
   const allAnswers = players.map((player) => player.answer)
-  players.forEach((player) => {
-    if (player.phase === 'submit') {
-      const repeatTimes = allAnswers.filter((answer) => answer === player.answer).length
-      if (repeatTimes === 1) {
-        updatePlayer(roomData.id, player.id, { phase: 'point' })
-      } else if (repeatTimes === 2) {
-        updatePlayer(roomData.id, player.id, { phase: 'point', points: player.points + 3 })
-      } else {
-        updatePlayer(roomData.id, player.id, { phase: 'point', points: player.points + 1 })
+  getInfo().then((value) => {
+    if (value && value.playerId) {
+      const player = players.filter((player) => player.id === value.playerId)[0]
+      if (player.phase === 'submit') {
+        const repeatTimes = allAnswers.filter((answer) => answer === player.answer).length
+        if (repeatTimes === 1) {
+          updatePlayer(roomData.id, player.id, { phase: 'point' })
+        } else if (repeatTimes === 2) {
+          updatePlayer(roomData.id, player.id, { phase: 'point', points: player.points + 3 })
+        } else {
+          updatePlayer(roomData.id, player.id, { phase: 'point', points: player.points + 1 })
+        }
       }
     }
   })
