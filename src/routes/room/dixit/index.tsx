@@ -49,6 +49,7 @@ const DIXITIndex: React.FC = () => {
       }
     })
   }, [])
+  
   return (
     <>
       <div className='hidden laptop:flex w-full px-20'>

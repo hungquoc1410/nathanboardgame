@@ -10,6 +10,8 @@ import CAHLayout from './routes/room/cards-against-humanity/layout'
 import DIXITIndex from './routes/room/dixit'
 import DIXITLayout from './routes/room/dixit/layout'
 import RoomLayout from './routes/room/layout'
+import LDIndex from './routes/room/lucky-dog'
+import LDLayout from './routes/room/lucky-dog/layout'
 import Index from './routes'
 
 import './App.css'
@@ -29,6 +31,9 @@ const App: React.FC = () => {
           </Route>
           <Route path='dixit' element={<DIXITLayout />}>
             <Route index element={<DIXITIndex />} />
+          </Route>
+          <Route path='ld' element={<LDLayout />}>
+            <Route index element={<LDIndex />} />
           </Route>
         </Route>
       </Route>
