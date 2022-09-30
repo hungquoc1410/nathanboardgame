@@ -11,9 +11,10 @@ const PlayersVote: React.FC<DIXITProps> = ({ roomData }) => {
   const [data, setData] = React.useState<IDIXITPlayer>()
   const [chose, setChose] = React.useState<string>()
   const [openNoti, setOpenNoti] = React.useState(false)
+  const [vote, setVote] = React.useState(false)
 
   const changeChose = (card: string) => {
-    if (data && !data.teller && data.submitCard && card !== data.submitCard) {
+    if (data && !data.teller && data.submitCard && card !== data.submitCard && !vote) {
       setChose(card)
     }
   }
@@ -28,6 +29,7 @@ const PlayersVote: React.FC<DIXITProps> = ({ roomData }) => {
   const confirmVote = () => {
     if (chose && data && data.id) {
       DIXITPlayerVote(roomData, data.id, chose)
+      setVote(true)
     } else {
       setOpenNoti(true)
     }
@@ -52,11 +54,13 @@ const PlayersVote: React.FC<DIXITProps> = ({ roomData }) => {
           {roomData.prompt}
         </Typography>
         <Stack spacing={1} className='w-full'>
-          {data && data.teller ? (
-            <Typography variant='h6' align='center'>
-              Wait for others vote...
-            </Typography>
-          ) : (
+          {(data && data.teller) ||
+            (data && !data.teller && vote && (
+              <Typography variant='h6' align='center'>
+                Wait for others vote...
+              </Typography>
+            ))}
+          {data && !data.teller && !vote && (
             <Typography variant='h6' align='center'>
               Choose Your Vote Card
             </Typography>
@@ -76,7 +80,7 @@ const PlayersVote: React.FC<DIXITProps> = ({ roomData }) => {
               )
             })}
           </div>
-          {data && !data.teller && (
+          {data && !data.teller && !vote && (
             <div className='self-center'>
               <Button onClick={() => confirmVote()}>Vote</Button>
             </div>

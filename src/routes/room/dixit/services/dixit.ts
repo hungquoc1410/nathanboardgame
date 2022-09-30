@@ -2,6 +2,7 @@ import _ from 'underscore'
 
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { IRoomPlayers, updatePlayer, updateRoom } from '../../../../services/firebase'
+import { getInfo } from '../../../../services/localforage'
 
 import { cardsData } from './cards'
 
@@ -64,17 +65,20 @@ export const DIXITRoomDivide = (roomData: IDIXITRoom) => {
   if (allReceive) {
     updateRoom(roomData.id, { phase: 'prompt', cards: remainingCards })
   } else {
-    players.forEach((player) => {
-      if (player.phase === 'ready') {
-        const playerCards = player.cards
-        let newCards: string[]
-        if (playerCards) {
-          const cardNeeded = 6 - playerCards.length
-          newCards = playerCards.concat(_.shuffle(remainingCards).splice(0, cardNeeded))
-        } else {
-          newCards = _.shuffle(remainingCards).splice(0, 6)
+    getInfo().then((value) => {
+      if (value && value.playerId) {
+        const player = players.filter((player) => player.id === value.playerId)[0]
+        if (player.phase === 'ready') {
+          const playerCards = player.cards
+          let newCards: string[]
+          if (playerCards) {
+            const cardNeeded = 6 - playerCards.length
+            newCards = playerCards.concat(_.shuffle(remainingCards).splice(0, cardNeeded))
+          } else {
+            newCards = _.shuffle(remainingCards).splice(0, 6)
+          }
+          updatePlayer(roomData.id, player.id, { cards: newCards, phase: 'receive' })
         }
-        updatePlayer(roomData.id, player.id, { cards: newCards, phase: 'receive' })
       }
     })
   }
@@ -134,7 +138,7 @@ export const DIXITRoomSubmit = (roomData: IDIXITRoom) => {
     const allSubmitCards = playersNoTeller.map((player) => player.submitCard)
     updateRoom(roomData.id, {
       phase: 'vote',
-      submitCards: allSubmitCards.concat([roomData.tellerCard]),
+      submitCards: _.shuffle(allSubmitCards.concat([roomData.tellerCard])),
     })
   }
 }
@@ -159,25 +163,28 @@ export const DIXITRoomPoint = (roomData: IDIXITRoom) => {
   } else {
     const allVotes = players.map((player) => player.voteCard).filter((e) => e)
     const repeatTimes = allVotes.filter((vote) => vote === roomData.tellerCard).length
-    players.forEach((player) => {
-      if (player.phase === 'vote') {
-        if (player.teller) {
-          let newPoints = player.points
-          if (repeatTimes !== 0 && repeatTimes !== roomData.numOfPlayers - 1) {
-            newPoints += 3
-          }
-          updatePlayer(roomData.id, player.id, { phase: 'point', points: newPoints })
-        } else {
-          const voteForPlayer = allVotes.filter((vote) => vote === player.submitCard).length
-          let newPoints = player.points + voteForPlayer
-          if (repeatTimes === 0 || repeatTimes === roomData.numOfPlayers - 1) {
-            newPoints += 2
-          } else {
-            if (player.voteCard === roomData.tellerCard) {
+    getInfo().then((value) => {
+      if (value && value.playerId) {
+        const player = players.filter((player) => player.id === value.playerId)[0]
+        if (player.phase === 'vote') {
+          if (player.teller) {
+            let newPoints = player.points
+            if (repeatTimes !== 0 && repeatTimes !== roomData.numOfPlayers - 1) {
               newPoints += 3
             }
+            updatePlayer(roomData.id, player.id, { phase: 'point', points: newPoints })
+          } else {
+            const voteForPlayer = allVotes.filter((vote) => vote === player.submitCard).length
+            let newPoints = player.points + voteForPlayer
+            if (repeatTimes === 0 || repeatTimes === roomData.numOfPlayers - 1) {
+              newPoints += 2
+            } else {
+              if (player.voteCard === roomData.tellerCard) {
+                newPoints += 3
+              }
+            }
+            updatePlayer(roomData.id, player.id, { phase: 'point', points: newPoints })
           }
-          updatePlayer(roomData.id, player.id, { phase: 'point', points: newPoints })
         }
       }
     })
@@ -189,15 +196,21 @@ export const DIXITRoomEnd = (roomData: IDIXITRoom) => {
   const allPoints = players.map((player) => player.points)
   const maxPoint = Math.max(...allPoints)
   if (maxPoint < 30) {
-    players.forEach((player) => {
-      if (player.phase === 'point') {
-        updatePlayer(roomData.id, player.id, { phase: 'ready' })
+    getInfo().then((value) => {
+      if (value && value.playerId) {
+        const player = players.filter((player) => player.id === value.playerId)[0]
+        if (player.phase === 'point') {
+          updatePlayer(roomData.id, player.id, { phase: 'ready' })
+        }
       }
     })
   } else {
-    players.forEach((player) => {
-      if (player.phase === 'point') {
-        updatePlayer(roomData.id, player.id, { phase: 'end' })
+    getInfo().then((value) => {
+      if (value && value.playerId) {
+        const player = players.filter((player) => player.id === value.playerId)[0]
+        if (player.phase === 'point') {
+          updatePlayer(roomData.id, player.id, { phase: 'end' })
+        }
       }
     })
   }

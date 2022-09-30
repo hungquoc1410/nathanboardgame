@@ -11,6 +11,7 @@ const PlayersSubmit: React.FC<DIXITProps> = ({ roomData }) => {
   const [data, setData] = React.useState<IDIXITPlayer>()
   const [chose, setChose] = React.useState<string>()
   const [openNoti, setOpenNoti] = React.useState(false)
+  const [submit, setSubmit] = React.useState(false)
 
   const handleNotiClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -22,6 +23,7 @@ const PlayersSubmit: React.FC<DIXITProps> = ({ roomData }) => {
   const confirmPrompt = () => {
     if (chose && data && data.id) {
       DIXITPlayerSubmit(roomData, data.id, chose)
+      setSubmit(true)
     } else {
       setOpenNoti(true)
     }
@@ -45,7 +47,7 @@ const PlayersSubmit: React.FC<DIXITProps> = ({ roomData }) => {
         <Typography variant='h5' align='center' className='text-pink-500'>
           {roomData.prompt}
         </Typography>
-        {data && !data.teller && (
+        {data && !data.teller && !submit && (
           <Stack spacing={1} className='w-full'>
             <Typography variant='h6' align='center'>
               Choose Your Card
@@ -69,6 +71,11 @@ const PlayersSubmit: React.FC<DIXITProps> = ({ roomData }) => {
               <Button onClick={() => confirmPrompt()}>Confirm</Button>
             </div>
           </Stack>
+        )}
+        {data && !data.teller && submit && (
+          <Typography variant='h5' align='center'>
+            Wait for other players to submit...
+          </Typography>
         )}
         {data && data.teller && (
           <Typography variant='h5' align='center'>
