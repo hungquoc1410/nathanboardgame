@@ -5,14 +5,14 @@ import { Button, Paper } from '@mui/material'
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { updateRoom } from '../../../../services/firebase'
 import { getInfo } from '../../../../services/localforage'
-import { ILDPlayer, LDNewGame } from '../services/lucky-dog'
+import { ILDPlayer, LDNewGame, LDRoomPlay } from '../services/lucky-dog'
 import { LDProps } from '..'
 
 const LDPlayerAction: React.FC<LDProps> = ({ roomData }) => {
   const [data, setData] = React.useState<ILDPlayer>()
 
   const startRound = () => {
-    updateRoom(roomData.id, { phase: 'player' })
+    LDRoomPlay(roomData)
   }
 
   const newGame = () => {

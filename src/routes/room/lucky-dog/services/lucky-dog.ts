@@ -1,3 +1,5 @@
+import _ from 'underscore'
+
 import { IRoomPlayers, updatePlayer, updateRoom } from '../../../../services/firebase'
 
 import { cardsData } from './cards'
@@ -13,9 +15,8 @@ export type ILDRoom = {
   phase: string
   cards: string[]
   turn: number
-  discards: string[]
   dice: number[]
-  decK: string[]
+  deck: string[]
   players: { [x: string]: ILDPlayer }
 }
 
@@ -36,8 +37,18 @@ export const LDNewGame = (roomId: string, playersData: IRoomPlayers) => {
     cards: cardsData,
     phase: 'play',
     turn: 0,
-    discards: [],
     dice: [],
     deck: [],
   })
+}
+
+export const LDRoomPlay = (roomData: ILDRoom) => {
+  const { cards, deck, id } = roomData
+  let newDeck: string[]
+  if (deck) {
+    newDeck = deck.concat(_.shuffle(cards).splice(0, 5 - deck.length))
+  } else {
+    newDeck = _.shuffle(cards).splice(0, 5)
+  }
+  updateRoom(id, { deck: newDeck, phase: 'player' })
 }
