@@ -4,7 +4,7 @@ import { Button, Stack, Typography } from '@mui/material'
 
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { getInfo } from '../../../../services/localforage'
-import { ILDPlayer, LDPlayerReRollDice, LDPlayerRollDice } from '../services/lucky-dog'
+import { ILDPlayer, LDPlayerRollDice } from '../services/lucky-dog'
 import { LDProps } from '..'
 
 import DiscardModal from './discard-modal'
@@ -22,7 +22,7 @@ const TurnPlayer: React.FC<LDProps> = ({ roomData }) => {
 
   const reRollDice = () => {
     if (reroll !== 0) {
-      LDPlayerReRollDice(roomData)
+      LDPlayerRollDice(roomData, true)
       setReroll(reroll - 1)
     }
   }

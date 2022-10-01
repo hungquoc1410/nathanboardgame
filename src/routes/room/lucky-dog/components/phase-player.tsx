@@ -2,14 +2,20 @@ import React from 'react'
 
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { getInfo } from '../../../../services/localforage'
-import { ILDPlayer, ILDRoom } from '../services/lucky-dog'
+import { ILDPlayer, ILDRoom, LDToggleFixedDice } from '../services/lucky-dog'
 import { LDProps } from '..'
 
 import TurnPlayer from './turn-player'
 
 const PhasePlayer: React.FC<LDProps> = ({ roomData }) => {
   const [data, setData] = React.useState<ILDRoom>()
-  const [turn, setTurn] = React.useState(true)
+  const [turn, setTurn] = React.useState(false)
+
+  const lockDice = (index: number, value: number) => {
+    if (turn && value !== 0) {
+      LDToggleFixedDice(roomData, index)
+    }
+  }
 
   React.useEffect(() => {
     setData(roomData)
@@ -43,10 +49,11 @@ const PhasePlayer: React.FC<LDProps> = ({ roomData }) => {
             data.dice.map((die, index) => {
               return (
                 <img
+                  onClick={() => lockDice(index, die.value)}
                   alt='die'
-                  className='w-full'
+                  className={`w-full ${die.fixed && 'border-8 border-blue-500'}`}
                   key={`die_${index}`}
-                  src={`/games/materials/dice/${die.toString()}.svg`}
+                  src={`/games/materials/dice/${die.value.toString()}.svg`}
                 />
               )
             })}

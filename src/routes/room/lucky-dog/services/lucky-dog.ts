@@ -16,7 +16,7 @@ export type ILDRoom = {
   phase: string
   cards: string[]
   turn: number
-  dice: number[]
+  dice: { fixed: boolean; value: number }[]
   deck: string[]
   players: { [x: string]: ILDPlayer }
 }
@@ -57,8 +57,8 @@ export const LDRoomPlay = (roomData: ILDRoom) => {
   } else {
     newTurn = turn + 1
   }
-
-  updateRoom(id, { deck: newDeck, phase: 'player', turn: newTurn })
+  const newDice = Array(5).fill({ fixed: false, value: 0 })
+  updateRoom(id, { deck: newDeck, phase: 'player', turn: newTurn, dice: newDice })
 }
 
 const getCurrentPlayer = (roomData: ILDRoom) => {
@@ -68,17 +68,22 @@ const getCurrentPlayer = (roomData: ILDRoom) => {
   return player.id
 }
 
-export const LDPlayerRollDice = (roomData: ILDRoom) => {
-  const newDice = Array.from({ length: 5 }, () => Math.floor(Math.random() * 6) + 1)
+export const LDPlayerRollDice = (roomData: ILDRoom, reroll = false) => {
   const turnId = getCurrentPlayer(roomData)
-  updatePlayer(roomData.id, turnId, { phase: 'first' })
-  updateRoom(roomData.id, { dice: newDice })
-}
-
-export const LDPlayerReRollDice = (roomData: ILDRoom) => {
-  const newDice = Array.from({ length: 5 }, () => Math.floor(Math.random() * 6) + 1)
-  const turnId = getCurrentPlayer(roomData)
-  updatePlayer(roomData.id, turnId, { phase: 'second' })
+  if (reroll) {
+    updatePlayer(roomData.id, turnId, { phase: 'second' })
+  } else {
+    updatePlayer(roomData.id, turnId, { phase: 'first' })
+  }
+  const { dice } = roomData
+  const newDice: { fixed: boolean; value: number }[] = []
+  dice.forEach((die) => {
+    if (die.fixed) {
+      newDice.push({ fixed: true, value: die.value })
+    } else {
+      newDice.push({ fixed: false, value: Math.floor(Math.random() * 6) + 1 })
+    }
+  })
   updateRoom(roomData.id, { dice: newDice })
 }
 
@@ -90,4 +95,12 @@ export const LDPlayerDiscard = (roomData: ILDRoom, chose: string) => {
   const turnId = getCurrentPlayer(roomData)
   updatePlayer(roomData.id, turnId, { phase: 'second' })
   updateRoom(roomData.id, { deck: newDeck })
+}
+
+export const LDToggleFixedDice = (roomData: ILDRoom, index: number) => {
+  const { dice } = roomData
+  const die = dice[index]
+  const newDie = { fixed: !die.fixed, value: die.value }
+  dice[index] = newDie
+  updateRoom(roomData.id, { dice: dice })
 }
