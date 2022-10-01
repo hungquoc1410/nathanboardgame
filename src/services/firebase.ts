@@ -40,6 +40,7 @@ export type IRoom = {
   maxPlayer: number
   numOfPlayers: number
   phase: string
+  players: { [x: string]: IPlayer }
 }
 
 export type IPlayer = {
@@ -69,7 +70,6 @@ export const setRoomKeyRef = (roomId: string, key: string) => {
 // Create data
 export const createRoom = (roomId: string, data: object) => {
   const roomRef = setRoomRef(roomId)
-  updateAllRooms(roomId)
   set(roomRef, data)
 }
 
@@ -92,7 +92,6 @@ export const newGameRoom = (
 const removeRoom = (roomId: string) => {
   const roomRef = setRoomRef(roomId)
   set(roomRef, null)
-  removeRoomId(roomId)
 }
 
 const removePlayer = (roomId: string, playerId: string) => {
@@ -100,24 +99,16 @@ const removePlayer = (roomId: string, playerId: string) => {
   set(playerRef, null)
 }
 
-const removeRoomId = async (roomId: string) => {
-  const snapshot = await getAllRoomsData()
-  if (snapshot) {
-    const index = snapshot.indexOf(roomId)
-    snapshot.splice(index, 1)
-    update(ref(Database, 'allRooms'), { ids: snapshot })
-  }
-}
-
 // Get data
-const getAllRoomsData = async () => {
-  const snapshot = await get(query(ref(Database, 'allRooms/ids')))
-  return snapshot.val()
-}
-
 export const getRoomInfo = async (roomId: string, key: string) => {
   const snapshot = await get(query(ref(Database, `rooms/${roomId}/${key}`)))
   return snapshot.val()
+}
+
+export const getRoomMaster = (roomData: IRoom) => {
+  const players: IPlayer[] = createArrayFromObject(roomData.players)
+  const master = players.filter((player) => player.master)[0]
+  return master.name
 }
 
 // Update data
@@ -129,16 +120,6 @@ export const updatePlayer = (roomId: string, playerId: string, data: object) => 
 export const updateRoom = (roomId: string, data: object) => {
   const roomRef = setRoomRef(roomId)
   update(roomRef, data)
-}
-
-const updateAllRooms = async (roomId: string) => {
-  const snapshot = await getAllRoomsData()
-  if (snapshot) {
-    snapshot.push(roomId)
-    update(ref(Database, 'allRooms'), { ids: snapshot })
-  } else {
-    update(ref(Database, 'allRooms'), { ids: [roomId] })
-  }
 }
 
 // Check data

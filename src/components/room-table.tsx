@@ -11,17 +11,18 @@ import {
   TableRow,
 } from '@mui/material'
 
-import { Database } from '../services/firebase'
+import { createArrayFromObject } from '../services/create-array-from-object'
+import { Database, IRoom } from '../services/firebase'
 
 import RoomTableRow from './room-table-row'
 
 const RoomTable: React.FC = () => {
-  const [data, setData] = React.useState<string[]>()
+  const [data, setData] = React.useState<IRoom[]>()
 
   React.useEffect(() => {
-    return onValue(ref(Database, 'allRooms/ids'), (snap) => {
+    return onValue(ref(Database, 'rooms'), (snap) => {
       if (snap.exists()) {
-        setData(snap.val())
+        setData(createArrayFromObject(snap.val()))
       } else {
         setData([])
       }
@@ -35,7 +36,7 @@ const RoomTable: React.FC = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>ID</TableCell>
+                <TableCell>Room Master</TableCell>
                 <TableCell>Players</TableCell>
                 <TableCell>Game</TableCell>
                 <TableCell>Join</TableCell>
@@ -44,7 +45,7 @@ const RoomTable: React.FC = () => {
             <TableBody>
               {data &&
                 data.map((room) => {
-                  return <RoomTableRow key={room} roomId={room} />
+                  return <RoomTableRow key={room.id} roomData={room} />
                 })}
             </TableBody>
           </Table>

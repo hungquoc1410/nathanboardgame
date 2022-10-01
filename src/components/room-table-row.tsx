@@ -1,21 +1,19 @@
 import React from 'react'
-import { onValue } from 'firebase/database'
 import { useNavigate } from 'react-router-dom'
 
 import { Button, Chip, TableCell, TableRow, useTheme } from '@mui/material'
 
-import { createPlayer, IRoom, setRoomRef } from '../services/firebase'
+import { createPlayer, getRoomMaster, IRoom } from '../services/firebase'
 import { getInfo, setInfo } from '../services/localforage'
 
-const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
+const RoomTableRow: React.FC<{ roomData: IRoom }> = ({ roomData }) => {
   const theme = useTheme()
   const navigate = useNavigate()
   const [data, setData] = React.useState<IRoom>()
-  const roomRef = setRoomRef(roomId)
 
   const joinRoom = async () => {
     if (data) {
-      setInfo({ roomId: roomId, gameId: data.game })
+      setInfo({ roomId: roomData.id, gameId: data.game })
       const info = await getInfo()
       const { playerId, playerName, playerColor } = info
       if (playerId && playerName && playerColor) {
@@ -27,25 +25,21 @@ const RoomTableRow: React.FC<{ roomId: string }> = ({ roomId }) => {
           phase: 'wait',
           points: 0,
         }
-        createPlayer(roomId, playerId, playerData)
+        createPlayer(roomData.id, playerId, playerData)
       }
-      navigate(roomId)
+      navigate(roomData.id)
     }
   }
 
   React.useEffect(() => {
-    return onValue(roomRef, (snap) => {
-      if (snap.exists()) {
-        setData(snap.val())
-      }
-    })
-  }, [roomId])
+    setData(roomData)
+  }, [roomData])
 
   return (
     <>
       {data && data.numOfPlayers !== data.maxPlayer && data.phase === 'wait' && (
         <TableRow>
-          <TableCell>{roomId}</TableCell>
+          <TableCell>{getRoomMaster(roomData)}</TableCell>
           <TableCell>{`${data.numOfPlayers}/${data.maxPlayer}`}</TableCell>
           <TableCell>
             <Chip
