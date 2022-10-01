@@ -2,7 +2,7 @@ import React from 'react'
 
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { getInfo } from '../../../../services/localforage'
-import { ILDPlayer, ILDRoom, LDToggleFixedDice } from '../services/lucky-dog'
+import { ILDPlayer, ILDRoom, LDCheckRule, LDToggleFixedDice } from '../services/lucky-dog'
 import { LDProps } from '..'
 
 import TurnPlayer from './turn-player'
@@ -30,7 +30,7 @@ const PhasePlayer: React.FC<LDProps> = ({ roomData }) => {
         setTurn(index + 1 === roomData.turn)
       }
     })
-  }, [])
+  }, [roomData])
 
   return (
     <div className='w-full flex flex-col items-center'>
@@ -38,7 +38,14 @@ const PhasePlayer: React.FC<LDProps> = ({ roomData }) => {
         {data &&
           data.deck &&
           data.deck.map((card) => {
-            return <img alt='card' key={card} src={`/games/ld/cards/${card}`} />
+            return (
+              <img
+                alt='card'
+                className={LDCheckRule(card.split('_')[0], roomData) ? '' : 'opacity-50'}
+                key={card}
+                src={`/games/ld/cards/${card}`}
+              />
+            )
           })}
       </div>
       <br />

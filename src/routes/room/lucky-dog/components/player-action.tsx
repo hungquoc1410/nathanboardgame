@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { Button, Paper } from '@mui/material'
+import { Button, Paper, Typography } from '@mui/material'
 
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { updateRoom } from '../../../../services/firebase'
 import { getInfo } from '../../../../services/localforage'
-import { ILDPlayer, LDNewGame, LDRoomPlay } from '../services/lucky-dog'
+import { ILDPlayer, LDGetCurrentPlayer, LDNewGame, LDRoomPlay } from '../services/lucky-dog'
 import { LDProps } from '..'
 
 const LDPlayerAction: React.FC<LDProps> = ({ roomData }) => {
@@ -72,10 +72,24 @@ const LDPlayerAction: React.FC<LDProps> = ({ roomData }) => {
   return (
     <div className='w-full flex flex-1 p-1 bg-gradient-to-br from-blue-500 to-pink-500 rounded-3xl'>
       <Paper
-        className='w-full flex flex-1 p-4 justify-center items-center'
+        className='w-full flex flex-1 flex-col gap-4 p-4 justify-center items-center'
         elevation={3}
         sx={{ borderRadius: 6 }}
       >
+        {LDGetCurrentPlayer(roomData) && roomData.phase !== 'play' && roomData.phase !== 'end' && (
+          <div className='flex flex-col gap-2'>
+            <Typography variant='h6' align='center'>
+              Current Player
+            </Typography>
+            <Typography
+              variant='h5'
+              align='center'
+              sx={{ color: LDGetCurrentPlayer(roomData).color }}
+            >
+              {LDGetCurrentPlayer(roomData).name}
+            </Typography>
+          </div>
+        )}
         {data && <div className='flex flex-col gap-4'>{actions()}</div>}
       </Paper>
     </div>

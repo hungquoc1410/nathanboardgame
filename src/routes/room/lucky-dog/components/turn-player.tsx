@@ -4,7 +4,7 @@ import { Button, Stack, Typography } from '@mui/material'
 
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { getInfo } from '../../../../services/localforage'
-import { ILDPlayer, LDPlayerRollDice } from '../services/lucky-dog'
+import { ILDPlayer, LDCheckRequirements, LDPlayerRollDice } from '../services/lucky-dog'
 import { LDProps } from '..'
 
 import DiscardModal from './discard-modal'
@@ -27,6 +27,12 @@ const TurnPlayer: React.FC<LDProps> = ({ roomData }) => {
     }
   }
 
+  const endTurn = () => {
+    if (data) {
+      LDCheckRequirements(roomData, data)
+    }
+  }
+
   React.useEffect(() => {
     getInfo().then((value) => {
       if (value && value.playerId) {
@@ -40,7 +46,9 @@ const TurnPlayer: React.FC<LDProps> = ({ roomData }) => {
   return (
     <>
       {data && data.phase && data.phase === 'ready' && (
-        <Button onClick={() => rollDice()}>Roll Dice</Button>
+        <div className='flex flex-col gap-4 w-full justify-center items-center'>
+          <Button onClick={() => rollDice()}>Roll Dice</Button>
+        </div>
       )}
 
       {data && data.phase && data.phase === 'first' && (
@@ -57,7 +65,7 @@ const TurnPlayer: React.FC<LDProps> = ({ roomData }) => {
             )}
             <Button onClick={handleOpen}>Discard one card</Button>
             <Typography variant='overline'>OR</Typography>
-            <Button>Confirm dice</Button>
+            <Button onClick={() => endTurn()}>End Your Turn</Button>
           </Stack>
         </div>
       )}
@@ -75,7 +83,7 @@ const TurnPlayer: React.FC<LDProps> = ({ roomData }) => {
                 <Typography variant='overline'>OR</Typography>
               </>
             )}
-            <Button>Confirm dice</Button>
+            <Button onClick={() => endTurn()}>End Your Turn</Button>
           </Stack>
         </div>
       )}

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { Paper } from '@mui/material'
 
+import { LDRoomEnd, LDRoomPlay } from '../services/lucky-dog'
 import { LDProps } from '..'
 
 import PhasePlayer from './phase-player'
@@ -14,6 +15,12 @@ const LDPlayArea: React.FC<LDProps> = ({ roomData }) => {
     switch (roomData.phase) {
       case 'wait':
         navigate(`/${roomData.id}`)
+        break
+      case 'start':
+        LDRoomPlay(roomData)
+        break
+      case 'end':
+        LDRoomEnd(roomData)
         break
     }
   }, [roomData])
