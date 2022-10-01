@@ -46,7 +46,7 @@ const DiscardModal: React.FC<DiscardModalProps> = ({ open, setOpen, roomData }) 
         <Typography variant='h5' align='center'>
           Choose a card to discard!
         </Typography>
-        <div className='grid grid-cols-5 gap-4'>
+        <div className='grid grid-cols-2 laptop:grid-cols-5 gap-4'>
           {roomData &&
             roomData.deck &&
             roomData.deck.map((card) => {

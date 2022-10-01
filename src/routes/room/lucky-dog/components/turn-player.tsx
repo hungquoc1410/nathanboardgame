@@ -56,16 +56,30 @@ const TurnPlayer: React.FC<LDProps> = ({ roomData }) => {
           <Typography variant='h5' align='center' className='w-full'>
             You can
           </Typography>
-          <Stack spacing={2} direction='row' justifyContent='center'>
+          <Stack
+            spacing={2}
+            direction={{ mobile: 'column', laptop: 'row' }}
+            justifyContent='center'
+          >
             {reroll !== 0 && (
               <>
-                <Button onClick={() => reRollDice()}>Re Roll ({reroll})</Button>
-                <Typography variant='overline'>OR</Typography>
+                <div className='flex items-center justify-center'>
+                  <Button onClick={() => reRollDice()}>Re Roll ({reroll})</Button>
+                </div>
+                <Typography variant='overline' align='center'>
+                  OR
+                </Typography>
               </>
             )}
-            <Button onClick={handleOpen}>Discard one card</Button>
-            <Typography variant='overline'>OR</Typography>
-            <Button onClick={() => endTurn()}>End Your Turn</Button>
+            <div className='flex items-center justify-center'>
+              <Button onClick={handleOpen}>Discard one card</Button>
+            </div>
+            <Typography variant='overline' align='center'>
+              OR
+            </Typography>
+            <div className='flex items-center justify-center'>
+              <Button onClick={() => endTurn()}>End Your Turn</Button>
+            </div>
           </Stack>
         </div>
       )}
@@ -79,11 +93,15 @@ const TurnPlayer: React.FC<LDProps> = ({ roomData }) => {
           <Stack spacing={2} direction='row' justifyContent='center'>
             {reroll !== 0 && (
               <>
-                <Button onClick={() => reRollDice()}>Re Roll ({reroll})</Button>
+                <div className='flex items-center justify-center'>
+                  <Button onClick={() => reRollDice()}>Re Roll ({reroll})</Button>
+                </div>
                 <Typography variant='overline'>OR</Typography>
               </>
             )}
-            <Button onClick={() => endTurn()}>End Your Turn</Button>
+            <div className='flex items-center justify-center'>
+              <Button onClick={() => endTurn()}>End Your Turn</Button>
+            </div>
           </Stack>
         </div>
       )}

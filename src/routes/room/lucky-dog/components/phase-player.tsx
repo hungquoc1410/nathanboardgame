@@ -34,7 +34,7 @@ const PhasePlayer: React.FC<LDProps> = ({ roomData }) => {
 
   return (
     <div className='w-full flex flex-col items-center'>
-      <div className='grid grid-cols-5 gap-4'>
+      <div className='grid laptop:grid-cols-5 grid-cols-2 gap-4'>
         {data &&
           data.deck &&
           data.deck.map((card) => {
@@ -49,7 +49,7 @@ const PhasePlayer: React.FC<LDProps> = ({ roomData }) => {
           })}
       </div>
       <br />
-      <div className='grid grid-cols-2 gap-4'>
+      <div className='grid laptop:grid-cols-2 gap-4'>
         <div className='grid grid-cols-5 gap-4'>
           {data &&
             data.dice &&
