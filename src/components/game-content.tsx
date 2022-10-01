@@ -41,6 +41,7 @@ const GameContent: React.FC<GameContentProps> = ({ game }) => {
         maxPlayer: maxPlayer,
         numOfPlayers: 1,
         phase: 'wait',
+        players: {},
       }
       const playerData = {
         id: playerId,
