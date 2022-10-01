@@ -1,5 +1,6 @@
 import _ from 'underscore'
 
+import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { IRoomPlayers, updatePlayer, updateRoom } from '../../../../services/firebase'
 
 import { cardsData } from './cards'
@@ -43,12 +44,50 @@ export const LDNewGame = (roomId: string, playersData: IRoomPlayers) => {
 }
 
 export const LDRoomPlay = (roomData: ILDRoom) => {
-  const { cards, deck, id } = roomData
+  const { cards, deck, id, turn, maxPlayer } = roomData
   let newDeck: string[]
   if (deck) {
     newDeck = deck.concat(_.shuffle(cards).splice(0, 5 - deck.length))
   } else {
     newDeck = _.shuffle(cards).splice(0, 5)
   }
-  updateRoom(id, { deck: newDeck, phase: 'player' })
+  let newTurn: number
+  if (turn === maxPlayer) {
+    newTurn = 1
+  } else {
+    newTurn = turn + 1
+  }
+
+  updateRoom(id, { deck: newDeck, phase: 'player', turn: newTurn })
+}
+
+const getCurrentPlayer = (roomData: ILDRoom) => {
+  const { turn } = roomData
+  const players: ILDPlayer[] = createArrayFromObject(roomData.players)
+  const player = players[turn - 1]
+  return player.id
+}
+
+export const LDPlayerRollDice = (roomData: ILDRoom) => {
+  const newDice = Array.from({ length: 5 }, () => Math.floor(Math.random() * 6) + 1)
+  const turnId = getCurrentPlayer(roomData)
+  updatePlayer(roomData.id, turnId, { phase: 'first' })
+  updateRoom(roomData.id, { dice: newDice })
+}
+
+export const LDPlayerReRollDice = (roomData: ILDRoom) => {
+  const newDice = Array.from({ length: 5 }, () => Math.floor(Math.random() * 6) + 1)
+  const turnId = getCurrentPlayer(roomData)
+  updatePlayer(roomData.id, turnId, { phase: 'second' })
+  updateRoom(roomData.id, { dice: newDice })
+}
+
+export const LDPlayerDiscard = (roomData: ILDRoom, chose: string) => {
+  const { cards, deck } = roomData
+  const index = deck.indexOf(chose)
+  deck.splice(index, 1)
+  const newDeck = deck.concat(_.shuffle(cards).splice(0, 1))
+  const turnId = getCurrentPlayer(roomData)
+  updatePlayer(roomData.id, turnId, { phase: 'second' })
+  updateRoom(roomData.id, { deck: newDeck })
 }
