@@ -1,6 +1,7 @@
 import React from 'react'
 import { onAuthStateChanged, signInAnonymously } from 'firebase/auth'
 import { onDisconnect, onValue } from 'firebase/database'
+import { motion } from 'framer-motion'
 import { Outlet, useLocation } from 'react-router-dom'
 
 import { AppBar, Backdrop, Box, CircularProgress, Toolbar } from '@mui/material'
@@ -12,6 +13,24 @@ import { Auth, checkRoom, connectedRef, setPlayerRef } from '../services/firebas
 import { getInfo, setInfo } from '../services/localforage'
 
 signInAnonymously(Auth)
+
+const pageVariants = {
+  initial: {
+    opacity: 0,
+  },
+  in: {
+    opacity: 1,
+  },
+  out: {
+    opacity: 0,
+  },
+}
+
+const pageTransition = {
+  type: 'tween',
+  ease: 'linear',
+  duration: 0.5,
+}
 
 const Layout: React.FC = () => {
   const [openModal, setOpenModal] = React.useState(false)
@@ -73,7 +92,15 @@ const Layout: React.FC = () => {
           </Toolbar>
         </Box>
       </AppBar>
-      <Outlet />
+      <motion.div
+        key={location.pathname}
+        initial='initial'
+        animate='in'
+        variants={pageVariants}
+        transition={pageTransition}
+      >
+        <Outlet />
+      </motion.div>
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={openBackdrop}
