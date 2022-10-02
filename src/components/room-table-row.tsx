@@ -37,9 +37,9 @@ const RoomTableRow: React.FC<{ roomData: IRoom }> = ({ roomData }) => {
 
   return (
     <>
-      {data && data.numOfPlayers !== data.maxPlayer && data.phase === 'wait' && (
+      {data && data.numOfPlayers !== data.maxPlayer && data.phase === 'wait' && data.players && (
         <TableRow>
-          <TableCell>{getRoomMaster(roomData)}</TableCell>
+          <TableCell>{data && getRoomMaster(data)}</TableCell>
           <TableCell>{`${data.numOfPlayers}/${data.maxPlayer}`}</TableCell>
           <TableCell>
             <Chip
