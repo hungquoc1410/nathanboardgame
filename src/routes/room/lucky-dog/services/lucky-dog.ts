@@ -92,7 +92,7 @@ export const LDPlayerDiscard = (roomData: ILDRoom, chose: string) => {
   const { cards, deck } = roomData
   const index = deck.indexOf(chose)
   deck.splice(index, 1)
-  const newDeck = deck.concat(_.shuffle(cards).splice(0, 1))
+  const newDeck = deck.concat(_.shuffle(cards).splice(0, 5 - deck.length))
   const turnId = LDGetCurrentPlayer(roomData).id
   updatePlayer(roomData.id, turnId, { phase: 'second' })
   updateRoom(roomData.id, { deck: newDeck })
