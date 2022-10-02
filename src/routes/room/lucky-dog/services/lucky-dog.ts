@@ -54,11 +54,11 @@ export const LDRoomPlay = (roomData: ILDRoom) => {
   }
   let newTurn: number
   if (turn === numOfPlayers) {
-    return updateRoom(id, { phase: 'end' })
+    return updateRoom(id, { phase: 'end', deck: newDeck, cards: cards })
   } else {
     newTurn = turn + 1
     const newDice = Array(5).fill({ fixed: false, value: 0 })
-    updateRoom(id, { deck: newDeck, phase: 'player', turn: newTurn, dice: newDice })
+    updateRoom(id, { deck: newDeck, phase: 'player', turn: newTurn, dice: newDice, cards: cards })
   }
 }
 
@@ -188,12 +188,13 @@ export const LDCheckRequirements = (roomData: ILDRoom, playerData: ILDPlayer) =>
         break
     }
   })
-  updatePlayer(roomData.id, playerData.id, { points: points, phase: 'ready' })
-  updateRoom(roomData.id, {
+  const newRoomData = {
+    ...roomData,
     deck: _.difference(roomDeck, removeCards),
     cards: _.difference(roomCard, removeCards),
-    phase: 'start',
-  })
+  }
+  updatePlayer(roomData.id, playerData.id, { points: points, phase: 'ready' })
+  LDRoomPlay(newRoomData)
 }
 
 const checkAT = (deck: string[], roomData: ILDRoom) => {
