@@ -2,6 +2,7 @@ import React from 'react'
 
 import { createArrayFromObject } from '../../../../services/create-array-from-object'
 import { getInfo } from '../../../../services/localforage'
+import Dice from '../../components/dice/dice'
 import { ILDPlayer, ILDRoom, LDCheckRule, LDToggleFixedDice } from '../services/lucky-dog'
 import { LDProps } from '..'
 
@@ -49,19 +50,19 @@ const PhasePlayer: React.FC<LDProps> = ({ roomData }) => {
           })}
       </div>
       <br />
-      <div className='grid laptop:grid-cols-2 gap-4'>
-        <div className='grid grid-cols-5 gap-4'>
+      <div className='grid laptop:grid-cols-2 gap-4 w-full'>
+        <div className='grid grid-cols-5 gap-8 w-full'>
           {data &&
             data.dice &&
             data.dice.map((die, index) => {
               return (
-                <img
-                  onClick={() => lockDice(index, die.value)}
-                  alt='die'
-                  className={`w-full ${die.fixed && 'border-8 border-blue-500'}`}
+                <div
                   key={`die_${index}`}
-                  src={`/games/materials/dice/${die.value.toString()}.svg`}
-                />
+                  onClick={() => lockDice(index, die.value)}
+                  className={`aspect-square ${die.fixed && 'outline outline-8 outline-blue-500'}`}
+                >
+                  <Dice die={die} index={index} />
+                </div>
               )
             })}
         </div>

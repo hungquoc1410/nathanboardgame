@@ -210,12 +210,12 @@ const checkAT = (deck: string[], roomData: ILDRoom) => {
 const check3K = (dice: number[]) => {
   const unique = _.uniq(dice)
   let result = false
-  if (unique.length <= 3) {
-    const repeatTime = unique.map((el) => dice.filter((die) => die === el).length).includes(3)
-    if (repeatTime) {
+  const repeatTime = unique.map((el) => dice.filter((die) => die === el).length)
+  repeatTime.forEach((time) => {
+    if (time >= 3) {
       result = true
     }
-  }
+  })
   return result
 }
 
@@ -231,15 +231,17 @@ const check3R = (dice: number[]) => {
 }
 
 const check4K = (dice: number[]) => {
-  const unique = _.uniq(dice)
-  let result = false
-  if (unique.length <= 2) {
-    const repeatTime = unique.map((el) => dice.filter((die) => die === el).length).includes(4)
-    if (repeatTime) {
-      result = true
-    }
+  if (!dice.includes(0)) {
+    const unique = _.uniq(dice)
+    let result = false
+    const repeatTime = unique.map((el) => dice.filter((die) => die === el).length)
+    repeatTime.forEach((time) => {
+      if (time >= 4) {
+        result = true
+      }
+    })
+    return result
   }
-  return result
 }
 
 const check4R = (dice: number[]) => {
