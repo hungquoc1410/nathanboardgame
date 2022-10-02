@@ -1,12 +1,16 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Button, Chip, TableCell, TableRow, useTheme } from '@mui/material'
+import { Button, Chip, Grow, TableCell, TableRow, useTheme } from '@mui/material'
 
 import { createPlayer, getRoomMaster, IRoom } from '../services/firebase'
 import { getInfo, setInfo } from '../services/localforage'
 
-const RoomTableRow: React.FC<{ roomData: IRoom }> = ({ roomData }) => {
+type RoomTableRowProps = {
+  roomData: IRoom
+}
+
+const RoomTableRow: React.FC<RoomTableRowProps> = ({ roomData }) => {
   const theme = useTheme()
   const navigate = useNavigate()
   const [data, setData] = React.useState<IRoom>()
@@ -38,28 +42,30 @@ const RoomTableRow: React.FC<{ roomData: IRoom }> = ({ roomData }) => {
   return (
     <>
       {data && data.numOfPlayers !== data.maxPlayer && data.phase === 'wait' && data.players && (
-        <TableRow>
-          <TableCell>{data && getRoomMaster(data)}</TableCell>
-          <TableCell>{`${data.numOfPlayers}/${data.maxPlayer}`}</TableCell>
-          <TableCell>
-            <Chip
-              label={data.title}
-              sx={{
-                backgroundColor: data.color,
-                color: theme.palette.getContrastText(data.color),
-              }}
-            ></Chip>
-          </TableCell>
-          <TableCell>
-            <Button
-              onClick={() => {
-                joinRoom()
-              }}
-            >
-              Join room
-            </Button>
-          </TableCell>
-        </TableRow>
+        <Grow in={true}>
+          <TableRow>
+            <TableCell>{data && getRoomMaster(data)}</TableCell>
+            <TableCell>{`${data.numOfPlayers}/${data.maxPlayer}`}</TableCell>
+            <TableCell>
+              <Chip
+                label={data.title}
+                sx={{
+                  backgroundColor: data.color,
+                  color: theme.palette.getContrastText(data.color),
+                }}
+              ></Chip>
+            </TableCell>
+            <TableCell>
+              <Button
+                onClick={() => {
+                  joinRoom()
+                }}
+              >
+                Join room
+              </Button>
+            </TableCell>
+          </TableRow>
+        </Grow>
       )}
     </>
   )
