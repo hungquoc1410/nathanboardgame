@@ -26,7 +26,11 @@ const Dice: React.FC<DiceProps> = ({ die, index }) => {
       {value === 0 ? (
         <img alt='die' src='/games/materials/dice/0.svg' />
       ) : (
-        <div id={`die_${index}`} data-side='1' className='dice w-full h-full'>
+        <div
+          id={`die_${index}`}
+          data-side={value}
+          className='dice w-12 h-12 laptop:w-24 laptop:h-24'
+        >
           <div className='sides side-1'>
             <span className='dot dot-1'></span>
           </div>

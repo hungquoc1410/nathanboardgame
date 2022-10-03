@@ -46,7 +46,7 @@ const NameColorModal: React.FC<NameColorModalProps> = ({ open, setOpen }) => {
   return (
     <Modal open={open} onClose={handleModalClose}>
       <Box sx={{ bgcolor: 'background.paper' }} className='h-full flex justify-center items-center'>
-        <div className='w-1/4 flex flex-col gap-10'>
+        <div className='w-9/10 laptop:w-1/4 flex flex-col gap-10'>
           <Typography variant='h4' align='center'>
             Enter Your Information
           </Typography>

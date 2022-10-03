@@ -19,8 +19,8 @@
 .dot {
   display: block;
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: 15%;
+  height: 15%;
   border-radius: 50%;
   background-color: black;
   transform: translate(-50%, -50%);
@@ -117,22 +117,43 @@
 }
 
 .dice .side-1 {
-  transform: translateZ(45px);
+  transform: translateZ(48px);
 }
 .dice .side-2 {
-  transform: rotateX(-180deg) translateZ(45px);
+  transform: rotateX(-180deg) translateZ(48px);
 }
 .dice .side-3 {
-  transform: rotateY(90deg) translateZ(45px);
+  transform: rotateY(90deg) translateZ(48px);
 }
 .dice .side-4 {
-  transform: rotateY(-90deg) translateZ(45px);
+  transform: rotateY(-90deg) translateZ(48px);
 }
 .dice .side-5 {
-  transform: rotateX(90deg) translateZ(45px);
+  transform: rotateX(90deg) translateZ(48px);
 }
 .dice .side-6 {
-  transform: rotateX(-90deg) translateZ(45px);
+  transform: rotateX(-90deg) translateZ(48px);
+}
+
+@media only screen and (max-width: 640px) {
+  .dice .side-1 {
+    transform: translateZ(24px);
+  }
+  .dice .side-2 {
+    transform: rotateX(-180deg) translateZ(24px);
+  }
+  .dice .side-3 {
+    transform: rotateY(90deg) translateZ(24px);
+  }
+  .dice .side-4 {
+    transform: rotateY(-90deg) translateZ(24px);
+  }
+  .dice .side-5 {
+    transform: rotateX(90deg) translateZ(24px);
+  }
+  .dice .side-6 {
+    transform: rotateX(-90deg) translateZ(24px);
+  }
 }
 
 .dice[data-side='1'] {
